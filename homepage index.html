@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夸克創意 QOOOQ Taiwan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f3ee;
+    --accent: #ff3c00;
+    --accent2: #ffd200;
+    --mid: #1a1a1a;
+    --gray: #888;
+    --light: #e8e4dd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans TC', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: exclusion;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    mix-blend-mode: exclusion;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: difference;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  #hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 18vw, 280px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+    white-space: nowrap;
+    pointer-events: none;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    from { transform: translate(-50%, -50%) translateX(-20px); }
+    to   { transform: translate(-50%, -50%) translateX(20px); }
+  }
+
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-size: clamp(42px, 6vw, 88px);
+    font-weight: 900;
+    line-height: 1.1;
+    max-width: 800px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 24px;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--gray);
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    right: 48px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .hero-scroll span {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gray);
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%,100% { transform: scaleY(1); opacity:1; }
+    50% { transform: scaleY(0.5); opacity:0.4; }
+  }
+
+  .hero-corner {
+    position: absolute;
+    top: 0; right: 0;
+    width: 40vw; height: 60vh;
+    background: radial-gradient(ellipse at top right, rgba(255,60,0,0.15), transparent 60%);
+    pointer-events: none;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(30px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* SECTION BASE */
+  section {
+    padding: 120px 48px;
+    position: relative;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 60px;
+  }
+  .section-title small {
+    display: block;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+
+  /* ABOUT */
+  #about { background: var(--mid); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 15px;
+    line-height: 2;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .about-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-item {
+    padding: 32px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: var(--mid);
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-bottom: none; }
+  .stat-item:hover { background: rgba(255,60,0,0.05); }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: 2px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+
+  /* VALUE */
+  #value { background: var(--black); }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .value-card {
+    padding: 48px;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .value-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.4s ease;
+  }
+  .value-card:hover { background: #0f0f0f; }
+  .value-card:hover::before { height: 100%; }
+
+  .value-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+    position: absolute;
+    right: 24px; top: 16px;
+  }
+  .value-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+  .value-title .highlight { color: var(--accent); }
+  .value-desc {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--gray);
+  }
+
+  /* SERVICE */
+  #service { background: var(--mid); }
+
+  .service-main {
+    background: var(--black);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 60px;
+    margin-bottom: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-main::after {
+    content: '01';
+    position: absolute;
+    right: 60px; bottom: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: rgba(255,60,0,0.08);
+    line-height: 1;
+  }
+
+  .service-main-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .service-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 4px 10px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 2px;
+  }
+
+  .service-main-desc {
+    font-size: 14px;
+    line-height: 2;
+    color: #aaa;
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+
+  .pain-points {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .pain-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 24px;
+    border-radius: 2px;
+  }
+  .pain-q {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .pain-problem {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.7;
+    color: var(--white);
+  }
+  .pain-problem mark {
+    background: none;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .flow-steps {
+    display: flex;
+    gap: 0;
+    margin: 40px 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .flow-step {
+    flex: 1;
+    padding: 24px 20px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .flow-step:last-child { border-right: none; }
+  .flow-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    opacity: 0.5;
+    line-height: 1;
+  }
+  .flow-text {
+    font-size: 13px;
+    color: #bbb;
+    line-height: 1.8;
+    margin-top: 8px;
+  }
+
+  .guarantee-row {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .guarantee-pill {
+    padding: 10px 20px;
+    border: 1px solid rgba(255,60,0,0.3);
+    border-radius: 100px;
+    font-size: 13px;
+    color: #ccc;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .guarantee-pill::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
+  }
+  .service-mini {
+    background: var(--mid);
+    padding: 32px 28px;
+    transition: background 0.3s;
+  }
+  .service-mini:hover { background: #222; }
+  .service-mini-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .service-mini-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--white);
+  }
+
+  /* RECRUIT */
+  #recruit {
+    background: var(--accent);
+    color: var(--black);
+  }
+  #recruit .section-tag { color: var(--black); opacity: 0.5; }
+  #recruit .section-title { color: var(--black); }
+  #recruit .section-title small { color: rgba(0,0,0,0.4); }
+
+  .recruit-inner {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .recruit-text p {
+    font-size: 16px;
+    line-height: 2;
+    color: rgba(0,0,0,0.7);
+    margin-bottom: 16px;
+  }
+
+  .recruit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 40px;
+    padding: 20px 40px;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .recruit-btn:hover {
+    background: var(--white);
+    color: var(--black);
+  }
+  .recruit-btn::after {
+    content: '→';
+    font-size: 16px;
+    transition: transform 0.3s;
+  }
+  .recruit-btn:hover::after { transform: translateX(6px); }
+
+  .recruit-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .recruit-badge {
+    background: rgba(0,0,0,0.1);
+    padding: 20px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--black);
+    border-left: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .recruit-badge .icon { font-size: 20px; }
+
+  /* FOOTER */
+  footer {
+    background: #050505;
+    padding: 60px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 2px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 40px; height: 2px;
+    background: var(--accent);
+    margin-bottom: 32px;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px 60px; }
+    .about-grid, .recruit-inner { grid-template-columns: 1fr; gap: 40px; }
+    .value-grid, .pain-points { grid-template-columns: 1fr; }
+    .service-grid { grid-template-columns: repeat(2,1fr); }
+    .flow-steps { flex-direction: column; }
+    .nav-links { display: none; }
+    .service-main { padding: 32px 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">QOOOQ<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#value">VALUE</a></li>
+    <li><a href="#service">SERVICE</a></li>
+    <li><a href="#recruit">RECRUIT</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-corner"></div>
+  <div class="hero-bg-text">QOOOQ</div>
+  <div class="hero-label">夸克創意 × QOOOQ Taiwan</div>
+  <h1 class="hero-title">
+    用無限的創意<br>
+    從<em>0</em>創造新玩法
+  </h1>
+  <p class="hero-sub">短影音行銷・KOL 整合・品牌爆款方案</p>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag">01 — About</div>
+  <h2 class="section-title">ABOUT<small>關於夸克創意</small></h2>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <div class="divider"></div>
+      <p>
+        <strong>夸克創意股份有限公司（QOOOQ Taiwan）</strong>成立於 2026 年 4 月，主要協助客戶透過短影音創造更多自然流量與業績。
+      </p>
+      <p>
+        夸克是物理最小的單位，卻創造出無限的宇宙。<br>
+        我們期許自己用無限的小創意，提供真正能解決廣告主流量與變現的行銷服務。
+      </p>
+      <p>
+        同時支援 CRM、廣告設計、廣告投放、商城代操等多元專業服務，深化與所有配合的廠商，達成全面性業績提升。
+      </p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-num">13+</div>
+        <div class="stat-label">創立兩個月 · 菁英成員</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">200萬</div>
+        <div class="stat-label">第一個月營收突破</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100萬+</div>
+        <div class="stat-label">多品項單月曝光</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">客戶滿意度極高</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section id="value">
+  <div class="section-tag">02 — Value</div>
+  <h2 class="section-title">VALUE<small>企業價值觀</small></h2>
+  <div class="value-grid reveal">
+    <div class="value-card">
+      <div class="value-num">01</div>
+      <div class="value-title"><span class="highlight">客戶至上</span></div>
+      <div class="value-desc">保證不滿意、沒成效，不收費。<br>客戶的成果是我們唯一的 KPI。</div>
+    </div>
+    <div class="value-card">
+      <div class="value-num">02</div>
+      <div class="value-title"><span class="highlight">行動至上</span></div>
+      <div class="value-desc">即時對應，立刻調整。<br>不等待，不拖延，快速反應市場變化。</div>
+    </div>
+    <div class="value-card">
+      <div class="value-num">03</div>
+      <div class="value-title"><span class="highlight">成長至上</span></div>
+      <div class="value-desc">交付成績不如預期？做到有業績為止。<br>我們對結果負責，不對過程負責。</div>
+    </div>
+    <div class="value-card">
+      <div class="value-num">04</div>
+      <div class="value-title"><span class="highlight">徹底貫徹</span></div>
+      <div class="value-desc">上述價值觀，所有成員貫徹始終。<br>這不是口號，是每一天的行動準則。</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE -->
+<section id="service">
+  <div class="section-tag">03 — Service</div>
+  <h2 class="section-title">SERVICE<small>事業內容</small></h2>
+
+  <!-- Main service highlight -->
+  <div class="service-main reveal">
+    <div class="service-main-title">
+      <span class="service-tag">SIGNATURE</span>
+      短影音行銷爆款方案
+    </div>
+    <p class="service-main-desc">
+      透過大量有趣的短影音內容於各大短影音平台曝光。<br>
+      <strong style="color:var(--accent)">我們不收固定費，有曝光才收費（曝光成果報酬制）。</strong>
+    </p>
+
+    <div style="font-size:13px; color:var(--gray); letter-spacing:2px; margin-bottom:16px;">— 是否有以下煩惱？</div>
+    <div class="pain-points">
+      <div class="pain-card">
+        <div class="pain-q">Pain 01</div>
+        <div class="pain-problem">想做曝光但 Meta / Google 成效廣告<mark>轉換與成本越來越難做</mark></div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">Pain 02</div>
+        <div class="pain-problem">好不容易進了線下實體通路，<mark>業績沒有彈跳式成長</mark></div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">Pain 03</div>
+        <div class="pain-problem">KOL/KOC 成本太高，但靠<mark>自然流量的成長速度太慢</mark></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px; color:var(--accent); letter-spacing:2px; margin:32px 0 16px;">→ 我們一次解決！</div>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="flow-n">01</div><div class="flow-text">規劃專案預算上限與曝光單價</div></div>
+      <div class="flow-step"><div class="flow-n">02</div><div class="flow-text">規劃商品行銷策略與誘導路徑</div></div>
+      <div class="flow-step"><div class="flow-n">03</div><div class="flow-text">以素人角度企劃腳本與影音內容</div></div>
+      <div class="flow-step"><div class="flow-n">04</div><div class="flow-text">大量創作並協助於各平台曝光</div></div>
+    </div>
+
+    <div class="guarantee-row">
+      <div class="guarantee-pill">曝光沒成長 → 成果收費，花費極少</div>
+      <div class="guarantee-pill">曝光太多 → 收費不超過當初上限金額</div>
+      <div class="guarantee-pill">有感 2 個月內曝光量大成長</div>
+    </div>
+  </div>
+
+  <!-- Other services -->
+  <div class="service-grid reveal">
+    <div class="service-mini">
+      <div class="service-mini-num">SERVICE-02</div>
+      <div class="service-mini-title">CRM 顧客經營支援<br>訂閱制導入支援</div>
+    </div>
+    <div class="service-mini">
+      <div class="service-mini-num">SERVICE-03</div>
+      <div class="service-mini-title">外站商城代操<br>與代營運</div>
+    </div>
+    <div class="service-mini">
+      <div class="service-mini-num">SERVICE-04</div>
+      <div class="service-mini-title">數位廣告投放<br>與網頁設計</div>
+    </div>
+    <div class="service-mini">
+      <div class="service-mini-num">SERVICE-05</div>
+      <div class="service-mini-title">社群經營<br>與爆款方案</div>
+    </div>
+    <div class="service-mini">
+      <div class="service-mini-num">SERVICE-06</div>
+      <div class="service-mini-title">品牌與經營<br>顧問服務</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECRUIT -->
+<section id="recruit">
+  <div class="section-tag">04 — Recruit</div>
+  <h2 class="section-title">RECRUIT<small>招募人才</small></h2>
+  <div class="recruit-inner reveal">
+    <div class="recruit-text">
+      <p>
+        夸克創意股份有限公司持續爆發性成長，希望招募更多優秀人才一起提供<strong>有意義、有價值</strong>的行銷服務。
+      </p>
+      <p>
+        只要您對於行銷、短影音、行銷經營策略有興趣，有熱忱，歡迎加入我們！<br>
+        讓我們一起青春，一起成長。
+      </p>
+      <a href="#" class="recruit-btn">查看職缺</a>
+    </div>
+    <div class="recruit-aside">
+      <div class="recruit-badge">
+        <span class="icon">🚀</span>
+        創立兩個月就招募 13 名菁英成員
+      </div>
+      <div class="recruit-badge">
+        <span class="icon">💰</span>
+        第一個月近 200 萬的營收
+      </div>
+      <div class="recruit-badge">
+        <span class="icon">📈</span>
+        多品項達成單月百萬曝光
+      </div>
+      <div class="recruit-badge">
+        <span class="icon">🎯</span>
+        成果收費・客戶至上・快速成長
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div>
+  <div class="footer-logo">QOOOQ<span>.</span></div>
+  <div style="font-family:'Noto Sans TC';font-size:13px;color:#555;margin-top:6px;letter-spacing:1px;">
+    夸克創意股份有限公司
+  </div>
+
+  <div style="margin-top:12px; font-size:12px; color:#666; line-height:1.8;">
+    聯絡方式：takara@ilha.tw<br>
+    LINE：@272maoxp
+  </div>
+
+  <div style="margin-top:10px; font-size:12px;">
+    <a href="/task-wall/privacy.html" style="color:#888;">隱私權政策</a> |
+    <a href="/task-wall/terms.html" style="color:#888;">使用條款</a> |
+    <a href="/task-wall/about.html" style="color:#888;">關於我們</a>
+  </div>
+</div>
+
+<div class="footer-copy">
+  © 2026 QOOOQ Taiwan. All rights reserved.
+</div>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 20 + 'px';
+    ring.style.top = ry - 20 + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
