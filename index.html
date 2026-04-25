@@ -9,18 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black: #111010;
-  --dark: #1c1a18;
-  --warm: #2a2520;
-  --white: #f2ede8;
-  --off: #d4cec7;
-  --gray: #8a8278;
-  --accent: #e8440a;
-  --accent-soft: #c9400f;
-  --accent-light: rgba(232,68,10,0.12);
-  --accent-glow: rgba(232,68,10,0.06);
-  --teal: #2e8b7a;
-  --border: rgba(242,237,232,0.08);
+  --black: #17312C;
+  --dark: #1a3832;
+  --warm: #1e3f38;
+  --white: #fbfbfb;
+  --off: #dde8e5;
+  --gray: #7a9e98;
+  --accent: #F2735B;
+  --accent-soft: #d9604a;
+  --accent-light: rgba(242,115,91,0.12);
+  --accent-glow: rgba(242,115,91,0.06);
+  --teal: #56B77E;
+  --border: rgba(251,251,251,0.09);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -207,8 +207,8 @@ section { padding: 100px 60px; position: relative; }
 .hero-bg {
   position: absolute; inset:0;
   background:
-    radial-gradient(ellipse 60% 60% at 80% 20%, rgba(232,68,10,0.18), transparent),
-    radial-gradient(ellipse 40% 50% at 10% 90%, rgba(232,68,10,0.07), transparent),
+    radial-gradient(ellipse 60% 60% at 80% 20%, rgba(242,115,91,0.14), transparent),
+    radial-gradient(ellipse 40% 50% at 10% 90%, rgba(242,115,91,0.07), transparent),
     var(--black);
 }
 
@@ -221,7 +221,7 @@ section { padding: 100px 60px; position: relative; }
   font-size: clamp(100px, 20vw, 320px);
   font-weight: 900;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(242,237,232,0.05);
+  -webkit-text-stroke: 1px rgba(251,251,251,0.06);
   white-space: nowrap;
   letter-spacing: -4px;
   pointer-events: none;
@@ -429,7 +429,7 @@ section { padding: 100px 60px; position: relative; }
   transform-origin:left;
   transition:transform .35s ease;
 }
-.credit-card:hover { background: #181614; }
+.credit-card:hover { background: #1a3832; }
 .credit-card:hover::after { transform:scaleX(1); }
 .credit-icon { font-size:32px; margin-bottom:16px; }
 .credit-n { font-family:'Montserrat',sans-serif; font-size:32px; font-weight:900; color:var(--accent); margin-bottom:6px; }
@@ -442,8 +442,8 @@ section { padding: 100px 60px; position: relative; }
   display: grid;
   grid-template-columns: repeat(2,1fr);
   gap: 1px;
-  background: rgba(242,237,232,0.05);
-  border: 1px solid rgba(242,237,232,0.05);
+  background: rgba(251,251,251,0.06);
+  border: 1px solid rgba(251,251,251,0.06);
 }
 @media(max-width:600px){ .value-grid{grid-template-columns:1fr;} }
 
@@ -454,7 +454,7 @@ section { padding: 100px 60px; position: relative; }
   overflow:hidden;
   transition:background .3s;
 }
-.val-card:hover { background: #302a24; }
+.val-card:hover { background: #1f4a40; }
 .val-card::before {
   content:'';
   position:absolute;top:0;left:0;
@@ -466,7 +466,7 @@ section { padding: 100px 60px; position: relative; }
 .val-bg-n {
   position:absolute;right:20px;top:12px;
   font-family:'Montserrat',sans-serif;font-size:88px;font-weight:900;
-  color:rgba(242,237,232,0.04);line-height:1;
+  color:rgba(251,251,251,0.05);line-height:1;
 }
 .val-title { font-size:18px;font-weight:700;margin-bottom:12px;color:var(--white); }
 .val-title span { color:var(--accent); }
@@ -488,7 +488,7 @@ section { padding: 100px 60px; position: relative; }
   content:'01';
   position:absolute;right:48px;bottom:32px;
   font-family:'Montserrat',sans-serif;font-size:140px;font-weight:900;
-  color: rgba(232,68,10,0.06);line-height:1;
+  color: rgba(242,115,91,0.06);line-height:1;
 }
 .sig-title {
   font-size:24px;font-weight:700;
@@ -507,8 +507,8 @@ section { padding: 100px 60px; position: relative; }
 }
 @media(max-width:768px){ .pain-grid{grid-template-columns:1fr;} }
 .pain-box {
-  background:rgba(242,237,232,0.03);
-  border:1px solid rgba(242,237,232,0.06);
+  background:rgba(251,251,251,0.04);
+  border:1px solid rgba(251,251,251,0.07);
   padding:20px;border-radius:2px;
 }
 .pain-lbl { font-size:10px;color:var(--gray);letter-spacing:2px;margin-bottom:8px;font-family:'Space Mono',monospace; }
@@ -533,7 +533,7 @@ section { padding: 100px 60px; position: relative; }
 .pills { display:flex;gap:12px;flex-wrap:wrap; }
 .pill {
   padding:9px 18px;
-  border:1px solid rgba(232,68,10,0.25);
+  border:1px solid rgba(242,115,91,0.25);
   border-radius:100px;
   font-size:12px;color:#ccc;
   display:flex;align-items:center;gap:8px;
@@ -552,7 +552,7 @@ section { padding: 100px 60px; position: relative; }
   background:var(--dark);padding:28px 24px;
   transition:background .3s;
 }
-.svc-box:hover{background:#222018;}
+.svc-box:hover{background:#1f4038;}
 .svc-n{font-family:'Space Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;}
 .svc-t{font-size:13px;font-weight:600;line-height:1.7;color:var(--white);}
 
@@ -588,7 +588,7 @@ section { padding: 100px 60px; position: relative; }
 
 .rec-badges{display:flex;flex-direction:column;gap:14px;}
 .rec-badge{
-  background:rgba(0,0,0,.1);
+  background:rgba(0,0,0,.15);
   padding:18px 22px;
   font-size:14px;font-weight:600;
   color:var(--black);
@@ -599,7 +599,7 @@ section { padding: 100px 60px; position: relative; }
 
 /* ── FOOTER ── */
 footer {
-  background: #0c0b0a;
+  background: #0f2420;
   padding: 56px 60px 36px;
   border-top: 1px solid var(--border);
 }
@@ -971,7 +971,7 @@ footer {
       <h4>CONTACT</h4>
       <p>
         <div class="ci-item"><span>✉️</span> <a href="mailto:takara@ilha.tw">takara@ilha.tw</a></div>
-        <div class="ci-item"><span>💬</span> LINE：@272maoxp</div>
+        <div class="ci-item"><span>💬</span> <a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">LINE 官方帳號 @272maoxp ↗</a></div>
       </p>
     </div>
     <div class="footer-links">
@@ -1007,7 +1007,7 @@ footer {
       <p>無論您是想提升曝光、增加業績，還是尋找可靠的行銷夥伴，歡迎填寫以下表單，我們會在 24 小時內與您聯繫。</p>
       <p>
         <div class="ci-item"><span>✉️</span> <a href="mailto:takara@ilha.tw" style="color:var(--off);text-decoration:none;">takara@ilha.tw</a></div>
-        <div class="ci-item"><span>💬</span> LINE：@272maoxp</div>
+        <div class="ci-item"><span>💬</span> <a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">LINE 官方帳號 @272maoxp ↗</a></div>
       </p>
       <br>
       <p style="font-size:13px;color:var(--gray);">
@@ -1023,7 +1023,7 @@ footer {
         2. 建立新 Form，取得 endpoint (格式像 https://formspree.io/f/xxxxxxxx)
         3. 把下方 action="" 填入你的 endpoint
       -->
-      <form id="contactForm" action="https://formspree.io/f/https://formspree.io/f/mzdywdbv" method="POST">
+      <form id="contactForm" action="https://formspree.io/f/mzdywdbv" method="POST">
         <div class="form-row">
           <div class="f-group">
             <label>姓名 <span class="req">*</span></label>
