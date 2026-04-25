@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>夸克創意 QOOOQ Taiwan｜短影音行銷・品牌爆款</title>
-<link rel="icon" href="images/favicon.png" type="image/png"><link rel="shortcut icon" href="images/favicon.png">
+<link rel="icon" href="images/favicon.ico" type="image/png"><link rel="shortcut icon" href="images/favicon.ico">
 <meta name="description" content="夸克創意股份有限公司，專注短影音行銷、KOL整合、品牌爆款方案，成果收費制。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
   --fg:#fbfbfb;--fg2:#e8d8d5;--muted:#a08880;
   --accent:#E8440a;--acc2:#c93a09;--border:rgba(232,68,10,0.18);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;}html,body{max-width:100%;overflow-x:hidden;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--fg);font-family:'Noto Sans TC',sans-serif;overflow-x:hidden;cursor:none;transition:background .55s;}
 
@@ -269,15 +269,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 
 
 
-/* ── MOBILE TEXT FIX ── */
-@media(max-width:768px){
-  /* All body text: left align, no justify */
-  p, .val-desc, .cc-l, .g-desc, .step-t, .sig-desc,
-  .credit-intro-txt, .recruit-text p, .about-text p {
-    text-align:left;
-    word-break:keep-all;
-    overflow-wrap:break-word;
-  }
+
   /* Center only standalone labels/titles */
   .sec-title, .sec-sub, .tag,
   .val-title, .g-title, .guarantee-title,
@@ -318,6 +310,19 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
   .about-text p { text-align: left; }
 }
 
+
+@media(max-width:768px){
+  /* Overflow fix */
+  .about-text p, .sig-desc, .credit-intro-txt, .recruit-text p{
+    max-width:100%;overflow-wrap:break-word;word-break:break-word;
+  }
+  /* Text alignment */
+  .cc-n,.cc-l,.g-title,.g-desc,.g-card{text-align:center;}
+  .recruit-text{text-align:center;}
+  .pain-layout{grid-template-columns:1fr;gap:16px;}
+  .pain-robot-col{align-items:center;}
+  .pain-robot-col img{width:120px;}
+}
 </style>
 </head>
 <body>
@@ -527,7 +532,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <h2 class="sec-title">VALUE</h2>
     <p class="sec-sub">企業價值觀</p>
     <div class="val-grid rv">
-      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span>客戶至上</span></div><div class="val-desc">保證不滿意、沒成效，不收費。客戶的成果是我們唯一的 KPI。</div></div>
+      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span>客戶至上</span></div><div class="val-desc">我們保證只要不滿意、沒成效，不收費。成果是我們唯一KPI。</div></div>
       <div class="val-card"><div class="val-bg-n">02</div><div class="val-title"><span>行動至上</span></div><div class="val-desc">即時對應，立刻調整。不等待，不拖延，快速反應市場變化。</div></div>
       <div class="val-card"><div class="val-bg-n">03</div><div class="val-title"><span>成長至上</span></div><div class="val-desc">交付成績不如預期？做到有業績為止。我們對結果負責，不對過程負責。</div></div>
       <div class="val-card"><div class="val-bg-n">04</div><div class="val-title"><span>徹底貫徹</span></div><div class="val-desc">上述價值觀，所有成員貫徹始終。這不是口號，是每一天的行動準則。</div></div>
