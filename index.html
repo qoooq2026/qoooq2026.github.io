@@ -267,25 +267,57 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 .success-msg{display:none;text-align:center;padding:40px;font-size:16px;color:var(--accent);font-weight:700;}
 #main-content.hidden{display:none;}
 
-/* Mobile text centering for better readability */
+
+
+/* ── MOBILE TEXT FIX ── */
 @media(max-width:768px){
-  .sig-desc{text-align:center;}
-  .about-text p{text-align:justify;}
-  .pain-item{text-align:left;}
-  .step-t{text-align:center;}
-  .val-desc{text-align:center;}
-  .val-title{text-align:center;}
-  .recruit-text p{text-align:center;}
-  .recruit-text{text-align:center;}
-  .credit-intro-txt{text-align:center;}
-  .cc-l{text-align:center;}
-  .g-desc{text-align:center;}
-  .g-title{text-align:center;}
-  /* Fix line breaking for Chinese text */
-  .hero-desc{word-break:keep-all;text-align:center;}
-  .sig-desc{word-break:keep-all;}
-  p{word-break:keep-all;}
+  /* All body text: left align, no justify */
+  p, .val-desc, .cc-l, .g-desc, .step-t, .sig-desc,
+  .credit-intro-txt, .recruit-text p, .about-text p {
+    text-align:left;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  /* Center only standalone labels/titles */
+  .sec-title, .sec-sub, .tag,
+  .val-title, .g-title, .guarantee-title,
+  .cc-n, .pain-title-tag, .solve-header-tag { text-align:center; }
+
+  /* About highlight box - left align */
+  .about-hero-box span { text-align:left; display:block; }
+
+  /* Steps - left align number + text */
+  .step { text-align:left; }
+  .step-n, .step-t { text-align:left; }
+
+  /* Pain items - left align */
+  .pain-item, .pain-lbl, .pain-txt { text-align:left; }
+
+  /* Guarantee grid - center on mobile */
+  .g-card { text-align:center; }
+
+  /* Credit cards - center */
+  .cc-card { text-align:center; }
+
+  /* Recruit - center */
+  .recruit-text { text-align:center; }
+
+  /* Pain layout on mobile: robot on top centered, items below */
+  .pain-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .pain-robot-col {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .pain-robot-col img { width: 120px; }
+
+  /* About text left align */
+  .about-text p { text-align: left; }
 }
+
 </style>
 </head>
 <body>
@@ -495,7 +527,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <h2 class="sec-title">VALUE</h2>
     <p class="sec-sub">企業價值觀</p>
     <div class="val-grid rv">
-      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span>客戶至上</span></div><div class="val-desc">我們保證，只要不滿意、沒成效，不收費。成果是我們唯一KPI。</div></div>
+      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span>客戶至上</span></div><div class="val-desc">保證不滿意、沒成效，不收費。客戶的成果是我們唯一的 KPI。</div></div>
       <div class="val-card"><div class="val-bg-n">02</div><div class="val-title"><span>行動至上</span></div><div class="val-desc">即時對應，立刻調整。不等待，不拖延，快速反應市場變化。</div></div>
       <div class="val-card"><div class="val-bg-n">03</div><div class="val-title"><span>成長至上</span></div><div class="val-desc">交付成績不如預期？做到有業績為止。我們對結果負責，不對過程負責。</div></div>
       <div class="val-card"><div class="val-bg-n">04</div><div class="val-title"><span>徹底貫徹</span></div><div class="val-desc">上述價值觀，所有成員貫徹始終。這不是口號，是每一天的行動準則。</div></div>
