@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qoooq2026.github.io/sitemap.xml
