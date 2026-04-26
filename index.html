@@ -60,8 +60,8 @@ header.alt{background:rgba(19,19,19,0.92);}
 .nav-mobile a:hover,.nav-mobile a.accent{color:var(--accent);}
 @media(max-width:768px){.nav-desktop{display:none;}.ham-btn{display:flex;}header{padding:0 20px;}}
 section{padding:100px 0;position:relative;}
-section > .inner{padding:0 40px;}
-@media(max-width:768px){section{padding:72px 0;}section > .inner{padding:0 20px;}}
+section>.inner{padding:0 40px;}
+@media(max-width:768px){section{padding:72px 0;}section>.inner{padding:0 20px;}}
 .tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:block;transition:color .4s;}
 .sec-title{font-family:'Montserrat',sans-serif;font-size:clamp(44px,6vw,84px);font-weight:900;line-height:.95;letter-spacing:-1px;color:var(--fg);margin-bottom:8px;transition:color .4s;}
 .sec-sub{font-size:clamp(13px,1.4vw,16px);color:var(--muted);letter-spacing:3px;margin-bottom:56px;transition:color .4s;}
@@ -104,7 +104,7 @@ section > .inner{padding:0 40px;}
 .credit-intro-txt{font-size:17px;line-height:2;color:var(--fg2);margin-bottom:40px;word-break:keep-all;overflow-wrap:break-word;}
 .credit-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
 @media(max-width:600px){.credit-cards{grid-template-columns:1fr;}}
-.cc-card{padding:36px 28px;background:var(--bg);position:relative;overflow:hidden;transition:background .4s;}
+.cc-card{padding:36px 28px;background:var(--bg);position:relative;overflow:hidden;transition:background .4s;text-align:center;}
 .cc-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s;}
 .cc-card:hover{background:var(--bg2);}
 .cc-card:hover::after{transform:scaleX(1);}
@@ -141,24 +141,15 @@ section > .inner{padding:0 40px;}
 .solve-robot img{width:140px;height:auto;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.3));animation:floatrobot 3s ease-in-out infinite alternate;}
 @keyframes floatrobot{from{transform:translateY(0);}to{transform:translateY(-10px);}}
 .guarantee-section{margin-top:28px;}
-.guarantee-title{font-size:16px;font-weight:700;color:var(--fg);margin-bottom:14px;transition:color .4s;}
+.guarantee-title{font-size:16px;font-weight:700;color:var(--fg);margin-bottom:14px;transition:color .4s;text-align:center;}
 .guarantee-title span{color:var(--accent);}
 .guarantee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
 @media(max-width:600px){.guarantee-grid{grid-template-columns:1fr;}}
-.g-card{background:var(--bg);padding:22px 24px;transition:background .4s;}
+.g-card{background:var(--bg);padding:22px 24px;transition:background .4s;text-align:center;}
 .g-card:hover{background:var(--bg2);}
 .g-icon{color:var(--accent);font-size:18px;margin-bottom:8px;}
 .g-title{font-size:14px;font-weight:700;color:var(--fg);margin-bottom:6px;transition:color .4s;}
 .g-desc{font-size:13px;color:var(--muted);line-height:1.7;transition:color .4s;}
-
-/* ===== SERVICE CTA BLOCK ===== */
-.service-cta{margin-top:40px;padding:40px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:24px;transition:background .4s,border-color .4s;}
-.service-cta:hover{border-color:var(--accent);}
-.service-cta-text{flex:1;}
-.service-cta-text p{font-size:15px;color:var(--muted);line-height:1.8;transition:color .4s;}
-.service-cta-text strong{color:var(--fg);font-size:18px;display:block;margin-bottom:6px;transition:color .4s;}
-@media(max-width:600px){.service-cta{flex-direction:column;align-items:flex-start;padding:24px 18px;}.service-cta .btn-solid{width:100%;text-align:center;}}
-
 .svc-grid-pc{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:2px;}
 .svc-grid-mob{display:none;background:var(--border);margin-top:2px;border:1px solid var(--border);}
 @media(max-width:768px){.svc-grid-pc{display:none;}.svc-grid-mob{display:block;}}
@@ -175,6 +166,28 @@ section > .inner{padding:0 40px;}
 .svc-row-mob:hover{background:var(--bg3);}
 .svc-row-text{padding:20px 18px;display:flex;flex-direction:column;justify-content:center;}
 .svc-row-img img{width:120px;height:120px;object-fit:cover;display:block;}
+
+/* ===== SERVICE CTA — 不用 rv，永遠顯示 ===== */
+.service-cta{
+  margin-top:40px;
+  padding:40px;
+  background:var(--bg);
+  border:1px solid var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  transition:background .4s;
+}
+.service-cta:hover{background:var(--bg3);}
+.service-cta-text strong{color:var(--fg);font-size:18px;display:block;margin-bottom:6px;transition:color .4s;}
+.service-cta-text p{font-size:15px;color:var(--muted);line-height:1.8;transition:color .4s;}
+@media(max-width:600px){
+  .service-cta{flex-direction:column;align-items:stretch;padding:24px 18px;gap:20px;}
+  .service-cta .btn-solid{width:100%;text-align:center;display:block;}
+  .service-cta-text strong,.service-cta-text p{text-align:left;}
+}
+
 #value{background:var(--bg3);transition:background .55s;}
 .val-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(251,251,251,0.05);border:1px solid rgba(251,251,251,0.05);}
 @media(max-width:600px){.val-grid{grid-template-columns:1fr;}}
@@ -201,21 +214,26 @@ section > .inner{padding:0 40px;}
 .recruit-robot{display:flex;align-items:center;justify-content:center;}
 .recruit-robot img{width:220px;height:auto;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.15));animation:floatrobot 3s ease-in-out infinite alternate;}
 @media(max-width:900px){.recruit-robot img{width:160px;}}
+
+/* ===== FOOTER 置中 ===== */
 footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border);}
-.footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;}
+.footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;text-align:center;}
 @media(max-width:768px){.footer-inner{padding:0 20px;}}
-.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;padding-bottom:40px;border-bottom:1px solid var(--border);margin-bottom:28px;}
-.f-logo-name{font-family:'Noto Sans TC',sans-serif;font-size:13px;color:var(--fg2);letter-spacing:2px;margin-top:10px;}
-.footer-contact h4,.footer-links h4{font-size:10px;letter-spacing:4px;color:var(--accent);margin-bottom:14px;font-family:'Space Mono',monospace;}
-.footer-contact a{font-size:13px;color:var(--fg2);text-decoration:none;display:block;line-height:2.2;}
+.footer-top{display:flex;flex-direction:column;align-items:center;gap:32px;padding-bottom:40px;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.f-logo-name{font-family:'Noto Sans TC',sans-serif;font-size:13px;color:var(--fg2);letter-spacing:2px;margin-top:8px;}
+.footer-contact h4,.footer-links h4{font-size:10px;letter-spacing:4px;color:var(--accent);margin-bottom:12px;font-family:'Space Mono',monospace;}
+.footer-contact a{font-size:13px;color:var(--fg2);text-decoration:none;display:block;line-height:2.4;}
 .footer-contact a:hover{color:var(--accent);}
-.footer-links a{display:block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:8px;transition:color .2s;}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 20px;}
+.footer-links h4{width:100%;text-align:center;}
+.footer-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;}
 .footer-links a:hover{color:var(--fg);}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-bottom{display:flex;flex-direction:column;align-items:center;gap:10px;}
 .footer-copy{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;}
-.footer-privacy a{font-size:12px;color:var(--muted);text-decoration:none;margin-left:20px;}
+.footer-privacy{display:flex;gap:0;}
+.footer-privacy a{font-size:12px;color:var(--muted);text-decoration:none;margin:0 10px;}
 .footer-privacy a:hover{color:var(--accent);}
-@media(max-width:768px){.footer-top{flex-direction:column;}.footer-bottom{flex-direction:column;gap:8px;text-align:center;}}
+
 .rv{opacity:0;transform:translateY(32px);transition:opacity .75s,transform .75s;}
 .rv.in{opacity:1;transform:translateY(0);}
 .ci-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg2);margin-bottom:8px;}
@@ -242,24 +260,19 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 .submit-btn:hover{background:var(--acc2);transform:translateY(-2px);}
 .success-msg{display:none;text-align:center;padding:40px;font-size:16px;color:var(--accent);font-weight:700;}
 #main-content.hidden{display:none;}
+
 @media(max-width:768px){
   .sec-title,.sec-sub,.tag{text-align:center;}
   .about-hero-box span{text-align:left;display:block;}
   .step{text-align:left;border-right:none;border-bottom:1px solid var(--border);}
   .step:last-child{border-bottom:none;}
-  .step-n,.step-t{text-align:left;}
-  .pain-item,.pain-lbl,.pain-txt{text-align:left;}
-  .g-card,.cc-card{text-align:center;}
-  .cc-n,.cc-l,.g-title,.g-desc{text-align:center;}
-  .recruit-text{text-align:center;}
-  .pain-title-tag{text-align:center;display:block;}
+  .step-n,.step-t,.pain-item,.pain-lbl,.pain-txt{text-align:left;}
   .val-title,.val-desc,.about-text p,.sig-desc{text-align:left;}
   .sig-title{justify-content:flex-start;font-size:18px;}
   .sig-title .sig-badge{white-space:nowrap;}
   .about-text p,.sig-desc,.credit-intro-txt,.recruit-text p{max-width:100%;overflow-wrap:break-word;word-break:break-word;}
-  .guarantee-title{text-align:center;}
   .solve-header-tag{text-align:left;}
-  .service-cta-text strong,.service-cta-text p{text-align:left;}
+  .recruit-text{text-align:center;}
 }
 </style>
 </head>
@@ -379,6 +392,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <span class="tag">04 — Service</span>
     <h2 class="sec-title">SERVICE</h2>
     <p class="sec-sub">事業內容</p>
+
     <div class="sig-card rv">
       <div class="sig-title"><span class="sig-badge">SIGNATURE</span>短影音行銷爆款方案</div>
       <p class="sig-desc">透過大量有趣的短影音內容於 TikTok、Reels、Shorts 等各大平台曝光。<br><strong style="color:var(--accent)">我們不收固定費，有曝光才收費（曝光成果報酬制）。</strong></p>
@@ -427,8 +441,8 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
       <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-01</div><div class="svc-ttl">短影音行銷爆款方案</div></div><div class="svc-row-img"><img src="images/svc_01_video.png" alt="短影音行銷爆款方案" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-02</div><div class="svc-ttl">CRM 顧客經營支援<br>訂閱制導入支援</div></div><div class="svc-row-img"><img src="images/svc_02_crm.png" alt="CRM 顧客經營支援" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-03</div><div class="svc-ttl">外站商城代操<br>與代營運</div></div><div class="svc-row-img"><img src="images/svc_03_ecommerce.png" alt="外站商城代操與代營運" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-04</div><div class="svc-ttl">數位廣告投放<br>與成效管理</div></div><div class="svc-row-img"><img src="images/svc_04_ads.png" alt="數位廣告投放與成效管理" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-05</div><div class="svc-ttl">社群經營<br>與爆款方案</div></div><div class="svc-row-img"><img src="images/svc_05_social.png" alt="社群經營與爆款方案" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-06</div><div class="svc-ttl">品牌與經營<br>顧問服務</div></div><div class="svc-row-img"><img src="images/svc_06_consultant.png" alt="品牌與經營顧問服務" loading="lazy"></div></div>
     </div>
 
-    <!-- ===== SERVICE CTA ===== -->
-    <div class="service-cta rv">
+    <!-- ===== SERVICE CTA — 無 rv 確保永遠顯示 ===== -->
+    <div class="service-cta">
       <div class="service-cta-text">
         <strong>想知道我們能為你的品牌做什麼？</strong>
         <p>免費諮詢，24 小時內回覆。有曝光才收費，沒有風險。</p>
@@ -475,7 +489,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <img src="images/logo_white.png" alt="QOOOQ 夸克創意" style="height:38px;width:auto;display:block;margin-bottom:10px;">
+        <img src="images/logo_white.png" alt="QOOOQ 夸克創意" style="height:38px;width:auto;display:block;margin:0 auto 8px;">
         <div class="f-logo-name">夸克創意股份有限公司</div>
       </div>
       <div class="footer-contact">
