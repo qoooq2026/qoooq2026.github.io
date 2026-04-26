@@ -1,10 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>夸克 任務牆</title>
+<title>夸克創意任務牆｜短影音拍攝任務・模特兒報名</title>
+
+<!-- SEO -->
+<meta name="description" content="夸克創意官方模特拍攝任務平台。短影音行銷、商品拍攝、素人任務招募，有酬勞、有彈性、有成長。">
+<meta name="keywords" content="短影音,拍攝任務,模特兒,素人模特,有酬拍攝,行銷拍攝,夸克創意,QOOOQ,台灣模特">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://qoooq2026.github.io/task-wall/">
+
+<!-- OG -->
+<meta property="og:title" content="夸克創意任務牆｜短影音拍攝任務報名">
+<meta property="og:description" content="查看目前開放的拍攝任務，名額有限，確認時間後請盡快報名。">
+<meta property="og:image" content="https://qoooq2026.github.io/images/og_image.png">
+<meta property="og:url" content="https://qoooq2026.github.io/task-wall/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://qoooq2026.github.io/images/og_image.png">
+
+<!-- Favicon -->
+<link rel="icon" href="../images/favicon.ico">
+<link rel="apple-touch-icon" href="../images/favicon.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,385 +34,227 @@
     --border: #2e2e2e;
     --accent: #c8f04d;
     --accent-dim: rgba(200,240,77,0.12);
-    --accent-dim2: rgba(200,240,77,0.06);
     --text: #f0f0f0;
     --muted: #888;
     --danger: #ff5f57;
     --warn: #f5a623;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans TC', sans-serif;
-    min-height: 100vh;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; }
 
-  /* Header */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 1.2rem 2rem;
+    padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
+    position: sticky; top: 0;
     background: rgba(15,15,15,0.95);
     backdrop-filter: blur(12px);
     z-index: 100;
   }
-  .logo {
+  .header-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .header-logo img { height: 28px; width: auto; }
+  .logo-text {
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--accent);
-    letter-spacing: 0.1em;
+    letter-spacing: .1em;
     text-transform: uppercase;
   }
-  .header-right {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .header-right { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-  /* Hero */
+  /* Hero with robot */
   .hero {
     padding: 4rem 2rem 2.5rem;
     max-width: 960px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
   }
-  .hero-label {
+  .hero-text .hero-label {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
     color: var(--accent);
-    letter-spacing: 0.15em;
+    letter-spacing: .15em;
     text-transform: uppercase;
     margin-bottom: 1rem;
   }
-  .hero h1 {
+  .hero-text h1 {
     font-size: clamp(2rem, 5vw, 3.2rem);
     font-weight: 700;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -.02em;
     margin-bottom: 1rem;
   }
-  .hero h1 span { color: var(--accent); }
-  .hero p {
-    color: var(--muted);
-    font-size: 15px;
-    font-weight: 300;
-    line-height: 1.7;
+  .hero-text h1 span { color: var(--accent); }
+  .hero-text p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.7; }
+  .hero-robot img {
+    width: 160px; height: auto;
+    filter: drop-shadow(0 8px 24px rgba(200,240,77,0.15));
+    animation: floatrobot 3s ease-in-out infinite alternate;
+  }
+  @keyframes floatrobot { from{transform:translateY(0)} to{transform:translateY(-12px)} }
+  @media(max-width:600px){
+    .hero{ grid-template-columns:1fr; gap:1rem; padding:2.5rem 1rem 1.5rem; }
+    .hero-robot{ display:flex; justify-content:center; }
+    .hero-robot img{ width:110px; }
   }
 
-  /* Main */
-  main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 1rem 2rem 4rem;
-  }
-
-  /* Section label */
+  main { max-width: 960px; margin: 0 auto; padding: 1rem 2rem 4rem; }
   .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: .12em; text-transform: uppercase;
+    margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;
   }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
 
-  /* Task grid */
-  .task-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
+  .task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 
-  /* Task card */
   .task-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.2s, transform 0.2s;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+    transition: border-color .2s, transform .2s;
+    opacity: 0; animation: cardIn .35s ease forwards;
   }
-  .task-card:hover {
-    border-color: #444;
-    transform: translateY(-2px);
-  }
-  .task-card.closed {
-    opacity: 0.45;
-    pointer-events: none;
-  }
-  .task-card.full {
-    border-color: rgba(245,166,35,0.3);
-  }
+  @keyframes cardIn { to { opacity: 1; } }
+  .task-card:hover { border-color: #444; transform: translateY(-2px); }
+  .task-card.closed { opacity: .45; pointer-events: none; }
+  .task-card.full { border-color: rgba(245,166,35,0.3); }
 
   .card-header {
     padding: 1.25rem 1.25rem 1rem;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
   }
-  .card-date {
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 1.3;
-  }
+  .card-date { font-size: 15px; font-weight: 500; line-height: 1.3; }
   .card-date .weekday {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    font-weight: 400;
-    display: block;
-    margin-top: 2px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); font-weight: 400; display: block; margin-top: 2px;
   }
-
   .badge {
-    font-size: 10px;
-    font-family: 'Space Mono', monospace;
-    padding: 3px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-size: 10px; font-family: 'Space Mono', monospace;
+    padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+    flex-shrink: 0; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
   }
-  .badge-open { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,77,0.3); }
-  .badge-full { background: rgba(245,166,35,0.12); color: var(--warn); border: 1px solid rgba(245,166,35,0.25); }
-  .badge-closed { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+  .badge-open { background:var(--accent-dim); color:var(--accent); border:1px solid rgba(200,240,77,.3); }
+  .badge-full { background:rgba(245,166,35,.12); color:var(--warn); border:1px solid rgba(245,166,35,.25); }
+  .badge-closed { background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
 
-  .card-body {
-    padding: 1rem 1.25rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .info-row {
-    display: flex;
-    gap: 10px;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  .info-label {
-    color: var(--muted);
-    min-width: 36px;
-    flex-shrink: 0;
-    font-size: 12px;
-  }
+  .card-body { padding: 1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .info-row { display: flex; gap: 10px; font-size: 13px; line-height: 1.5; }
+  .info-label { color: var(--muted); min-width: 52px; flex-shrink: 0; font-size: 12px; }
   .info-val { color: var(--text); }
   .info-val.pay { color: var(--accent); font-weight: 500; font-family: 'Space Mono', monospace; }
 
-  .quota-wrap {
-    margin-top: 4px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  .quota-bar-bg {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-bottom: 6px;
-  }
-  .quota-bar-fill {
-    height: 3px;
-    border-radius: 2px;
-    background: var(--accent);
-    transition: width 0.5s ease;
-  }
-  .quota-text {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .quota-wrap { margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .quota-bar-bg { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 6px; }
+  .quota-bar-fill { height: 3px; border-radius: 2px; background: var(--accent); transition: width .5s ease; }
+  .quota-text { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-  .card-footer {
-    padding: 1rem 1.25rem;
-  }
+  .card-footer { padding: 1rem 1.25rem; }
   .btn-apply {
-    width: 100%;
-    padding: 10px;
-    background: var(--accent);
-    color: #0f0f0f;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
+    width: 100%; padding: 10px;
+    background: var(--accent); color: #0f0f0f;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700;
     font-family: 'Noto Sans TC', sans-serif;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
+    cursor: pointer; transition: opacity .15s, transform .1s;
   }
-  .btn-apply:hover { opacity: 0.88; transform: scale(0.99); }
-  .btn-apply:active { transform: scale(0.97); }
-  .btn-apply:disabled {
-    background: var(--border);
-    color: var(--muted);
-    cursor: default;
-    transform: none;
-    opacity: 1;
-  }
+  .btn-apply:hover { opacity: .88; transform: scale(.99); }
+  .btn-apply:active { transform: scale(.97); }
+  .btn-apply:disabled { background: var(--border); color: var(--muted); cursor: default; transform: none; opacity: 1; }
 
-  /* Loading / empty */
-  .state-msg {
-    text-align: center;
-    padding: 5rem 1rem;
-    color: var(--muted);
-    font-size: 14px;
-  }
+  .state-msg { text-align: center; padding: 5rem 1rem; color: var(--muted); font-size: 14px; }
   .state-msg .spinner {
     width: 28px; height: 28px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+    border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin .7s linear infinite;
     margin: 0 auto 1rem;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Modal */
   .modal-backdrop {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); z-index: 200;
+    align-items: center; justify-content: center; padding: 1rem;
   }
   .modal-backdrop.open { display: flex; }
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 420px;
-    animation: fadeUp 0.2s ease;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; width: 100%; max-width: 420px;
+    animation: fadeUp .2s ease;
   }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .modal h3 {
-    font-size: 17px;
-    font-weight: 500;
-    margin-bottom: 6px;
-  }
-  .modal .modal-task {
-    font-size: 13px;
-    color: var(--accent);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 1.5rem;
-  }
-  .modal label {
-    display: block;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.05em;
-  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .modal h3 { font-size: 17px; font-weight: 500; margin-bottom: 6px; }
+  .modal .modal-task { font-size: 13px; color: var(--accent); font-family: 'Space Mono', monospace; margin-bottom: 1.5rem; }
+  .modal label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: .05em; }
   .modal input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 15px;
-    padding: 10px 14px;
-    outline: none;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.05em;
-    transition: border-color 0.15s;
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 15px; padding: 10px 14px;
+    outline: none; font-family: 'Space Mono', monospace; letter-spacing: .05em;
+    transition: border-color .15s;
   }
   .modal input:focus { border-color: var(--accent); }
-  .modal-hint {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 8px;
-    line-height: 1.6;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 1.5rem;
-  }
+  .modal-hint { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 1.5rem; }
   .btn-cancel {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-size: 14px;
-    cursor: pointer;
-    font-family: 'Noto Sans TC', sans-serif;
-    transition: border-color 0.15s;
+    flex: 1; padding: 10px; background: transparent;
+    border: 1px solid var(--border); border-radius: 8px;
+    color: var(--muted); font-size: 14px; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif; transition: border-color .15s;
   }
   .btn-cancel:hover { border-color: #555; }
   .btn-confirm {
-    flex: 2;
-    padding: 10px;
-    background: var(--accent);
-    border: none;
-    border-radius: 8px;
-    color: #0f0f0f;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Noto Sans TC', sans-serif;
-    transition: opacity 0.15s;
+    flex: 2; padding: 10px; background: var(--accent);
+    border: none; border-radius: 8px; color: #0f0f0f;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif; transition: opacity .15s;
   }
-  .btn-confirm:hover { opacity: 0.88; }
-  .btn-confirm:disabled { opacity: 0.5; cursor: default; }
-
-  /* Result message in modal */
+  .btn-confirm:hover { opacity: .88; }
+  .btn-confirm:disabled { opacity: .5; cursor: default; }
   .result-box {
-    display: none;
-    padding: 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    line-height: 1.6;
-    margin-top: 1rem;
+    display: none; padding: 14px; border-radius: 8px;
+    font-size: 13px; line-height: 1.6; margin-top: 1rem;
   }
-  .result-box.success { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,77,0.25); }
-  .result-box.error { background: rgba(255,95,87,0.1); color: var(--danger); border: 1px solid rgba(255,95,87,0.25); }
+  .result-box.success { background:var(--accent-dim); color:var(--accent); border:1px solid rgba(200,240,77,.25); }
+  .result-box.error { background:rgba(255,95,87,.1); color:var(--danger); border:1px solid rgba(255,95,87,.25); }
 
-  /* Fade in cards */
-  .task-card { opacity: 0; animation: cardIn 0.35s ease forwards; }
-  @keyframes cardIn { to { opacity: 1; } }
-
-  @media (max-width: 600px) {
-    header { padding: 1rem; }
-    .hero { padding: 2.5rem 1rem 1.5rem; }
-    main { padding: 1rem 1rem 3rem; }
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem; text-align: center;
+    font-size: 12px; color: var(--muted);
   }
+  footer a { color: var(--muted); text-decoration: none; margin: 0 10px; }
+  footer a:hover { color: var(--accent); }
+
+  @media(max-width:600px){ header{padding:1rem;} main{padding:1rem 1rem 3rem;} }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">QOOOQ夸克創意 — 模特任務牆</div>
+  <a href="index.html" class="header-logo">
+    <img src="../images/logo_white.png" alt="QOOOQ 夸克創意">
+    <span class="logo-text">任務牆</span>
+  </a>
   <div class="header-right" id="last-updated"></div>
 </header>
 
 <div class="hero">
-  <div class="hero-label">Open Shoots</div>
-  <h1>找到你的<br><span>下一個任務</span></h1>
-  <p>以下是目前開放報名的拍攝案件。<br>名額有限，確認時間後請盡快報名。</p>
+  <div class="hero-text">
+    <div class="hero-label">Open Shoots</div>
+    <h1>找到你的<br><span>下一個任務</span></h1>
+    <p>以下是目前開放報名的拍攝案件。<br>名額有限，確認時間後請盡快報名。</p>
+  </div>
+  <div class="hero-robot">
+    <img src="../images/robot_wave.png" alt="夸克機器人">
+  </div>
 </div>
 
 <main>
@@ -404,47 +266,25 @@
     </div>
   </div>
 </main>
-<section style="max-width:960px; margin:0 auto 40px; padding:20px; border-top:1px solid #2e2e2e; color:#888; font-size:13px; line-height:1.8;">
 
-  <div style="margin-bottom:12px; color:#c8f04d; font-family:'Space Mono', monospace;">
-    QoooQ / 夸克創意
-  </div>
-  <div>
-  公司名稱：夸克創意股份有限公司
-  </div>
-
-  <div>
-    本頁面由夸克創意 QoooQ 提供，為官方模特拍攝任務平台。
-  </div>
-  
-  <div>
-    僅供已加入 LINE 官方帳號之模特兒確認與報名拍攝任務使用。
-  </div>
-
-  <div>
-    所填寫之聯絡電話僅用於任務確認與聯繫，不作其他用途。
-  </div>
-
-  <div style="margin-top:10px;">
-    聯絡方式：@272maoxp / Email：takara@ilha.tw
-  </div>
-
+<section style="max-width:960px;margin:0 auto 40px;padding:20px;border-top:1px solid #2e2e2e;color:#888;font-size:13px;line-height:1.8;">
+  <div style="margin-bottom:12px;color:#c8f04d;font-family:'Space Mono',monospace;">QoooQ / 夸克創意</div>
+  <div>公司名稱：夸克創意股份有限公司</div>
+  <div>本頁面為官方模特拍攝任務平台，僅供已加入 LINE 官方帳號之模特兒使用。</div>
+  <div>所填寫之聯絡電話僅用於任務確認與聯繫，不作其他用途。</div>
+  <div style="margin-top:10px;">聯絡方式：@272maoxp / Email：takara@ilha.tw</div>
 </section>
-  
-<!-- 報名 Modal -->
+
 <div class="modal-backdrop" id="modal">
   <div class="modal">
     <h3>確認報名</h3>
-    <p style="font-size:12px; color:#888; margin-top:6px; line-height:1.6;">
-※ 本電話僅用於確認您於本公司登記之資料與拍攝任務聯繫，不會用於行銷用途或提供任何第三方
-</p>
+    <p style="font-size:12px;color:#888;margin-top:6px;line-height:1.6;">
+      ※ 本電話僅用於確認登記資料與任務聯繫，不作行銷或提供第三方使用。
+    </p>
     <div class="modal-task" id="modal-task-name"></div>
     <label>聯絡電話（用於任務聯繫）</label>
-<input type="tel" id="phone-input" placeholder="0912345678" maxlength="10">
-
-<div class="modal-hint">
-請輸入當初登記的手機號碼，系統將自動比對你的資料。
-</div>
+    <input type="tel" id="phone-input" placeholder="0912345678" maxlength="10">
+    <div class="modal-hint">請輸入當初登記的手機號碼，系統將自動比對你的資料。</div>
     <div class="result-box" id="result-box"></div>
     <div class="modal-actions" id="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">取消</button>
@@ -453,24 +293,37 @@
   </div>
 </div>
 
+<footer>
+  <a href="privacy.html">隱私權政策</a>
+  <a href="terms.html">使用條款</a>
+  <span>© 2026 夸克創意股份有限公司</span>
+</footer>
+
 <script>
 const API = 'https://script.google.com/macros/s/AKfycby6_55IOnAkxywA0QTW7usbUSIglmG4NInrYCKK8fLd3zKIzYtMsyLBtGZRR41-ZzN-mw/exec';
-
 let currentTask = null;
 
 async function loadTasks() {
   const container = document.getElementById('task-container');
   try {
-    const res = await fetch(API + '?action=getTasks');
+    // Fix error 2: add AbortController to prevent hanging requests
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    const res = await fetch(API + '?action=getTasks', { signal: controller.signal });
+    clearTimeout(timeout);
     const data = await res.json();
     if (!data.success || !data.tasks || data.tasks.length === 0) {
       container.innerHTML = '<div class="state-msg">目前沒有開放中的任務，請稍後再查看。</div>';
       return;
     }
     renderTasks(data.tasks);
-    document.getElementById('last-updated').textContent = '更新：' + new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('last-updated').textContent = '更新：' + new Date().toLocaleTimeString('zh-TW', {hour:'2-digit',minute:'2-digit'});
   } catch (e) {
-    container.innerHTML = '<div class="state-msg">載入失敗，請重新整理頁面。</div>';
+    if (e.name === 'AbortError') {
+      container.innerHTML = '<div class="state-msg">載入逾時，請重新整理頁面。</div>';
+    } else {
+      container.innerHTML = '<div class="state-msg">載入失敗，請重新整理頁面。</div>';
+    }
   }
 }
 
@@ -478,45 +331,40 @@ function renderTasks(tasks) {
   const container = document.getElementById('task-container');
   const grid = document.createElement('div');
   grid.className = 'task-grid';
-
   tasks.forEach((t, i) => {
     const isFull = Number(t.filled) >= Number(t.total);
     const isClosed = t.closed === true || t.closed === 'TRUE';
     const pct = t.total > 0 ? Math.min(100, Math.round((t.filled / t.total) * 100)) : 0;
-
     let badgeHtml = '<span class="badge badge-open">招募中</span>';
     if (isClosed) badgeHtml = '<span class="badge badge-closed">已截止</span>';
     else if (isFull) badgeHtml = '<span class="badge badge-full">額滿</span>';
-
     const card = document.createElement('div');
-    card.className = 'task-card' + (isClosed ? ' closed' : '') + (isFull && !isClosed ? ' full' : '');
+    card.className = 'task-card' + (isClosed?' closed':'') + (isFull&&!isClosed?' full':'');
     card.style.animationDelay = (i * 0.06) + 's';
-
+    const taskId = (t.taskName || t.date || '').replace(/'/g, '');
     card.innerHTML = `
       <div class="card-header">
-        <div class="card-date">${t.date}<span class="weekday">${t.location || ''}</span></div>
+        <div class="card-date">${t.date}<span class="weekday">${t.location||''}</span></div>
         ${badgeHtml}
       </div>
       <div class="card-body">
-        <div class="info-row"><span class="info-label">時段</span><span class="info-val">${t.time || '詳見任務說明'}</span></div>
-        <div class="info-row"><span class="info-label">商品</span><span class="info-val">${t.product || '詳見任務說明'}</span></div>
-        ${t.desc ? `<div class="info-row"><span class="info-label">說明</span><span class="info-val">${t.desc}</span></div>` : ''}
-        <div class="info-row"><span class="info-label">時長/任務數</span><span class="info-val">${t.duration || '—'}</span></div>
-        <div class="info-row"><span class="info-label">報酬</span><span class="info-val pay">${t.pay || '—'}</span></div>
+        <div class="info-row"><span class="info-label">時段</span><span class="info-val">${t.time||'詳見任務說明'}</span></div>
+        <div class="info-row"><span class="info-label">商品</span><span class="info-val">${t.product||'詳見任務說明'}</span></div>
+        ${t.desc?`<div class="info-row"><span class="info-label">說明</span><span class="info-val">${t.desc}</span></div>`:''}
+        <div class="info-row"><span class="info-label">時長</span><span class="info-val">${t.duration||'—'}</span></div>
+        <div class="info-row"><span class="info-label">報酬</span><span class="info-val pay">${t.pay||'—'}</span></div>
         <div class="quota-wrap">
           <div class="quota-bar-bg"><div class="quota-bar-fill" style="width:${pct}%"></div></div>
-          <div class="quota-text">${t.filled || 0} / ${t.total} 人已報名</div>
+          <div class="quota-text">${t.filled||0} / ${t.total} 人已報名</div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn-apply" ${(isFull || isClosed) ? 'disabled' : ''} onclick="openModal('${(t.taskName || t.date).replace(/'/g, '')}')">
-          ${isClosed ? '已截止' : isFull ? '名額已滿' : '我要報名'}
+        <button class="btn-apply" ${(isFull||isClosed)?'disabled':''} onclick="openModal('${taskId}')">
+          ${isClosed?'已截止':isFull?'名額已滿':'我要報名'}
         </button>
-      </div>
-    `;
+      </div>`;
     grid.appendChild(card);
   });
-
   container.innerHTML = '';
   container.appendChild(grid);
 }
@@ -541,27 +389,24 @@ function closeModal() {
 document.getElementById('modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
-
 document.getElementById('phone-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') submitApply();
 });
 
 async function submitApply() {
   const phone = document.getElementById('phone-input').value.trim();
-  if (!phone || phone.length < 9) {
-    showResult('error', '請輸入正確的手機號碼');
-    return;
-  }
-
+  if (!phone || phone.length < 9) { showResult('error','請輸入正確的手機號碼'); return; }
   const btn = document.getElementById('btn-confirm');
-  btn.disabled = true;
-  btn.textContent = '送出中...';
-
+  btn.disabled = true; btn.textContent = '送出中...';
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
     const res = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({ phone, taskName: currentTask }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
     const data = await res.json();
     if (data.success) {
       showResult('success', data.message);
@@ -569,13 +414,11 @@ async function submitApply() {
       loadTasks();
     } else {
       showResult('error', data.message);
-      btn.disabled = false;
-      btn.textContent = '確認報名';
+      btn.disabled = false; btn.textContent = '確認報名';
     }
   } catch (e) {
-    showResult('error', '網路錯誤，請稍後再試');
-    btn.disabled = false;
-    btn.textContent = '確認報名';
+    showResult('error', e.name==='AbortError'?'請求逾時，請稍後再試':'網路錯誤，請稍後再試');
+    btn.disabled = false; btn.textContent = '確認報名';
   }
 }
 
@@ -588,10 +431,5 @@ function showResult(type, msg) {
 
 loadTasks();
 </script>
-  <footer>
-  <a href="privacy.html">隱私權政策</a> |
-  <a href="terms.html">使用條款</a> |
-  <a href="about.html">關於我們</a>
-</footer>
 </body>
 </html>
