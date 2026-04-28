@@ -25,232 +25,434 @@
 <link rel="icon" href="../images/favicon.ico">
 <link rel="apple-touch-icon" href="../images/favicon.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #222;
-    --border: #2e2e2e;
-    --accent: #c8f04d;
-    --accent-dim: rgba(200,240,77,0.12);
-    --text: #f0f0f0;
-    --muted: #888;
-    --danger: #ff5f57;
-    --warn: #f5a623;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; }
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+<style>
+  /* ── 對齊官網 design token ── */
+  :root {
+    --bg:      #17312C;
+    --bg2:     #1a3832;
+    --bg3:     #1e3f38;
+    --surface: #1a3832;
+    --border:  rgba(251,251,251,0.09);
+    --accent:  #F2735B;
+    --acc2:    #d9604a;
+    --accent-dim: rgba(242,115,91,0.12);
+    --text:    #fbfbfb;
+    --fg2:     #dde8e5;
+    --muted:   #7a9e98;
+    --warn:    #f5c842;
+    --danger:  #ff5f57;
+    --max-w:   960px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { overflow-x: hidden; scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+    cursor: none;
+  }
+
+  /* ── Custom cursor (官網同款) ── */
+  #cur, #cur-ring {
+    position: fixed; border-radius: 50%; pointer-events: none;
+    z-index: 9999; transform: translate(-50%,-50%);
+    transition: background .3s, border-color .3s, transform .15s;
+  }
+  #cur      { width: 10px; height: 10px; background: var(--accent); }
+  #cur-ring { width: 36px; height: 36px; border: 1.5px solid var(--accent); opacity: .6; }
+  @media(hover:none){ #cur,#cur-ring{ display:none; } body{ cursor:auto; } }
+
+  /* ── Header ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 1rem 2rem;
+    padding: 0 40px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky; top: 0;
-    background: rgba(15,15,15,0.95);
-    backdrop-filter: blur(12px);
+    background: rgba(23,49,44,0.92);
+    backdrop-filter: blur(14px);
     z-index: 100;
+    transition: background .5s;
   }
+  header.scrolled { background: rgba(23,49,44,0.98); }
   .header-logo {
     display: flex; align-items: center; gap: 10px;
     text-decoration: none;
   }
-  .header-logo img { height: 28px; width: auto; }
-  .logo-text {
+  .header-logo img { height: 32px; width: auto; }
+  .logo-tag {
     font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    font-size: 10px; color: var(--accent);
+    letter-spacing: .15em; text-transform: uppercase;
+    border-left: 1px solid var(--border);
+    padding-left: 12px; margin-left: 4px;
   }
-  .header-right { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .header-right {
+    font-size: 10px; color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .08em;
+  }
+  @media(max-width:600px){ header{ padding:0 20px; } }
 
-  /* Hero with robot */
+  /* ── Hero ── */
   .hero {
-    padding: 4rem 2rem 2.5rem;
-    max-width: 960px;
+    padding: 96px 40px 64px;
+    max-width: var(--max-w);
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 2rem;
     align-items: center;
+    position: relative;
   }
-  .hero-text .hero-label {
+  /* watermark 同官網 */
+  .hero-wm {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(80px, 18vw, 220px);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(251,251,251,0.045);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -4px;
+    animation: wmdrift 18s ease-in-out infinite alternate;
+    overflow: hidden;
+    max-width: 100vw;
+  }
+  @keyframes wmdrift {
+    from { transform: translate(-50%,-50%) translateX(-20px); }
+    to   { transform: translate(-50%,-50%) translateX(20px); }
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-kicker {
     font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
+    font-size: 10px; letter-spacing: 5px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeup .7s .1s both;
   }
-  .hero-text h1 {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -.02em;
-    margin-bottom: 1rem;
+  .hero-h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(36px, 5.5vw, 68px);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -1px; margin-bottom: 20px;
+    animation: fadeup .7s .3s both;
   }
-  .hero-text h1 span { color: var(--accent); }
-  .hero-text p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.7; }
+  .hero-h1 em { font-style: normal; color: var(--accent); }
+  .hero-desc {
+    font-size: 15px; color: var(--muted);
+    line-height: 2; margin-bottom: 0;
+    font-weight: 300;
+    animation: fadeup .7s .5s both;
+  }
+  .hero-robot {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
   .hero-robot img {
-    width: 160px; height: auto;
-    filter: drop-shadow(0 8px 24px rgba(200,240,77,0.15));
+    width: 150px; height: auto;
+    filter: drop-shadow(0 8px 24px rgba(242,115,91,0.2));
     animation: floatrobot 3s ease-in-out infinite alternate;
   }
-  @keyframes floatrobot { from{transform:translateY(0)} to{transform:translateY(-12px)} }
-  @media(max-width:600px){
-    .hero{ grid-template-columns:1fr; gap:1rem; padding:2.5rem 1rem 1.5rem; }
-    .hero-robot{ display:flex; justify-content:center; }
-    .hero-robot img{ width:110px; }
+  @keyframes floatrobot {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-12px); }
+  }
+  @keyframes fadeup {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @media(max-width:640px){
+    .hero { grid-template-columns:1fr; padding:80px 20px 48px; gap:24px; }
+    .hero-robot { justify-content:center; }
+    .hero-robot img { width: 110px; }
   }
 
-  main { max-width: 960px; margin: 0 auto; padding: 1rem 2rem 4rem; }
+  /* ── Section label ── */
+  main { max-width: var(--max-w); margin: 0 auto; padding: 0 40px 80px; }
+  @media(max-width:600px){ main{ padding:0 20px 64px; } }
+
   .section-label {
-    font-family: 'Space Mono', monospace; font-size: 11px;
-    color: var(--muted); letter-spacing: .12em; text-transform: uppercase;
-    margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--accent); letter-spacing: 5px; text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 16px;
   }
-  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .section-label::after {
+    content:''; flex:1; height:1px; background:var(--border);
+  }
 
-  .task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  /* ── Task grid ── */
+  .task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(284px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
 
   .task-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
-    transition: border-color .2s, transform .2s;
-    opacity: 0; animation: cardIn .35s ease forwards;
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    opacity: 0;
+    animation: cardIn .4s ease forwards;
+    transition: background .25s;
+    position: relative;
+    overflow: hidden;
   }
+  .task-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .35s;
+  }
+  .task-card:hover { background: var(--bg3); }
+  .task-card:hover::before { transform: scaleX(1); }
+  .task-card.closed { opacity: .4 !important; pointer-events: none; }
+  .task-card.full   { }
+
   @keyframes cardIn { to { opacity: 1; } }
-  .task-card:hover { border-color: #444; transform: translateY(-2px); }
-  .task-card.closed { opacity: .45; pointer-events: none; }
-  .task-card.full { border-color: rgba(245,166,35,0.3); }
 
   .card-header {
-    padding: 1.25rem 1.25rem 1rem;
+    padding: 24px 24px 16px;
     border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
   }
-  .card-date { font-size: 15px; font-weight: 500; line-height: 1.3; }
+  .card-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px; font-weight: 900; line-height: 1.2;
+    color: var(--text);
+  }
   .card-date .weekday {
-    font-family: 'Space Mono', monospace; font-size: 11px;
-    color: var(--muted); font-weight: 400; display: block; margin-top: 2px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    font-weight: 400; display: block; margin-top: 4px;
+    letter-spacing: .08em;
   }
+
   .badge {
-    font-size: 10px; font-family: 'Space Mono', monospace;
-    padding: 3px 8px; border-radius: 4px; white-space: nowrap;
-    flex-shrink: 0; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    font-size: 9px; font-family: 'Space Mono', monospace;
+    padding: 4px 10px; border-radius: 2px;
+    white-space: nowrap; flex-shrink: 0;
+    font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
   }
-  .badge-open { background:var(--accent-dim); color:var(--accent); border:1px solid rgba(200,240,77,.3); }
-  .badge-full { background:rgba(245,166,35,.12); color:var(--warn); border:1px solid rgba(245,166,35,.25); }
-  .badge-closed { background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
+  .badge-open   { background: rgba(242,115,91,.15); color: var(--accent); border: 1px solid rgba(242,115,91,.3); }
+  .badge-full   { background: rgba(245,200,66,.1);  color: var(--warn);   border: 1px solid rgba(245,200,66,.25); }
+  .badge-closed { background: rgba(251,251,251,.05); color: var(--muted);  border: 1px solid var(--border); }
 
-  .card-body { padding: 1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  .info-row { display: flex; gap: 10px; font-size: 13px; line-height: 1.5; }
-  .info-label { color: var(--muted); min-width: 52px; flex-shrink: 0; font-size: 12px; }
-  .info-val { color: var(--text); }
-  .info-val.pay { color: var(--accent); font-weight: 500; font-family: 'Space Mono', monospace; }
+  .card-body {
+    padding: 16px 24px; flex: 1;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .info-row { display: flex; gap: 12px; font-size: 13px; line-height: 1.6; }
+  .info-label {
+    color: var(--muted); min-width: 40px; flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: .06em;
+    text-transform: uppercase; padding-top: 1px;
+  }
+  .info-val { color: var(--fg2); }
+  .info-val.pay {
+    color: var(--accent); font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+  }
 
-  .quota-wrap { margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .quota-bar-bg { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 6px; }
-  .quota-bar-fill { height: 3px; border-radius: 2px; background: var(--accent); transition: width .5s ease; }
-  .quota-text { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .quota-wrap {
+    margin-top: 6px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .quota-bar-bg { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 8px; }
+  .quota-bar-fill { height: 2px; border-radius: 1px; background: var(--accent); transition: width .6s ease; }
+  .quota-text {
+    font-size: 10px; color: var(--muted);
+    font-family: 'Space Mono', monospace; letter-spacing: .06em;
+  }
 
-  .card-footer { padding: 1rem 1.25rem; }
+  .card-footer { padding: 16px 24px 24px; }
   .btn-apply {
-    width: 100%; padding: 10px;
-    background: var(--accent); color: #0f0f0f;
-    border: none; border-radius: 8px;
-    font-size: 14px; font-weight: 700;
-    font-family: 'Noto Sans TC', sans-serif;
-    cursor: pointer; transition: opacity .15s, transform .1s;
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 2px;
+    font-size: 13px; font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
   }
-  .btn-apply:hover { opacity: .88; transform: scale(.99); }
-  .btn-apply:active { transform: scale(.97); }
-  .btn-apply:disabled { background: var(--border); color: var(--muted); cursor: default; transform: none; opacity: 1; }
+  .btn-apply:hover { background: var(--acc2); transform: translateY(-1px); }
+  .btn-apply:active { transform: translateY(0); }
+  .btn-apply:disabled {
+    background: rgba(251,251,251,.06);
+    color: var(--muted); cursor: default;
+    transform: none;
+    border: 1px solid var(--border);
+  }
 
-  .state-msg { text-align: center; padding: 5rem 1rem; color: var(--muted); font-size: 14px; }
+  /* ── State messages ── */
+  .state-msg {
+    text-align: center; padding: 80px 20px;
+    color: var(--muted); font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .08em;
+  }
   .state-msg .spinner {
     width: 28px; height: 28px;
     border: 2px solid var(--border); border-top-color: var(--accent);
     border-radius: 50%; animation: spin .7s linear infinite;
-    margin: 0 auto 1rem;
+    margin: 0 auto 20px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── Modal ── */
   .modal-backdrop {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.75); z-index: 200;
+    background: rgba(0,0,0,.7); z-index: 200;
     align-items: center; justify-content: center; padding: 1rem;
   }
   .modal-backdrop.open { display: flex; }
   .modal {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 16px; padding: 2rem; width: 100%; max-width: 420px;
-    animation: fadeUp .2s ease;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2rem; width: 100%; max-width: 420px;
+    animation: fadeUp .22s ease;
+    position: relative;
   }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  .modal h3 { font-size: 17px; font-weight: 500; margin-bottom: 6px; }
-  .modal .modal-task { font-size: 13px; color: var(--accent); font-family: 'Space Mono', monospace; margin-bottom: 1.5rem; }
-  .modal label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: .05em; }
+  .modal::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .modal-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
+  }
+  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .modal .modal-task {
+    font-size: 12px; color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 24px; line-height: 1.8;
+  }
+  .modal label {
+    display: block; font-size: 10px; color: var(--muted);
+    margin-bottom: 8px; letter-spacing: .1em;
+    font-family: 'Space Mono', monospace; text-transform: uppercase;
+  }
   .modal input {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 15px; padding: 10px 14px;
-    outline: none; font-family: 'Space Mono', monospace; letter-spacing: .05em;
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 2px; color: var(--text); font-size: 15px;
+    padding: 11px 14px; outline: none;
+    font-family: 'Space Mono', monospace; letter-spacing: .08em;
     transition: border-color .15s;
   }
   .modal input:focus { border-color: var(--accent); }
-  .modal-hint { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .modal-hint { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+  .modal-privacy {
+    font-size: 11px; color: var(--muted); margin-top: 6px;
+    line-height: 1.6; opacity: .7;
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
   .btn-cancel {
-    flex: 1; padding: 10px; background: transparent;
-    border: 1px solid var(--border); border-radius: 8px;
-    color: var(--muted); font-size: 14px; cursor: pointer;
-    font-family: 'Noto Sans TC', sans-serif; transition: border-color .15s;
+    flex: 1; padding: 11px; background: transparent;
+    border: 1px solid var(--border); border-radius: 2px;
+    color: var(--muted); font-size: 12px; cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .08em; text-transform: uppercase;
+    transition: border-color .15s, color .15s;
   }
-  .btn-cancel:hover { border-color: #555; }
+  .btn-cancel:hover { border-color: var(--accent); color: var(--accent); }
   .btn-confirm {
-    flex: 2; padding: 10px; background: var(--accent);
-    border: none; border-radius: 8px; color: #0f0f0f;
-    font-size: 14px; font-weight: 700; cursor: pointer;
-    font-family: 'Noto Sans TC', sans-serif; transition: opacity .15s;
+    flex: 2; padding: 11px; background: var(--accent);
+    border: none; border-radius: 2px; color: #fff;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .1em; text-transform: uppercase;
+    transition: background .2s;
   }
-  .btn-confirm:hover { opacity: .88; }
+  .btn-confirm:hover { background: var(--acc2); }
   .btn-confirm:disabled { opacity: .5; cursor: default; }
+
   .result-box {
-    display: none; padding: 14px; border-radius: 8px;
-    font-size: 13px; line-height: 1.6; margin-top: 1rem;
+    display: none; padding: 14px 16px; border-radius: 2px;
+    font-size: 13px; line-height: 1.7; margin-top: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
   }
-  .result-box.success { background:var(--accent-dim); color:var(--accent); border:1px solid rgba(200,240,77,.25); }
-  .result-box.error { background:rgba(255,95,87,.1); color:var(--danger); border:1px solid rgba(255,95,87,.25); }
+  .result-box.success {
+    background: rgba(242,115,91,.1); color: var(--accent);
+    border: 1px solid rgba(242,115,91,.25);
+  }
+  .result-box.error {
+    background: rgba(255,95,87,.1); color: var(--danger);
+    border: 1px solid rgba(255,95,87,.25);
+  }
 
-  footer {
+  /* ── Footer ── */
+  .page-footer {
+    background: #0d201c;
     border-top: 1px solid var(--border);
-    padding: 1.5rem 2rem; text-align: center;
-    font-size: 12px; color: var(--muted);
+    padding: 40px;
+    text-align: center;
   }
-  footer a { color: var(--muted); text-decoration: none; margin: 0 10px; }
-  footer a:hover { color: var(--accent); }
+  .footer-co {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--accent);
+    letter-spacing: 3px; margin-bottom: 12px;
+  }
+  .footer-info { font-size: 12px; color: var(--muted); line-height: 2.2; }
+  .footer-links { margin-top: 20px; display: flex; justify-content: center; gap: 4px; }
+  .footer-links a {
+    font-size: 12px; color: var(--muted);
+    text-decoration: none; margin: 0 8px;
+    transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy {
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 2px;
+  }
+  @media(max-width:600px){ .page-footer{ padding:32px 20px; } }
 
-  @media(max-width:600px){ header{padding:1rem;} main{padding:1rem 1rem 3rem;} }
+  /* ── Divider bar (官網 .divbar) ── */
+  .divbar { width: 36px; height: 3px; background: var(--accent); margin-bottom: 32px; }
 </style>
 </head>
 <body>
 
-<header>
-  <a href="index.html" class="header-logo">
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<header id="siteHeader">
+  <a href="../index.html" class="header-logo">
     <img src="../images/logo_white.png" alt="QOOOQ 夸克創意">
-    <span class="logo-text">任務牆</span>
+    <span class="logo-tag">任務牆</span>
   </a>
   <div class="header-right" id="last-updated"></div>
 </header>
 
+<!-- Hero -->
 <div class="hero">
-  <div class="hero-text">
-    <div class="hero-label">Open Shoots</div>
-    <h1>找到你的<br><span>下一個任務</span></h1>
-    <p>以下是目前開放報名的拍攝案件。<br>名額有限，確認時間後請盡快報名。</p>
+  <div class="hero-wm" aria-hidden="true">TASK</div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Open Shoots · 夸克創意 × 2026</div>
+    <h1 class="hero-h1">找到你的<br><em>下一個任務</em></h1>
+    <p class="hero-desc">
+      以下是目前開放報名的拍攝案件。<br>
+      名額有限，確認時間後請盡快報名。
+    </p>
   </div>
   <div class="hero-robot">
     <img src="../images/robot_wave.png" alt="夸克機器人">
@@ -258,6 +460,7 @@
 </div>
 
 <main>
+  <div class="divbar"></div>
   <div class="section-label">進行中的案件</div>
   <div id="task-container">
     <div class="state-msg">
@@ -267,46 +470,79 @@
   </div>
 </main>
 
-<section style="max-width:960px;margin:0 auto 40px;padding:20px;border-top:1px solid #2e2e2e;color:#888;font-size:13px;line-height:1.8;">
-  <div style="margin-bottom:12px;color:#c8f04d;font-family:'Space Mono',monospace;">QoooQ / 夸克創意</div>
-  <div>公司名稱：夸克創意股份有限公司</div>
-  <div>本頁面為官方模特拍攝任務平台，僅供已加入 LINE 官方帳號之模特兒使用。</div>
-  <div>所填寫之聯絡電話僅用於任務確認與聯繫，不作其他用途。</div>
-  <div style="margin-top:10px;">聯絡方式：@272maoxp / Email：takara@ilha.tw</div>
-</section>
+<!-- Legal strip -->
+<div style="max-width:var(--max-w);margin:0 auto 0;padding:24px 40px 40px;border-top:1px solid var(--border);">
+  <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:12px;">QOOOQ / 夸克創意</div>
+  <div style="font-size:12px;color:var(--muted);line-height:2.2;">
+    公司名稱：夸克創意股份有限公司<br>
+    本頁面為官方模特拍攝任務平台，僅供已加入 LINE 官方帳號之模特兒使用。<br>
+    所填寫之聯絡電話僅用於任務確認與聯繫，不作其他用途。<br>
+    聯絡方式：@272maoxp ／ Email：takara@ilha.tw
+  </div>
+</div>
 
+<!-- Modal -->
 <div class="modal-backdrop" id="modal">
   <div class="modal">
-    <h3>確認報名</h3>
-    <p style="font-size:12px;color:#888;margin-top:6px;line-height:1.6;">
-      ※ 本電話僅用於確認登記資料與任務聯繫，不作行銷或提供第三方使用。
-    </p>
+    <div class="modal-kicker">確認報名</div>
+    <h3>報名任務</h3>
     <div class="modal-task" id="modal-task-name"></div>
     <label>聯絡電話（用於任務聯繫）</label>
     <input type="tel" id="phone-input" placeholder="0912345678" maxlength="10">
     <div class="modal-hint">請輸入當初登記的手機號碼，系統將自動比對你的資料。</div>
+    <div class="modal-privacy">※ 本電話僅用於確認登記資料與任務聯繫，不作行銷或提供第三方使用。</div>
     <div class="result-box" id="result-box"></div>
     <div class="modal-actions" id="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">取消</button>
-      <button class="btn-confirm" id="btn-confirm" onclick="submitApply()">確認報名</button>
+      <button class="btn-confirm" id="btn-confirm" onclick="submitApply()">確認報名 →</button>
     </div>
   </div>
 </div>
 
-<footer>
-  <a href="privacy.html">隱私權政策</a>
-  <a href="terms.html">使用條款</a>
-  <span>© 2026 夸克創意股份有限公司</span>
+<footer class="page-footer">
+  <div class="footer-co">QOOOQ Taiwan</div>
+  <div class="footer-info">
+    夸克創意股份有限公司<br>
+    © 2026 QOOOQ Taiwan. All rights reserved.
+  </div>
+  <div class="footer-links">
+    <a href="privacy.html">隱私權政策</a>
+    <a href="terms.html">使用條款</a>
+    <a href="../index.html">回到官網</a>
+  </div>
 </footer>
 
 <script>
+/* ── Custom cursor ── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+});
+(function loop() {
+  rx += (mx - rx) * .12; ry += (my - ry) * .12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2.2)'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; });
+});
+
+/* ── Header scroll tint ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ── API ── */
 const API = 'https://script.google.com/macros/s/AKfycby6_55IOnAkxywA0QTW7usbUSIglmG4NInrYCKK8fLd3zKIzYtMsyLBtGZRR41-ZzN-mw/exec';
 let currentTask = null;
 
 async function loadTasks() {
   const container = document.getElementById('task-container');
   try {
-    // Fix error 2: add AbortController to prevent hanging requests
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
     const res = await fetch(API + '?action=getTasks', { signal: controller.signal });
@@ -317,13 +553,12 @@ async function loadTasks() {
       return;
     }
     renderTasks(data.tasks);
-    document.getElementById('last-updated').textContent = '更新：' + new Date().toLocaleTimeString('zh-TW', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('last-updated').textContent =
+      'Updated · ' + new Date().toLocaleTimeString('zh-TW', { hour:'2-digit', minute:'2-digit' });
   } catch (e) {
-    if (e.name === 'AbortError') {
-      container.innerHTML = '<div class="state-msg">載入逾時，請重新整理頁面。</div>';
-    } else {
-      container.innerHTML = '<div class="state-msg">載入失敗，請重新整理頁面。</div>';
-    }
+    container.innerHTML = e.name === 'AbortError'
+      ? '<div class="state-msg">載入逾時，請重新整理頁面。</div>'
+      : '<div class="state-msg">載入失敗，請重新整理頁面。</div>';
   }
 }
 
@@ -332,35 +567,56 @@ function renderTasks(tasks) {
   const grid = document.createElement('div');
   grid.className = 'task-grid';
   tasks.forEach((t, i) => {
-    const isFull = Number(t.filled) >= Number(t.total);
+    const isFull   = Number(t.filled) >= Number(t.total);
     const isClosed = t.closed === true || t.closed === 'TRUE';
     const pct = t.total > 0 ? Math.min(100, Math.round((t.filled / t.total) * 100)) : 0;
     let badgeHtml = '<span class="badge badge-open">招募中</span>';
-    if (isClosed) badgeHtml = '<span class="badge badge-closed">已截止</span>';
-    else if (isFull) badgeHtml = '<span class="badge badge-full">額滿</span>';
+    if (isClosed)       badgeHtml = '<span class="badge badge-closed">已截止</span>';
+    else if (isFull)    badgeHtml = '<span class="badge badge-full">額滿</span>';
+
     const card = document.createElement('div');
-    card.className = 'task-card' + (isClosed?' closed':'') + (isFull&&!isClosed?' full':'');
-    card.style.animationDelay = (i * 0.06) + 's';
+    card.className = 'task-card' + (isClosed ? ' closed' : '') + (isFull && !isClosed ? ' full' : '');
+    card.style.animationDelay = (i * 0.07) + 's';
+
     const taskId = (t.taskName || t.date || '').replace(/'/g, '');
     card.innerHTML = `
       <div class="card-header">
-        <div class="card-date">${t.date}<span class="weekday">${t.location||''}</span></div>
+        <div class="card-date">
+          ${t.date}
+          <span class="weekday">${t.location || ''}</span>
+        </div>
         ${badgeHtml}
       </div>
       <div class="card-body">
-        <div class="info-row"><span class="info-label">時段</span><span class="info-val">${t.time||'詳見任務說明'}</span></div>
-        <div class="info-row"><span class="info-label">商品</span><span class="info-val">${t.product||'詳見任務說明'}</span></div>
-        ${t.desc?`<div class="info-row"><span class="info-label">說明</span><span class="info-val">${t.desc}</span></div>`:''}
-        <div class="info-row"><span class="info-label">時長</span><span class="info-val">${t.duration||'—'}</span></div>
-        <div class="info-row"><span class="info-label">報酬</span><span class="info-val pay">${t.pay||'—'}</span></div>
+        <div class="info-row">
+          <span class="info-label">時段</span>
+          <span class="info-val">${t.time || '詳見任務說明'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">商品</span>
+          <span class="info-val">${t.product || '詳見任務說明'}</span>
+        </div>
+        ${t.desc ? `<div class="info-row"><span class="info-label">說明</span><span class="info-val">${t.desc}</span></div>` : ''}
+        <div class="info-row">
+          <span class="info-label">時長</span>
+          <span class="info-val">${t.duration || '—'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">報酬</span>
+          <span class="info-val pay">${t.pay || '—'}</span>
+        </div>
         <div class="quota-wrap">
-          <div class="quota-bar-bg"><div class="quota-bar-fill" style="width:${pct}%"></div></div>
-          <div class="quota-text">${t.filled||0} / ${t.total} 人已報名</div>
+          <div class="quota-bar-bg">
+            <div class="quota-bar-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="quota-text">${t.filled || 0} / ${t.total} 人已報名</div>
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn-apply" ${(isFull||isClosed)?'disabled':''} onclick="openModal('${taskId}')">
-          ${isClosed?'已截止':isFull?'名額已滿':'我要報名'}
+        <button class="btn-apply"
+          ${(isFull || isClosed) ? 'disabled' : ''}
+          onclick="openModal('${taskId}')">
+          ${isClosed ? '已截止' : isFull ? '名額已滿' : '我要報名 →'}
         </button>
       </div>`;
     grid.appendChild(card);
@@ -377,6 +633,7 @@ function openModal(taskName) {
   document.getElementById('result-box').className = 'result-box';
   document.getElementById('modal-actions').style.display = 'flex';
   document.getElementById('btn-confirm').disabled = false;
+  document.getElementById('btn-confirm').textContent = '確認報名 →';
   document.getElementById('modal').classList.add('open');
   setTimeout(() => document.getElementById('phone-input').focus(), 100);
 }
@@ -389,13 +646,13 @@ function closeModal() {
 document.getElementById('modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
-document.getElementById('phone-input').addEventListener('keydown', function(e) {
+document.getElementById('phone-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') submitApply();
 });
 
 async function submitApply() {
   const phone = document.getElementById('phone-input').value.trim();
-  if (!phone || phone.length < 9) { showResult('error','請輸入正確的手機號碼'); return; }
+  if (!phone || phone.length < 9) { showResult('error', '請輸入正確的手機號碼'); return; }
   const btn = document.getElementById('btn-confirm');
   btn.disabled = true; btn.textContent = '送出中...';
   try {
@@ -414,11 +671,11 @@ async function submitApply() {
       loadTasks();
     } else {
       showResult('error', data.message);
-      btn.disabled = false; btn.textContent = '確認報名';
+      btn.disabled = false; btn.textContent = '確認報名 →';
     }
   } catch (e) {
-    showResult('error', e.name==='AbortError'?'請求逾時，請稍後再試':'網路錯誤，請稍後再試');
-    btn.disabled = false; btn.textContent = '確認報名';
+    showResult('error', e.name === 'AbortError' ? '請求逾時，請稍後再試' : '網路錯誤，請稍後再試');
+    btn.disabled = false; btn.textContent = '確認報名 →';
   }
 }
 
