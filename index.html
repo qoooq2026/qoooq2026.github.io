@@ -345,10 +345,10 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <div class="dash-live"><i></i><span id="exposureStatus">SYNCING</span></div>
   </div>
   <div class="dash-number loading" id="monthlyExposure">讀取中</div>
-  <div class="dash-meta">
-    <span><b>全客戶發布數據</b></span>
-    <span><b>平均投稿自然流量 5,000+</b></span>
-  </div>
+     <div class="dash-meta">
+       <span><b>全客戶發布數據 × 1.8</b></span>
+       <span><b>每 30 分鐘更新</b></span>
+     </div>
 </div>
   </div>
   <div class="scroll-hint"><div class="scroll-bar"></div><span>SCROLL</span></div>
@@ -624,35 +624,28 @@ if(window.matchMedia('(hover:none)').matches){
   gid:'66553152',
   range:'R:R',
   fallbackBase:5000000,
-  growthPerMinute:300
+  multiplier:1.8,
+  refreshMinutes:30
 };
 
 const exposureEl=document.getElementById('monthlyExposure');
 const statusEl=document.getElementById('exposureStatus');
 const nf=new Intl.NumberFormat('zh-TW');
 
-let exposureValue=0;
 let shownValue=0;
 let displayRaf=null;
-let growthTimer=null;
-let monthCheckTimer=null;
-let growthRunId=0;
-
-function getMonthKey(){
-  const d=new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-}
+let refreshTimer=null;
 
 function formatExposure(n){
   return nf.format(Math.max(0,Math.floor(n)));
 }
 
-function renderExposure(){
+function renderExposure(nextValue){
   if(displayRaf)cancelAnimationFrame(displayRaf);
 
-  const start=shownValue;
-  const end=exposureValue;
-  const duration=680;
+  const start=shownValue || nextValue;
+  const end=nextValue;
+  const duration=900;
   const t0=performance.now();
 
   function step(now){
@@ -700,75 +693,33 @@ function fetchSheetTotalJsonp(){
   });
 }
 
-function startOrganicGrowth(base,statusText='LIVE'){
-  if(growthTimer)clearTimeout(growthTimer);
-  if(monthCheckTimer)clearInterval(monthCheckTimer);
-
-  growthRunId++;
-
-  const runId=growthRunId;
-  const monthKey=getMonthKey();
-
-  exposureValue=base;
-  shownValue=base;
-
-  exposureEl.classList.remove('loading');
-  exposureEl.textContent=formatExposure(exposureValue);
-  statusEl.textContent=statusText;
-
-  scheduleMinuteBursts(monthKey,runId);
-
-  monthCheckTimer=setInterval(()=>{
-    if(getMonthKey()!==monthKey){
-      initExposure();
-    }
-  },60000);
-}
-
-function scheduleMinuteBursts(monthKey,runId){
-  if(getMonthKey()!==monthKey || runId!==growthRunId)return;
-
-  let remaining=EXPOSURE_CONFIG.growthPerMinute;
-  const chunks=Array.from({length:Math.floor(12+Math.random()*10)},()=>Math.random());
-  const total=chunks.reduce((a,b)=>a+b,0);
-
-  chunks.forEach((w,i)=>{
-    const delay=1800+Math.random()*56000;
-
-    setTimeout(()=>{
-      if(getMonthKey()!==monthKey || runId!==growthRunId)return;
-
-      const add=i===chunks.length-1
-        ? remaining
-        : Math.max(1,Math.round(EXPOSURE_CONFIG.growthPerMinute*w/total));
-
-      remaining-=add;
-      exposureValue+=add;
-      renderExposure();
-    },delay);
-  });
-
-  growthTimer=setTimeout(()=>{
-    scheduleMinuteBursts(monthKey,runId);
-  },60000+Math.random()*2600);
-}
-
-async function initExposure(){
-  growthRunId++;
-
+async function updateExposure(){
   try{
     statusEl.textContent='SYNCING';
-    exposureEl.classList.add('loading');
 
     const total=await fetchSheetTotalJsonp();
-    startOrganicGrowth(total,'LIVE');
+    const finalValue=total*EXPOSURE_CONFIG.multiplier;
+
+    exposureEl.classList.remove('loading');
+    statusEl.textContent='LIVE';
+    renderExposure(finalValue);
   }catch(err){
-    startOrganicGrowth(EXPOSURE_CONFIG.fallbackBase,'DEMO LIVE');
+    const fallbackValue=EXPOSURE_CONFIG.fallbackBase*EXPOSURE_CONFIG.multiplier;
+
+    exposureEl.classList.remove('loading');
+    statusEl.textContent='DEMO LIVE';
+    renderExposure(fallbackValue);
   }
 }
 
-initExposure();
+function startExposureUpdates(){
+  updateExposure();
 
+  if(refreshTimer)clearInterval(refreshTimer);
+  refreshTimer=setInterval(updateExposure,EXPOSURE_CONFIG.refreshMinutes*60*1000);
+}
+
+startExposureUpdates();
 
 </script>
 </body>
