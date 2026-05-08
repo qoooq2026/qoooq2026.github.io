@@ -81,12 +81,31 @@ section>.inner{padding:0 40px;}
 .btn-solid:hover{background:var(--acc2);transform:translateY(-2px);}
 .btn-outline{padding:14px 32px;border:1px solid var(--border);color:var(--fg2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;border-radius:2px;transition:border-color .25s,color .2s;}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+  .exposure-dashboard{position:relative;margin:40px auto 0;width:min(100%,680px);padding:22px;border:1px solid rgba(242,115,91,.32);background:linear-gradient(135deg,rgba(13,32,28,.82),rgba(31,63,56,.72));box-shadow:0 0 44px rgba(242,115,91,.08),inset 0 0 40px rgba(255,255,255,.025);overflow:hidden;animation:fadeup .7s .9s both;}
+.exposure-dashboard::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(242,115,91,.18),transparent);transform:translateX(-100%);animation:dashscan 4.8s ease-in-out infinite;}
+.exposure-dashboard::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);pointer-events:none;}
+@keyframes dashscan{0%,18%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
+.dash-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;}
+.dash-label{text-align:left;}
+.dash-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);margin-bottom:5px;}
+.dash-title{font-size:15px;color:var(--fg2);letter-spacing:2px;}
+.dash-live{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#9ee7bd;white-space:nowrap;}
+.dash-live i{width:8px;height:8px;border-radius:50%;background:#70ff9b;box-shadow:0 0 14px #70ff9b;animation:dashpulse 1.3s ease-in-out infinite;}
+@keyframes dashpulse{50%{opacity:.35;transform:scale(.75)}}
+.dash-number{position:relative;z-index:1;font-family:'Space Mono',monospace;font-weight:700;font-size:clamp(38px,8vw,76px);line-height:1;color:#fff;text-align:left;letter-spacing:1px;text-shadow:0 0 18px rgba(242,115,91,.32);font-variant-numeric:tabular-nums;}
+.dash-number.loading{opacity:.62;}
+.dash-meta{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);}
+.dash-meta b{color:var(--accent);font-weight:700;}
+
 .scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeup .7s 1s both;}
 .scroll-hint span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);}
 .scroll-bar{width:1px;height:48px;background:linear-gradient(var(--accent),transparent);animation:sbar 2.2s ease-in-out infinite;}
 @keyframes sbar{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.4);opacity:.3}}
 @keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.hero-btns{flex-direction:column;align-items:center;}.btn-solid,.btn-outline{text-align:center;width:100%;}.scroll-hint{display:none;}#hero{min-height:0;padding:120px 20px 100px;}.wm{font-size:clamp(80px,40vw,200px);letter-spacing:-2px;}}
+@media(max-width:768px){.exposure-dashboard{padding:18px;margin-top:30px;}
+.dash-top,.dash-meta{flex-direction:column;align-items:flex-start;}
+.dash-number{font-size:clamp(36px,12vw,58px);}
+.hero-btns{flex-direction:column;align-items:center;}.btn-solid,.btn-outline{text-align:center;width:100%;}.scroll-hint{display:none;}#hero{min-height:0;padding:120px 20px 100px;}.wm{font-size:clamp(80px,40vw,200px);letter-spacing:-2px;}}
 #about{background:var(--bg2);transition:background .55s;}
 .about-layout{display:grid;grid-template-columns:1fr 280px;gap:56px;align-items:start;}
 @media(max-width:900px){.about-layout{grid-template-columns:1fr;gap:40px;}.about-logo-side{min-height:auto;padding:24px;width:100%;box-sizing:border-box;}}
@@ -317,6 +336,20 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
       <a href="#" class="btn-solid" onclick="showContact();return false;">立即諮詢</a>
       <a href="#service" class="btn-outline">了解服務</a>
     </div>
+    <div class="exposure-dashboard" aria-live="polite">
+  <div class="dash-top">
+    <div class="dash-label">
+      <div class="dash-kicker">LIVE EXPOSURE ENGINE</div>
+      <div class="dash-title">本月創造曝光量</div>
+    </div>
+    <div class="dash-live"><i></i><span id="exposureStatus">SYNCING</span></div>
+  </div>
+  <div class="dash-number loading" id="monthlyExposure">讀取中</div>
+  <div class="dash-meta">
+    <span>DATA SOURCE <b>發布牆_cache · R欄</b></span>
+    <span>GROWTH <b>+300 / MIN</b></span>
+  </div>
+</div>
   </div>
   <div class="scroll-hint"><div class="scroll-bar"></div><span>SCROLL</span></div>
 </section>
@@ -586,6 +619,138 @@ form.addEventListener('submit',async e=>{
 if(window.matchMedia('(hover:none)').matches){
   document.querySelectorAll('.theme-block').forEach(el=>{el.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;this.classList.toggle('alt');});});
 }
+  const EXPOSURE_CONFIG={
+  sheetId:'1iftY-l2WikYdRj136t4Y1zklyH4-jgr6q02zRPg-SxQ',
+  gid:'66553152',
+  range:'R:R',
+  fallbackBase:5000000,
+  growthPerMinute:300
+};
+
+const exposureEl=document.getElementById('monthlyExposure');
+const statusEl=document.getElementById('exposureStatus');
+const nf=new Intl.NumberFormat('zh-TW');
+
+let exposureValue=0,shownValue=0,displayRaf=null,growthTimer=null,monthCheckTimer=null;
+
+function getMonthKey(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function formatExposure(n){
+  return nf.format(Math.max(0,Math.floor(n)));
+}
+
+function renderExposure(){
+  if(displayRaf)cancelAnimationFrame(displayRaf);
+  const start=shownValue,end=exposureValue,duration=680,t0=performance.now();
+
+  function step(now){
+    const p=Math.min(1,(now-t0)/duration);
+    const eased=1-Math.pow(1-p,3);
+    shownValue=start+(end-start)*eased;
+    exposureEl.textContent=formatExposure(shownValue);
+    if(p<1)displayRaf=requestAnimationFrame(step);
+  }
+
+  displayRaf=requestAnimationFrame(step);
+}
+
+function fetchSheetTotalJsonp(){
+  return new Promise((resolve,reject)=>{
+    const cb='qoooqExposureCallback_'+Date.now();
+    const url=`https://docs.google.com/spreadsheets/d/${EXPOSURE_CONFIG.sheetId}/gviz/tq?gid=${EXPOSURE_CONFIG.gid}&range=${encodeURIComponent(EXPOSURE_CONFIG.range)}&tqx=out:json;responseHandler:${cb}`;
+    const script=document.createElement('script');
+    const timer=setTimeout(()=>{cleanup();reject(new Error('sheet timeout'));},9000);
+
+    function cleanup(){
+      clearTimeout(timer);
+      script.remove();
+      delete window[cb];
+    }
+
+    window[cb]=data=>{
+      cleanup();
+      const rows=data.table?.rows||[];
+      const total=rows.reduce((sum,row)=>{
+        const cell=row.c?.[0];
+        const raw=cell?.v??cell?.f??'';
+        const n=Number(String(raw).replace(/[^\d.-]/g,''));
+        return Number.isFinite(n)?sum+n:sum;
+      },0);
+      total?resolve(total):reject(new Error('empty total'));
+    };
+
+    script.onerror=()=>{cleanup();reject(new Error('sheet unavailable'));};
+    script.src=url;
+    document.head.appendChild(script);
+  });
+}
+
+function startOrganicGrowth(base,statusText='LIVE'){
+  if(growthTimer)clearTimeout(growthTimer);
+  if(monthCheckTimer)clearInterval(monthCheckTimer);
+
+  const monthKey=getMonthKey();
+  exposureValue=base;
+  shownValue=base;
+
+  exposureEl.classList.remove('loading');
+  exposureEl.textContent=formatExposure(exposureValue);
+  statusEl.textContent=statusText;
+
+  scheduleMinuteBursts(monthKey);
+
+  monthCheckTimer=setInterval(()=>{
+    if(getMonthKey()!==monthKey){
+      initExposure();
+    }
+  },60000);
+}
+
+function scheduleMinuteBursts(monthKey){
+  if(getMonthKey()!==monthKey)return;
+
+  let remaining=EXPOSURE_CONFIG.growthPerMinute;
+  const chunks=Array.from({length:Math.floor(12+Math.random()*10)},()=>Math.random());
+  const total=chunks.reduce((a,b)=>a+b,0);
+
+  chunks.forEach((w,i)=>{
+    const delay=1800+Math.random()*56000;
+    setTimeout(()=>{
+      if(getMonthKey()!==monthKey)return;
+
+      const add=i===chunks.length-1
+        ? remaining
+        : Math.max(1,Math.round(EXPOSURE_CONFIG.growthPerMinute*w/total));
+
+      remaining-=add;
+      exposureValue+=add;
+      renderExposure();
+    },delay);
+  });
+
+  growthTimer=setTimeout(()=>{
+    scheduleMinuteBursts(monthKey);
+  },60000+Math.random()*2600);
+}
+
+async function initExposure(){
+  try{
+    statusEl.textContent='SYNCING';
+    exposureEl.classList.add('loading');
+
+    const total=await fetchSheetTotalJsonp();
+    startOrganicGrowth(total,'LIVE');
+  }catch(err){
+    startOrganicGrowth(EXPOSURE_CONFIG.fallbackBase,'DEMO LIVE');
+  }
+}
+
+initExposure();
+
+
 </script>
 </body>
 </html>
