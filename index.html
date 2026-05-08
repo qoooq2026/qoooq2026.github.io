@@ -346,8 +346,8 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
   </div>
   <div class="dash-number loading" id="monthlyExposure">讀取中</div>
   <div class="dash-meta">
-    <span>DATA SOURCE <b>發布牆_cache · R欄</b></span>
-    <span>GROWTH <b>+300 / MIN</b></span>
+    <span><b>全客戶發布數據</b></span>
+    <span><b>平均投稿自然流量 5,000+</b></span>
   </div>
 </div>
   </div>
@@ -631,7 +631,12 @@ const exposureEl=document.getElementById('monthlyExposure');
 const statusEl=document.getElementById('exposureStatus');
 const nf=new Intl.NumberFormat('zh-TW');
 
-let exposureValue=0,shownValue=0,displayRaf=null,growthTimer=null,monthCheckTimer=null;
+let exposureValue=0;
+let shownValue=0;
+let displayRaf=null;
+let growthTimer=null;
+let monthCheckTimer=null;
+let growthRunId=0;
 
 function getMonthKey(){
   const d=new Date();
@@ -644,13 +649,18 @@ function formatExposure(n){
 
 function renderExposure(){
   if(displayRaf)cancelAnimationFrame(displayRaf);
-  const start=shownValue,end=exposureValue,duration=680,t0=performance.now();
+
+  const start=shownValue;
+  const end=exposureValue;
+  const duration=680;
+  const t0=performance.now();
 
   function step(now){
     const p=Math.min(1,(now-t0)/duration);
     const eased=1-Math.pow(1-p,3);
     shownValue=start+(end-start)*eased;
     exposureEl.textContent=formatExposure(shownValue);
+
     if(p<1)displayRaf=requestAnimationFrame(step);
   }
 
@@ -672,6 +682,7 @@ function fetchSheetTotalJsonp(){
 
     window[cb]=data=>{
       cleanup();
+
       const rows=data.table?.rows||[];
       const total=rows.reduce((sum,row)=>{
         const cell=row.c?.[0];
@@ -679,6 +690,7 @@ function fetchSheetTotalJsonp(){
         const n=Number(String(raw).replace(/[^\d.-]/g,''));
         return Number.isFinite(n)?sum+n:sum;
       },0);
+
       total?resolve(total):reject(new Error('empty total'));
     };
 
@@ -692,7 +704,11 @@ function startOrganicGrowth(base,statusText='LIVE'){
   if(growthTimer)clearTimeout(growthTimer);
   if(monthCheckTimer)clearInterval(monthCheckTimer);
 
+  growthRunId++;
+
+  const runId=growthRunId;
   const monthKey=getMonthKey();
+
   exposureValue=base;
   shownValue=base;
 
@@ -700,7 +716,7 @@ function startOrganicGrowth(base,statusText='LIVE'){
   exposureEl.textContent=formatExposure(exposureValue);
   statusEl.textContent=statusText;
 
-  scheduleMinuteBursts(monthKey);
+  scheduleMinuteBursts(monthKey,runId);
 
   monthCheckTimer=setInterval(()=>{
     if(getMonthKey()!==monthKey){
@@ -709,8 +725,8 @@ function startOrganicGrowth(base,statusText='LIVE'){
   },60000);
 }
 
-function scheduleMinuteBursts(monthKey){
-  if(getMonthKey()!==monthKey)return;
+function scheduleMinuteBursts(monthKey,runId){
+  if(getMonthKey()!==monthKey || runId!==growthRunId)return;
 
   let remaining=EXPOSURE_CONFIG.growthPerMinute;
   const chunks=Array.from({length:Math.floor(12+Math.random()*10)},()=>Math.random());
@@ -718,8 +734,9 @@ function scheduleMinuteBursts(monthKey){
 
   chunks.forEach((w,i)=>{
     const delay=1800+Math.random()*56000;
+
     setTimeout(()=>{
-      if(getMonthKey()!==monthKey)return;
+      if(getMonthKey()!==monthKey || runId!==growthRunId)return;
 
       const add=i===chunks.length-1
         ? remaining
@@ -732,11 +749,13 @@ function scheduleMinuteBursts(monthKey){
   });
 
   growthTimer=setTimeout(()=>{
-    scheduleMinuteBursts(monthKey);
+    scheduleMinuteBursts(monthKey,runId);
   },60000+Math.random()*2600);
 }
 
 async function initExposure(){
+  growthRunId++;
+
   try{
     statusEl.textContent='SYNCING';
     exposureEl.classList.add('loading');
