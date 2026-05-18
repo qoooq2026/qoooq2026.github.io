@@ -278,6 +278,35 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 .submit-btn{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;border-radius:2px;transition:background .25s,transform .2s;}
 .submit-btn:hover{background:var(--acc2);transform:translateY(-2px);}
 .success-msg{display:none;text-align:center;padding:40px;font-size:16px;color:var(--accent);font-weight:700;}
+  .success-panel{
+  padding:56px 32px;
+  text-align:center;
+  border:1px solid var(--accent);
+  background:rgba(242,115,91,0.06);
+}
+.success-panel-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  margin:0 auto 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--accent);
+  color:#fff;
+  font-size:24px;
+  font-weight:900;
+}
+.success-panel h3{
+  font-size:22px;
+  color:var(--fg);
+  margin-bottom:12px;
+}
+.success-panel p{
+  font-size:15px;
+  color:var(--fg2);
+  line-height:2;
+}
 #main-content.hidden{display:none;}
 
 @media(max-width:768px){
@@ -527,7 +556,7 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
       </div>
       <div class="footer-contact">
         <h4>CONTACT</h4>
-        <a href="mailto:info@ilha.tw">info@qoooq.tw</a>
+        <a href="#" onclick="showContact();return false;">info@qoooq.tw</a>
         <a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener">加入 LINE 官方帳號</a>
       </div>
       <div class="footer-links">
@@ -612,8 +641,19 @@ form.addEventListener('submit',async e=>{
   btn.textContent='送出中...';btn.disabled=true;
   try{
     const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
-    if(res.ok){form.style.display='none';document.getElementById('successMsg').style.display='block';}
-    else{btn.textContent='請直接來信 info@qoooq.tw';btn.disabled=false;}
+    if(res.ok){
+  form.closest('.contact-form').innerHTML=`
+    <div class="success-panel">
+      <div class="success-panel-icon">✓</div>
+      <h3>我們收到您的需求</h3>
+      <p>將於 24 小時內與您聯繫，請稍候。</p>
+    </div>
+  `;
+}
+else{
+  btn.textContent='請直接來信 info@qoooq.tw';
+  btn.disabled=false;
+}
   }catch{btn.textContent='請直接來信 info@qoooq.tw';btn.disabled=false;}
 });
 if(window.matchMedia('(hover:none)').matches){
