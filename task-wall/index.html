@@ -573,7 +573,15 @@ function renderTasks(tasks) {
     let badgeHtml = '<span class="badge badge-open">招募中</span>';
     if (isClosed)       badgeHtml = '<span class="badge badge-closed">已截止</span>';
     else if (isFull)    badgeHtml = '<span class="badge badge-full">額滿</span>';
-
+    
+function fmtDate(raw) {
+  const d = new Date(raw);
+  if (isNaN(d)) return raw;
+  const w = ['日','一','二','三','四','五','六'][d.getDay()];
+  return d.getFullYear() + '.' +
+    String(d.getMonth()+1).padStart(2,'0') + '.' +
+    String(d.getDate()).padStart(2,'0') + ' 週' + w;
+}
     const card = document.createElement('div');
     card.className = 'task-card' + (isClosed ? ' closed' : '') + (isFull && !isClosed ? ' full' : '');
     card.style.animationDelay = (i * 0.07) + 's';
@@ -582,7 +590,7 @@ function renderTasks(tasks) {
     card.innerHTML = `
       <div class="card-header">
         <div class="card-date">
-          ${t.date}
+          ${fmtDate(t.date)}
           <span class="weekday">${t.location || ''}</span>
         </div>
         ${badgeHtml}
