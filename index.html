@@ -23,10 +23,8 @@
 <meta name="twitter:description" content="台灣短影音行銷公司。有曝光才收費，成果導向。TikTok／Reels全平台。">
 <meta name="twitter:image" content="https://qoooq.tw/images/og_image.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"夸克創意股份有限公司","alternateName":["QoooQ Taiwan","夸克創意","QoooQ"],"url":"https://qoooq.tw","logo":"https://qoooq.tw/images/logo_white.png","description":"台灣短影音行銷公司，專注流量變現、品牌曝光、KOL整合。有曝光才收費的成果導向行銷夥伴。","foundingDate":"2026","areaServed":["TW","JP"],"knowsLanguage":["zh-TW","ja"],"contactPoint":{"@type":"ContactPoint","email":"info@qoooq.tw","contactType":"customer service","availableLanguage":["zh-TW","ja"]},"sameAs":["https://lin.ee/OgLqDGS","https://www.104.com.tw/company/1a2x6bnqjm?jobsource=google"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"夸克創意 QoooQ Taiwan","url":"https://qoooq.tw"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"短影音行銷爆款方案","provider":{"@type":"Organization","name":"夸克創意股份有限公司"},"description":"透過大量短影音內容於TikTok、Reels、Shorts等平台曝光，曝光成果報酬制，有曝光才收費。","areaServed":["TW","JP"],"serviceType":["短影音行銷","流量變現","品牌曝光","KOL整合","社群行銷"],"url":"https://qoooq.tw/#service"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&family=Montserrat:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#17312C;--bg2:#1a3832;--bg3:#1e3f38;--fg:#fbfbfb;--fg2:#dde8e5;--muted:#7a9e98;--accent:#F2735B;--acc2:#d9604a;--border:rgba(251,251,251,0.09);--green:#17312C;--max-w:880px;}
 .theme-block{transition:background .55s,color .55s,border-color .55s;}
@@ -34,6 +32,8 @@
 *{margin:0;padding:0;box-sizing:border-box;min-width:0;}
 html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%;}
 body{background:var(--bg);color:var(--fg);font-family:'Noto Sans TC',sans-serif;overflow-x:hidden;width:100%;cursor:none;transition:background .55s;}
+body[lang="ja"]{font-family:'Noto Sans JP',sans-serif;}
+body[lang="en"]{font-family:'Noto Sans TC',sans-serif;}
 #cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:background .3s,border-color .3s,transform .15s;}
 #cur{width:10px;height:10px;background:var(--accent);}
 #cur-ring{width:36px;height:36px;border:1.5px solid var(--accent);opacity:.6;}
@@ -49,16 +49,32 @@ header.alt{background:rgba(19,19,19,0.92);}
 .nav-desktop a:hover{color:var(--accent);}
 .nav-cta{padding:8px 18px;background:var(--accent);color:#fff!important;border-radius:2px;transition:background .25s!important;}
 .nav-cta:hover{background:var(--acc2)!important;}
+
+/* ===== LANG SWITCHER ===== */
+.lang-switcher{display:flex;align-items:center;gap:2px;margin-left:8px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.lang-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 9px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .2s,background .2s;text-transform:uppercase;white-space:nowrap;}
+.lang-btn:hover{color:var(--fg);background:rgba(255,255,255,0.06);}
+.lang-btn.active{color:var(--accent);background:rgba(242,115,91,0.1);}
+.lang-divider{width:1px;height:14px;background:var(--border);flex-shrink:0;}
+
 .ham-btn{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px;}
 .ham-btn span{display:block;width:24px;height:2px;background:var(--fg);transition:all .3s;}
 .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 .ham-btn.open span:nth-child(2){opacity:0;}
 .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-.nav-mobile{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(17,17,17,0.97);backdrop-filter:blur(20px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:40px;}
+.nav-mobile{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(17,17,17,0.97);backdrop-filter:blur(20px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:36px;}
 .nav-mobile.open{display:flex;}
 .nav-mobile a{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;color:var(--fg);text-decoration:none;letter-spacing:3px;text-transform:uppercase;transition:color .2s;}
 .nav-mobile a:hover,.nav-mobile a.accent{color:var(--accent);}
-@media(max-width:768px){.nav-desktop{display:none;}.ham-btn{display:flex;}header{padding:0 20px;}}
+.nav-mobile .lang-switcher-mob{display:flex;align-items:center;gap:0;border:1px solid rgba(255,255,255,0.15);border-radius:2px;overflow:hidden;margin-top:8px;}
+.nav-mobile .lang-btn{font-size:11px;padding:10px 16px;}
+
+@media(max-width:768px){
+  .nav-desktop{display:none;}
+  .ham-btn{display:flex;}
+  header{padding:0 20px;}
+  .lang-switcher{display:none;}
+}
 section{padding:100px 0;position:relative;}
 section>.inner{padding:0 40px;}
 @media(max-width:768px){section{padding:72px 0;}section>.inner{padding:0 20px;}}
@@ -81,7 +97,7 @@ section>.inner{padding:0 40px;}
 .btn-solid:hover{background:var(--acc2);transform:translateY(-2px);}
 .btn-outline{padding:14px 32px;border:1px solid var(--border);color:var(--fg2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;border-radius:2px;transition:border-color .25s,color .2s;}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-  .exposure-dashboard{position:relative;margin:40px auto 0;width:min(100%,680px);padding:22px;border:1px solid rgba(242,115,91,.32);background:linear-gradient(135deg,rgba(13,32,28,.82),rgba(31,63,56,.72));box-shadow:0 0 44px rgba(242,115,91,.08),inset 0 0 40px rgba(255,255,255,.025);overflow:hidden;animation:fadeup .7s .9s both;}
+.exposure-dashboard{position:relative;margin:40px auto 0;width:min(100%,680px);padding:22px;border:1px solid rgba(242,115,91,.32);background:linear-gradient(135deg,rgba(13,32,28,.82),rgba(31,63,56,.72));box-shadow:0 0 44px rgba(242,115,91,.08),inset 0 0 40px rgba(255,255,255,.025);overflow:hidden;animation:fadeup .7s .9s both;}
 .exposure-dashboard::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(242,115,91,.18),transparent);transform:translateX(-100%);animation:dashscan 4.8s ease-in-out infinite;}
 .exposure-dashboard::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);pointer-events:none;}
 @keyframes dashscan{0%,18%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
@@ -96,16 +112,12 @@ section>.inner{padding:0 40px;}
 .dash-number.loading{opacity:.62;}
 .dash-meta{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);}
 .dash-meta b{color:var(--accent);font-weight:700;}
-
 .scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeup .7s 1s both;}
 .scroll-hint span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);}
 .scroll-bar{width:1px;height:48px;background:linear-gradient(var(--accent),transparent);animation:sbar 2.2s ease-in-out infinite;}
 @keyframes sbar{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.4);opacity:.3}}
 @keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.exposure-dashboard{padding:18px;margin-top:30px;}
-.dash-top,.dash-meta{flex-direction:column;align-items:flex-start;}
-.dash-number{font-size:clamp(36px,12vw,58px);}
-.hero-btns{flex-direction:column;align-items:center;}.btn-solid,.btn-outline{text-align:center;width:100%;}.scroll-hint{display:none;}#hero{min-height:0;padding:120px 20px 100px;}.wm{font-size:clamp(80px,40vw,200px);letter-spacing:-2px;}}
+@media(max-width:768px){.exposure-dashboard{padding:18px;margin-top:30px;}.dash-top,.dash-meta{flex-direction:column;align-items:flex-start;}.dash-number{font-size:clamp(36px,12vw,58px);}.hero-btns{flex-direction:column;align-items:center;}.btn-solid,.btn-outline{text-align:center;width:100%;}.scroll-hint{display:none;}#hero{min-height:0;padding:120px 20px 100px;}.wm{font-size:clamp(80px,40vw,200px);letter-spacing:-2px;}}
 #about{background:var(--bg2);transition:background .55s;}
 .about-layout{display:grid;grid-template-columns:1fr 280px;gap:56px;align-items:start;}
 @media(max-width:900px){.about-layout{grid-template-columns:1fr;gap:40px;}.about-logo-side{min-height:auto;padding:24px;width:100%;box-sizing:border-box;}}
@@ -128,7 +140,7 @@ section>.inner{padding:0 40px;}
 .cc-card:hover{background:var(--bg2);}
 .cc-card:hover::after{transform:scaleX(1);}
 .cc-n{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:900;color:var(--accent);line-height:1;margin-bottom:10px;transition:color .4s;}
-.cc-l{font-size:14px;color:var(--fg2);line-height:;transition:color .4s;}
+.cc-l{font-size:14px;color:var(--fg2);line-height:1.8;transition:color .4s;}
 #service{background:var(--bg2);transition:background .55s;}
 .sig-card{background:var(--bg);border:1px solid var(--border);padding:48px;margin-bottom:2px;position:relative;overflow:hidden;transition:background .4s,border-color .4s;}
 .sig-card::before{content:'01';position:absolute;right:40px;bottom:28px;font-family:'Montserrat',sans-serif;font-size:120px;font-weight:900;color:rgba(242,115,91,0.06);line-height:1;}
@@ -144,7 +156,7 @@ section>.inner{padding:0 40px;}
 .pain-items{display:flex;flex-direction:column;gap:8px;}
 .pain-item{background:rgba(251,251,251,0.03);border:1px solid rgba(251,251,251,0.06);padding:16px 18px;border-radius:2px;}
 .pain-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:5px;font-family:'Space Mono',monospace;}
-.pain-txt{font-size:14px;font-weight:500;line-height:;color:var(--fg);}
+.pain-txt{font-size:14px;font-weight:500;line-height:1.7;color:var(--fg);}
 .pain-txt mark{background:none;color:var(--accent);font-weight:700;}
 .solve-section{margin:28px 0;}
 .solve-header-tag{font-size:10px;color:var(--accent);letter-spacing:3px;font-family:'Space Mono',monospace;margin-bottom:14px;}
@@ -185,28 +197,11 @@ section>.inner{padding:0 40px;}
 .svc-row-mob:hover{background:var(--bg3);}
 .svc-row-text{padding:20px 18px;display:flex;flex-direction:column;justify-content:center;}
 .svc-row-img img{width:120px;height:120px;object-fit:cover;display:block;}
-
-/* ===== SERVICE CTA — 不用 rv，永遠顯示 ===== */
-.service-cta{
-  margin-top:40px;
-  padding:40px;
-  background:var(--bg);
-  border:1px solid var(--accent);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
-  transition:background .4s;
-}
+.service-cta{margin-top:40px;padding:40px;background:var(--bg);border:1px solid var(--accent);display:flex;align-items:center;justify-content:space-between;gap:24px;transition:background .4s;}
 .service-cta:hover{background:var(--bg3);}
 .service-cta-text strong{color:var(--fg);font-size:18px;display:block;margin-bottom:6px;transition:color .4s;}
-.service-cta-text p{font-size:15px;color:var(--muted);line-height:;transition:color .4s;}
-@media(max-width:600px){
-  .service-cta{flex-direction:column;align-items:stretch;padding:24px 18px;gap:20px;}
-  .service-cta .btn-solid{width:100%;text-align:center;display:block;}
-  .service-cta-text strong,.service-cta-text p{text-align:left;}
-}
-
+.service-cta-text p{font-size:15px;color:var(--muted);line-height:1.7;transition:color .4s;}
+@media(max-width:600px){.service-cta{flex-direction:column;align-items:stretch;padding:24px 18px;gap:20px;}.service-cta .btn-solid{width:100%;text-align:center;display:block;}}
 #value{background:var(--bg3);transition:background .55s;}
 .val-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(251,251,251,0.05);border:1px solid rgba(251,251,251,0.05);}
 @media(max-width:600px){.val-grid{grid-template-columns:1fr;}}
@@ -233,8 +228,6 @@ section>.inner{padding:0 40px;}
 .recruit-robot{display:flex;align-items:center;justify-content:center;}
 .recruit-robot img{width:220px;height:auto;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.15));animation:floatrobot 3s ease-in-out infinite alternate;}
 @media(max-width:900px){.recruit-robot img{width:160px;}}
-
-/* ===== FOOTER 置中 ===== */
 footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border);}
 .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;text-align:center;}
 @media(max-width:768px){.footer-inner{padding:0 20px;}}
@@ -252,7 +245,6 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 .footer-privacy{display:flex;gap:0;}
 .footer-privacy a{font-size:12px;color:var(--muted);text-decoration:none;margin:0 10px;}
 .footer-privacy a:hover{color:var(--accent);}
-
 .rv{opacity:0;transform:translateY(32px);transition:opacity .75s,transform .75s;}
 .rv.in{opacity:1;transform:translateY(0);}
 .ci-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg2);margin-bottom:8px;}
@@ -274,41 +266,14 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 .f-group input,.f-group select,.f-group textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--fg);padding:12px 16px;font-family:'Noto Sans TC',sans-serif;font-size:14px;border-radius:2px;outline:none;transition:border-color .2s;appearance:none;}
 .f-group input:focus,.f-group select:focus,.f-group textarea:focus{border-color:var(--accent);}
 .f-group textarea{resize:vertical;min-height:100px;}
-.form-note{font-size:12px;color:var(--muted);line-height:;margin-bottom:20px;}
+.form-note{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:20px;}
 .submit-btn{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;border-radius:2px;transition:background .25s,transform .2s;}
 .submit-btn:hover{background:var(--acc2);transform:translateY(-2px);}
-.success-msg{display:none;text-align:center;padding:40px;font-size:16px;color:var(--accent);font-weight:700;}
-  .success-panel{
-  padding:56px 32px;
-  text-align:center;
-  border:1px solid var(--accent);
-  background:rgba(242,115,91,0.06);
-}
-.success-panel-icon{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  margin:0 auto 18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--accent);
-  color:#fff;
-  font-size:24px;
-  font-weight:900;
-}
-.success-panel h3{
-  font-size:22px;
-  color:var(--fg);
-  margin-bottom:12px;
-}
-.success-panel p{
-  font-size:15px;
-  color:var(--fg2);
-  line-height:2;
-}
+.success-panel{padding:56px 32px;text-align:center;border:1px solid var(--accent);background:rgba(242,115,91,0.06);}
+.success-panel-icon{width:44px;height:44px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-size:24px;font-weight:900;}
+.success-panel h3{font-size:22px;color:var(--fg);margin-bottom:12px;}
+.success-panel p{font-size:15px;color:var(--fg2);line-height:2;}
 #main-content.hidden{display:none;}
-
 @media(max-width:768px){
   .sec-title,.sec-sub,.tag{text-align:center;}
   .about-hero-box span{text-align:left;display:block;}
@@ -322,6 +287,10 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
   .solve-header-tag{text-align:left;}
   .recruit-text{text-align:center;}
 }
+
+/* ===== LANG TRANSITION ===== */
+[data-i18n]{transition:opacity .18s;}
+.lang-switching [data-i18n]{opacity:0;}
 </style>
 </head>
 <body>
@@ -333,23 +302,39 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <img src="images/logo_white.png" alt="QoooQ 夸克創意 短影音行銷" class="logo-img">
   </a>
   <ul class="nav-desktop">
-    <li><a href="#about" onclick="showMain()">ABOUT</a></li>
-    <li><a href="#credit" onclick="showMain()">CREDIT</a></li>
-    <li><a href="#service" onclick="showMain()">SERVICE</a></li>
-    <li><a href="#value" onclick="showMain()">VALUE</a></li>
-    <li><a href="#recruit" onclick="showMain()">RECRUIT</a></li>
-    <li><a href="#" class="nav-cta" onclick="showContact();return false;">CONTACT US</a></li>
+    <li><a href="#about" onclick="showMain()" data-i18n="nav.about">ABOUT</a></li>
+    <li><a href="#credit" onclick="showMain()" data-i18n="nav.credit">CREDIT</a></li>
+    <li><a href="#service" onclick="showMain()" data-i18n="nav.service">SERVICE</a></li>
+    <li><a href="#value" onclick="showMain()" data-i18n="nav.value">VALUE</a></li>
+    <li><a href="#recruit" onclick="showMain()" data-i18n="nav.recruit">RECRUIT</a></li>
+    <li><a href="#" class="nav-cta" onclick="showContact();return false;" data-i18n="nav.contact">CONTACT US</a></li>
+    <li>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('zh')" data-lang="zh">ZH</button>
+        <div class="lang-divider"></div>
+        <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+        <div class="lang-divider"></div>
+        <button class="lang-btn" onclick="setLang('ja')" data-lang="ja">JP</button>
+      </div>
+    </li>
   </ul>
   <button class="ham-btn" id="hamBtn" aria-label="選單"><span></span><span></span><span></span></button>
 </header>
 
 <nav class="nav-mobile" id="mobileNav">
-  <a href="#about" onclick="showMain();closeMob()">ABOUT</a>
-  <a href="#credit" onclick="showMain();closeMob()">CREDIT</a>
-  <a href="#service" onclick="showMain();closeMob()">SERVICE</a>
-  <a href="#value" onclick="showMain();closeMob()">VALUE</a>
-  <a href="#recruit" onclick="showMain();closeMob()">RECRUIT</a>
-  <a href="#" class="accent" onclick="showContact();closeMob();return false;">CONTACT US</a>
+  <a href="#about" onclick="showMain();closeMob()" data-i18n="nav.about">ABOUT</a>
+  <a href="#credit" onclick="showMain();closeMob()" data-i18n="nav.credit">CREDIT</a>
+  <a href="#service" onclick="showMain();closeMob()" data-i18n="nav.service">SERVICE</a>
+  <a href="#value" onclick="showMain();closeMob()" data-i18n="nav.value">VALUE</a>
+  <a href="#recruit" onclick="showMain();closeMob()" data-i18n="nav.recruit">RECRUIT</a>
+  <a href="#" class="accent" onclick="showContact();closeMob();return false;" data-i18n="nav.contact">CONTACT US</a>
+  <div class="lang-switcher-mob lang-switcher">
+    <button class="lang-btn active" onclick="setLang('zh')" data-lang="zh">ZH</button>
+    <div class="lang-divider"></div>
+    <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+    <div class="lang-divider"></div>
+    <button class="lang-btn" onclick="setLang('ja')" data-lang="ja">JP</button>
+  </div>
 </nav>
 
 <div id="main-content">
@@ -358,46 +343,46 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
   <div class="hero-bg-glow"></div>
   <div class="wm" aria-hidden="true">QoooQ</div>
   <div class="hero-inner">
-    <div class="hero-kicker">夸克創意 × QoooQ Taiwan · 2026</div>
-    <h1 class="hero-h1">用無限的創意<br>從<em>0</em>創造新玩法</h1>
-    <p class="hero-desc">短影音行銷・KOL 整合・品牌曝光方案<br>有曝光才收費，真正的成果導向行銷夥伴</p>
+    <div class="hero-kicker" data-i18n="hero.kicker">夸克創意 × QoooQ Taiwan · 2026</div>
+    <h1 class="hero-h1" data-i18n="hero.h1">用無限的創意<br>從<em>0</em>創造新玩法</h1>
+    <p class="hero-desc" data-i18n="hero.desc">短影音行銷・KOL 整合・品牌曝光方案<br>有曝光才收費，真正的成果導向行銷夥伴</p>
     <div class="hero-btns">
-      <a href="#" class="btn-solid" onclick="showContact();return false;">立即諮詢</a>
-      <a href="#service" class="btn-outline">了解服務</a>
+      <a href="#" class="btn-solid" onclick="showContact();return false;" data-i18n="hero.cta1">立即諮詢</a>
+      <a href="#service" class="btn-outline" data-i18n="hero.cta2">了解服務</a>
     </div>
     <div class="exposure-dashboard" aria-live="polite">
-  <div class="dash-top">
-    <div class="dash-label">
-      <div class="dash-kicker">LIVE EXPOSURE ENGINE</div>
-      <div class="dash-title">本月創造曝光量</div>
+      <div class="dash-top">
+        <div class="dash-label">
+          <div class="dash-kicker">LIVE EXPOSURE ENGINE</div>
+          <div class="dash-title" data-i18n="hero.dashTitle">本月創造曝光量</div>
+        </div>
+        <div class="dash-live"><i></i><span id="exposureStatus">SYNCING</span></div>
+      </div>
+      <div class="dash-number loading" id="monthlyExposure" data-i18n="hero.dashLoading">讀取中</div>
+      <div class="dash-meta">
+        <span><b data-i18n="hero.dashMeta1">全平台投稿發布數據 * 自然流量</b></span>
+        <span><b data-i18n="hero.dashMeta2">每 30 分鐘更新</b></span>
+      </div>
     </div>
-    <div class="dash-live"><i></i><span id="exposureStatus">SYNCING</span></div>
-  </div>
-  <div class="dash-number loading" id="monthlyExposure">讀取中</div>
-     <div class="dash-meta">
-       <span><b>全平台投稿發布數據 * 自然流量 </b></span>
-       <span><b>每 30 分鐘更新</b></span>
-     </div>
-</div>
   </div>
   <div class="scroll-hint"><div class="scroll-bar"></div><span>SCROLL</span></div>
 </section>
 
 <section id="about" class="theme-block">
   <div class="inner">
-    <span class="tag">01 — About</span>
+    <span class="tag" data-i18n="about.tag">01 — About</span>
     <h2 class="sec-title">ABOUT</h2>
-    <p class="sec-sub">關於夸克創意</p>
+    <p class="sec-sub" data-i18n="about.sub">關於夸克創意</p>
     <div class="about-layout rv">
       <div class="about-left">
         <div class="about-hero-box">
-          <span>我們是從自創 8 年電商品牌<br>獨立出來的流量變現專家</span>
+          <span data-i18n="about.heroBox">我們是從自創 8 年電商品牌<br>獨立出來的流量變現專家</span>
         </div>
         <div class="divbar"></div>
         <div class="about-text">
-          <p><strong>夸克創意股份有限公司（QoooQ.tw）</strong>成立於 2026 年 4 月，帶著 8 年電商品牌的成功經驗，深耕流量與變現策略。</p>
-          <p>我司主要協助客戶透過<strong>短影音行銷</strong>創造更多自然流量與業績。夸克是物理最小的單位，卻創造出無限的宇宙。我們期許自己用無限的小創意，提供真正能解決廣告主<strong>流量變現</strong>的行銷服務。</p>
-          <p>同時支援 CRM、廣告設計、廣告投放、商城代操等多元專業服務，深化與所有配合的廠商，達成全面性業績提升。</p>
+          <p data-i18n="about.p1"><strong>夸克創意股份有限公司（QoooQ.tw）</strong>成立於 2026 年 4 月，帶著 8 年電商品牌的成功經驗，深耕流量與變現策略。</p>
+          <p data-i18n="about.p2">我司主要協助客戶透過<strong>短影音行銷</strong>創造更多自然流量與業績。夸克是物理最小的單位，卻創造出無限的宇宙。我們期許自己用無限的小創意，提供真正能解決廣告主<strong>流量變現</strong>的行銷服務。</p>
+          <p data-i18n="about.p3">同時支援 CRM、廣告設計、廣告投放、商城代操等多元專業服務，深化與所有配合的廠商，達成全面性業績提升。</p>
         </div>
       </div>
       <div class="about-logo-side">
@@ -410,12 +395,12 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 
 <section id="credit" class="theme-block">
   <div class="inner">
-    <span class="tag">02 — Credit</span>
+    <span class="tag" data-i18n="credit.tag">02 — Credit</span>
     <h2 class="sec-title">CREDIT</h2>
-    <p class="sec-sub">實績亮點</p>
+    <p class="sec-sub" data-i18n="credit.sub">實績亮點</p>
     <div class="credit-chart-wrap rv">
-      <div class="credit-chart-label">自營品牌 8 年業績走勢 ── 平均每年 YoY +50%</div>
-      <svg viewBox="0 0 700 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;" role="img" aria-label="自營品牌8年業績走勢圖，平均每年YoY成長50%">
+      <div class="credit-chart-label" data-i18n="credit.chartLabel">自營品牌 8 年業績走勢 ── 平均每年 YoY +50%</div>
+      <svg viewBox="0 0 700 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;" role="img" aria-label="8-year revenue growth chart">
         <defs>
           <linearGradient id="aG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F2735B" stop-opacity="0.28"/><stop offset="100%" stop-color="#F2735B" stop-opacity="0.02"/></linearGradient>
           <linearGradient id="lG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#56B77E"/><stop offset="60%" stop-color="#F2a07a"/><stop offset="100%" stop-color="#F2735B"/></linearGradient>
@@ -440,108 +425,112 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
         <text x="665" y="258" font-size="11" fill="rgba(255,255,255,0.7)" font-family="monospace" font-weight="700" text-anchor="middle">2026</text>
       </svg>
     </div>
-    <p class="credit-intro-txt rv">我們是曝光與營收的<strong style="color:var(--accent);">成長駭客</strong>。協助客戶種類從知名上市櫃品牌，到超有特色的新創都有。只要是 B2C 面向大眾的品項，我們都能提供優質的<strong>短影音行銷</strong>與<strong>品牌曝光</strong>服務。</p>
+    <p class="credit-intro-txt rv" data-i18n="credit.intro">我們是曝光與營收的<strong style="color:var(--accent);">成長駭客</strong>。協助客戶種類從知名上市櫃品牌，到超有特色的新創都有。只要是 B2C 面向大眾的品項，我們都能提供優質的<strong>短影音行銷</strong>與<strong>品牌曝光</strong>服務。</p>
     <div class="credit-cards rv">
-      <div class="cc-card"><div class="cc-n">13名+</div><div class="cc-l">創立兩個月<br>成功招募經營成員，持續招募中</div></div>
-      <div class="cc-card"><div class="cc-n">30間+</div><div class="cc-l">創立兩個月<br>台日合作客戶超過 30 間</div></div>
-      <div class="cc-card"><div class="cc-n">500萬+</div><div class="cc-l">單品自然流量<br>達成單月超過 100 萬曝光</div></div>
+      <div class="cc-card"><div class="cc-n">13名+</div><div class="cc-l" data-i18n="credit.card1">創立兩個月<br>成功招募經營成員，持續招募中</div></div>
+      <div class="cc-card"><div class="cc-n">30間+</div><div class="cc-l" data-i18n="credit.card2">創立兩個月<br>台日合作客戶超過 30 間</div></div>
+      <div class="cc-card"><div class="cc-n">500萬+</div><div class="cc-l" data-i18n="credit.card3">單品自然流量<br>達成單月超過 100 萬曝光</div></div>
     </div>
   </div>
 </section>
 
 <section id="service" class="theme-block">
   <div class="inner">
-    <span class="tag">04 — Service</span>
+    <span class="tag" data-i18n="service.tag">04 — Service</span>
     <h2 class="sec-title">SERVICE</h2>
-    <p class="sec-sub">事業內容</p>
+    <p class="sec-sub" data-i18n="service.sub">事業內容</p>
 
     <div class="sig-card rv">
-      <div class="sig-title"><span class="sig-badge">SIGNATURE</span>短影音行銷爆款方案</div>
-      <p class="sig-desc">透過大量有趣的短影音內容於 TikTok、Reels、Shorts 等各大平台曝光。<br><strong style="color:var(--accent)">我們不收固定費，有曝光才收費（曝光成果報酬制）。</strong></p>
+      <div class="sig-title"><span class="sig-badge" data-i18n="service.badge">SIGNATURE</span><span data-i18n="service.sigTitle">短影音行銷爆款方案</span></div>
+      <p class="sig-desc" data-i18n="service.sigDesc">透過大量有趣的短影音內容於 TikTok、Reels、Shorts 等各大平台曝光。<br><strong style="color:var(--accent)">我們不收固定費，有曝光才收費（曝光成果報酬制）。</strong></p>
       <div class="pain-layout">
         <div class="pain-robot-col">
-          <img src="images/robot_sad.png" alt="煩惱機器人">
-          <div class="pain-title-tag">是否有以下煩惱？</div>
+          <img src="images/robot_sad.png" alt="robot">
+          <div class="pain-title-tag" data-i18n="service.painTag">是否有以下煩惱？</div>
         </div>
         <div class="pain-items">
-          <div class="pain-item"><div class="pain-lbl">Pain 01</div><div class="pain-txt">Meta / Google 成效廣告<mark>轉換與成本越來越難做</mark></div></div>
-          <div class="pain-item"><div class="pain-lbl">Pain 02</div><div class="pain-txt">進了線下實體通路，<mark>業績沒有彈跳式成長</mark></div></div>
-          <div class="pain-item"><div class="pain-lbl">Pain 03</div><div class="pain-txt">KOL/KOC 成本太高，<mark>自然流量成長速度太慢</mark></div></div>
+          <div class="pain-item"><div class="pain-lbl">Pain 01</div><div class="pain-txt" data-i18n="service.pain1">Meta / Google 成效廣告<mark>轉換與成本越來越難做</mark></div></div>
+          <div class="pain-item"><div class="pain-lbl">Pain 02</div><div class="pain-txt" data-i18n="service.pain2">進了線下實體通路，<mark>業績沒有彈跳式成長</mark></div></div>
+          <div class="pain-item"><div class="pain-lbl">Pain 03</div><div class="pain-txt" data-i18n="service.pain3">KOL/KOC 成本太高，<mark>自然流量成長速度太慢</mark></div></div>
         </div>
       </div>
       <div class="solve-section">
-        <div class="solve-header-tag">→ 我們一次解決！</div>
+        <div class="solve-header-tag" data-i18n="service.solveTag">→ 我們一次解決！</div>
         <div class="solve-layout">
           <div class="steps">
-            <div class="step"><div class="step-n">01</div><div class="step-t">規劃專案預算上限與曝光單價</div></div>
-            <div class="step"><div class="step-n">02</div><div class="step-t">規劃商品行銷策略與誘導路徑</div></div>
-            <div class="step"><div class="step-n">03</div><div class="step-t">以素人角度企劃腳本與影音內容</div></div>
-            <div class="step"><div class="step-n">04</div><div class="step-t">大量創作並協助於各平台曝光</div></div>
+            <div class="step"><div class="step-n">01</div><div class="step-t" data-i18n="service.step1">規劃專案預算上限與曝光單價</div></div>
+            <div class="step"><div class="step-n">02</div><div class="step-t" data-i18n="service.step2">規劃商品行銷策略與誘導路徑</div></div>
+            <div class="step"><div class="step-n">03</div><div class="step-t" data-i18n="service.step3">以素人角度企劃腳本與影音內容</div></div>
+            <div class="step"><div class="step-n">04</div><div class="step-t" data-i18n="service.step4">大量創作並協助於各平台曝光</div></div>
           </div>
-          <div class="solve-robot">
-            <img src="images/robot_wave.png" alt="開心機器人">
-          </div>
+          <div class="solve-robot"><img src="images/robot_wave.png" alt="robot"></div>
         </div>
       </div>
       <div class="guarantee-section">
-        <div class="guarantee-title">三大有感保證 ── <span>絕對客戶友善</span></div>
+        <div class="guarantee-title" data-i18n="service.guaranteeTitle">三大有感保證 ── <span>絕對客戶友善</span></div>
         <div class="guarantee-grid">
-          <div class="g-card"><div class="g-icon">✓</div><div class="g-title">曝光沒成長</div><div class="g-desc">成果收費制，曝光沒達標花費極少，不需擔心白花錢。</div></div>
-          <div class="g-card"><div class="g-icon">✓</div><div class="g-title">曝光太多</div><div class="g-desc">收費不超過當初約定的上限金額，封頂保護你的預算。</div></div>
-          <div class="g-card"><div class="g-icon">✓</div><div class="g-title">有感 2 個月內大成長</div><div class="g-desc">2 個月內感受到曝光量明顯成長，看得見的效果。</div></div>
+          <div class="g-card"><div class="g-icon">✓</div><div class="g-title" data-i18n="service.g1title">曝光沒成長</div><div class="g-desc" data-i18n="service.g1desc">成果收費制，曝光沒達標花費極少，不需擔心白花錢。</div></div>
+          <div class="g-card"><div class="g-icon">✓</div><div class="g-title" data-i18n="service.g2title">曝光太多</div><div class="g-desc" data-i18n="service.g2desc">收費不超過當初約定的上限金額，封頂保護你的預算。</div></div>
+          <div class="g-card"><div class="g-icon">✓</div><div class="g-title" data-i18n="service.g3title">有感 2 個月內大成長</div><div class="g-desc" data-i18n="service.g3desc">2 個月內感受到曝光量明顯成長，看得見的效果。</div></div>
         </div>
       </div>
     </div>
 
-    <!-- PC grid -->
     <div class="svc-grid-pc rv">
-      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_01_video.png" alt="短影音行銷爆款方案 TikTok Reels Shorts" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-01</div><div class="svc-ttl">短影音行銷爆款方案</div></div></div><div class="svc-card"><div class="svc-card-img"><img src="images/svc_02_crm.png" alt="CRM 顧客經營支援 訂閱制導入支援" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-02</div><div class="svc-ttl">CRM 顧客經營支援<br>訂閱制導入支援</div></div></div><div class="svc-card"><div class="svc-card-img"><img src="images/svc_03_ecommerce.png" alt="外站商城代操與代營運 電商行銷" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-03</div><div class="svc-ttl">外站商城代操<br>與代營運</div></div></div><div class="svc-card"><div class="svc-card-img"><img src="images/svc_04_ads.png" alt="數位廣告投放與成效管理" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-04</div><div class="svc-ttl">數位廣告投放<br>與成效管理</div></div></div><div class="svc-card"><div class="svc-card-img"><img src="images/svc_05_social.png" alt="社群經營與品牌曝光爆款方案" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-05</div><div class="svc-ttl">社群經營<br>與爆款方案</div></div></div><div class="svc-card"><div class="svc-card-img"><img src="images/svc_06_consultant.png" alt="品牌與經營顧問服務 流量變現策略" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-06</div><div class="svc-ttl">品牌與經營<br>顧問服務</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_01_video.png" alt="Short video marketing" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-01</div><div class="svc-ttl" data-i18n="service.svc1">短影音行銷爆款方案</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_02_crm.png" alt="CRM" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-02</div><div class="svc-ttl" data-i18n="service.svc2">CRM 顧客經營支援<br>訂閱制導入支援</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_03_ecommerce.png" alt="E-commerce" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-03</div><div class="svc-ttl" data-i18n="service.svc3">外站商城代操<br>與代營運</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_04_ads.png" alt="Digital ads" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-04</div><div class="svc-ttl" data-i18n="service.svc4">數位廣告投放<br>與成效管理</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_05_social.png" alt="Social media" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-05</div><div class="svc-ttl" data-i18n="service.svc5">社群經營<br>與爆款方案</div></div></div>
+      <div class="svc-card"><div class="svc-card-img"><img src="images/svc_06_consultant.png" alt="Consulting" loading="lazy"></div><div class="svc-card-body"><div class="svc-num">SERVICE-06</div><div class="svc-ttl" data-i18n="service.svc6">品牌與經營<br>顧問服務</div></div></div>
     </div>
 
-    <!-- Mobile rows -->
     <div class="svc-grid-mob rv">
-      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-01</div><div class="svc-ttl">短影音行銷爆款方案</div></div><div class="svc-row-img"><img src="images/svc_01_video.png" alt="短影音行銷爆款方案" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-02</div><div class="svc-ttl">CRM 顧客經營支援<br>訂閱制導入支援</div></div><div class="svc-row-img"><img src="images/svc_02_crm.png" alt="CRM 顧客經營支援" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-03</div><div class="svc-ttl">外站商城代操<br>與代營運</div></div><div class="svc-row-img"><img src="images/svc_03_ecommerce.png" alt="外站商城代操與代營運" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-04</div><div class="svc-ttl">數位廣告投放<br>與成效管理</div></div><div class="svc-row-img"><img src="images/svc_04_ads.png" alt="數位廣告投放與成效管理" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-05</div><div class="svc-ttl">社群經營<br>與爆款方案</div></div><div class="svc-row-img"><img src="images/svc_05_social.png" alt="社群經營與爆款方案" loading="lazy"></div></div><div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-06</div><div class="svc-ttl">品牌與經營<br>顧問服務</div></div><div class="svc-row-img"><img src="images/svc_06_consultant.png" alt="品牌與經營顧問服務" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-01</div><div class="svc-ttl" data-i18n="service.svc1">短影音行銷爆款方案</div></div><div class="svc-row-img"><img src="images/svc_01_video.png" alt="" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-02</div><div class="svc-ttl" data-i18n="service.svc2">CRM 顧客經營支援<br>訂閱制導入支援</div></div><div class="svc-row-img"><img src="images/svc_02_crm.png" alt="" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-03</div><div class="svc-ttl" data-i18n="service.svc3">外站商城代操<br>與代營運</div></div><div class="svc-row-img"><img src="images/svc_03_ecommerce.png" alt="" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-04</div><div class="svc-ttl" data-i18n="service.svc4">數位廣告投放<br>與成效管理</div></div><div class="svc-row-img"><img src="images/svc_04_ads.png" alt="" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-05</div><div class="svc-ttl" data-i18n="service.svc5">社群經營<br>與爆款方案</div></div><div class="svc-row-img"><img src="images/svc_05_social.png" alt="" loading="lazy"></div></div>
+      <div class="svc-row-mob"><div class="svc-row-text"><div class="svc-num">SERVICE-06</div><div class="svc-ttl" data-i18n="service.svc6">品牌與經營<br>顧問服務</div></div><div class="svc-row-img"><img src="images/svc_06_consultant.png" alt="" loading="lazy"></div></div>
     </div>
 
-    <!-- ===== SERVICE CTA — 無 rv 確保永遠顯示 ===== -->
     <div class="service-cta">
       <div class="service-cta-text">
-        <strong>想知道我們能為你的品牌做什麼？</strong>
-        <p>免費諮詢，24 小時內回覆。有曝光才收費，沒有風險。</p>
+        <strong data-i18n="service.ctaTitle">想知道我們能為你的品牌做什麼？</strong>
+        <p data-i18n="service.ctaDesc">免費諮詢，24 小時內回覆。有曝光才收費，沒有風險。</p>
       </div>
-      <a href="#" class="btn-solid" onclick="showContact();return false;">立即諮詢 →</a>
+      <a href="#" class="btn-solid" onclick="showContact();return false;" data-i18n="service.ctaBtn">立即諮詢 →</a>
     </div>
-
   </div>
 </section>
 
 <section id="value" class="theme-block">
   <div class="inner">
-    <span class="tag">03 — Value</span>
+    <span class="tag" data-i18n="value.tag">03 — Value</span>
     <h2 class="sec-title">VALUE</h2>
-    <p class="sec-sub">企業價值觀</p>
+    <p class="sec-sub" data-i18n="value.sub">企業價值觀</p>
     <div class="val-grid rv">
-      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span>客戶至上</span></div><div class="val-desc">我們保證只要不滿意、沒成效，不收費。成果是我們唯一 KPI。</div></div>
-      <div class="val-card"><div class="val-bg-n">02</div><div class="val-title"><span>行動至上</span></div><div class="val-desc">即時對應，立刻調整。不等待，不拖延，快速反應市場變化。</div></div>
-      <div class="val-card"><div class="val-bg-n">03</div><div class="val-title"><span>成長至上</span></div><div class="val-desc">交付成績不如預期？做到有業績為止。我們對結果負責，不對過程負責。</div></div>
-      <div class="val-card"><div class="val-bg-n">04</div><div class="val-title"><span>徹底貫徹</span></div><div class="val-desc">上述價值觀，所有成員貫徹始終。這不是口號，是每一天的行動準則。</div></div>
+      <div class="val-card"><div class="val-bg-n">01</div><div class="val-title"><span data-i18n="value.v1title">客戶至上</span></div><div class="val-desc" data-i18n="value.v1desc">我們保證只要不滿意、沒成效，不收費。成果是我們唯一 KPI。</div></div>
+      <div class="val-card"><div class="val-bg-n">02</div><div class="val-title"><span data-i18n="value.v2title">行動至上</span></div><div class="val-desc" data-i18n="value.v2desc">即時對應，立刻調整。不等待，不拖延，快速反應市場變化。</div></div>
+      <div class="val-card"><div class="val-bg-n">03</div><div class="val-title"><span data-i18n="value.v3title">成長至上</span></div><div class="val-desc" data-i18n="value.v3desc">交付成績不如預期？做到有業績為止。我們對結果負責，不對過程負責。</div></div>
+      <div class="val-card"><div class="val-bg-n">04</div><div class="val-title"><span data-i18n="value.v4title">徹底貫徹</span></div><div class="val-desc" data-i18n="value.v4desc">上述價值觀，所有成員貫徹始終。這不是口號，是每一天的行動準則。</div></div>
     </div>
   </div>
 </section>
 
 <section id="recruit">
   <div class="inner">
-    <span class="tag">05 — Recruit</span>
+    <span class="tag" data-i18n="recruit.tag">05 — Recruit</span>
     <h2 class="sec-title">RECRUIT</h2>
-    <p class="sec-sub">招募人才</p>
+    <p class="sec-sub" data-i18n="recruit.sub">招募人才</p>
     <div class="recruit-layout rv">
       <div class="recruit-text">
-        <p>夸克創意股份有限公司持續爆發性成長，希望招募更多優秀人才，一起提供<strong>有意義、有價值</strong>的行銷服務。</p>
-        <p>只要您對於行銷、短影音、行銷經營策略有興趣、有熱忱，歡迎加入我們！讓我們一起青春，一起成長。</p>
-        <a href="https://www.104.com.tw/company/1a2x6bnqjm?jobsource=google" target="_blank" rel="noopener" class="btn-dark">查看職缺 on 104</a>
+        <p data-i18n="recruit.p1">夸克創意股份有限公司持續爆發性成長，希望招募更多優秀人才，一起提供<strong>有意義、有價值</strong>的行銷服務。</p>
+        <p data-i18n="recruit.p2">只要您對於行銷、短影音、行銷經營策略有興趣、有熱忱，歡迎加入我們！讓我們一起青春，一起成長。</p>
+        <a href="https://www.104.com.tw/company/1a2x6bnqjm?jobsource=google" target="_blank" rel="noopener" class="btn-dark" data-i18n="recruit.btn">查看職缺 on 104</a>
       </div>
       <div class="recruit-robot">
-        <img src="images/robot_happy.png" alt="夸克機器人">
+        <img src="images/robot_happy.png" alt="QoooQ robot">
       </div>
     </div>
   </div>
@@ -552,64 +541,75 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
     <div class="footer-top">
       <div>
         <img src="images/logo_white.png" alt="QoooQ 夸克創意" style="height:38px;width:auto;display:block;margin:0 auto 8px;">
-        <div class="f-logo-name">夸克創意股份有限公司</div>
+        <div class="f-logo-name" data-i18n="footer.companyName">夸克創意股份有限公司</div>
       </div>
       <div class="footer-contact">
         <h4>CONTACT</h4>
         <a href="#" onclick="showContact();return false;">info@qoooq.tw</a>
-        <a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener">加入 LINE 官方帳號</a>
+        <a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener" data-i18n="footer.line">加入 LINE 官方帳號</a>
       </div>
       <div class="footer-links">
         <h4>LINKS</h4>
-        <a href="#about" onclick="showMain()">About</a>
-        <a href="#credit" onclick="showMain()">Credit</a>
-        <a href="#service" onclick="showMain()">Service</a>
-        <a href="#recruit" onclick="showMain()">Recruit</a>
-        <a href="#" onclick="showContact();return false;">Contact Us</a>
+        <a href="#about" onclick="showMain()" data-i18n="nav.about">About</a>
+        <a href="#credit" onclick="showMain()" data-i18n="nav.credit">Credit</a>
+        <a href="#service" onclick="showMain()" data-i18n="nav.service">Service</a>
+        <a href="#recruit" onclick="showMain()" data-i18n="nav.recruit">Recruit</a>
+        <a href="#" onclick="showContact();return false;" data-i18n="nav.contact">Contact Us</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 QoooQ Taiwan. All rights reserved.</div>
+      <div class="footer-copy" data-i18n="footer.copy">© 2026 QoooQ Taiwan. All rights reserved.</div>
       <div class="footer-privacy">
-        <a href="privacy.html">隱私權政策</a>
-        <a href="terms.html">使用條款</a>
+        <a href="privacy.html" data-i18n="footer.privacy">隱私權政策</a>
+        <a href="terms.html" data-i18n="footer.terms">使用條款</a>
       </div>
     </div>
   </div>
 </footer>
 </div>
 
+<!-- CONTACT PAGE -->
 <div id="contact-page">
   <div class="inner">
-    <span class="tag">Contact Us</span>
+    <span class="tag" data-i18n="contact.tag">Contact Us</span>
     <h2 class="sec-title">CONTACT</h2>
-    <p class="sec-sub">業務諮詢・合作洽談</p>
+    <p class="sec-sub" data-i18n="contact.sub">業務諮詢・合作洽談</p>
     <div class="contact-wrap">
       <div class="contact-info">
         <div class="divbar"></div>
-        <h3>讓我們幫你爆款！</h3>
-        <p>無論您是想提升曝光、增加業績，還是尋找可靠的行銷夥伴，歡迎填寫以下表單，我們會在 24 小時內與您聯繫。</p>
+        <h3 data-i18n="contact.h3">讓我們幫你爆款！</h3>
+        <p data-i18n="contact.desc">無論您是想提升曝光、增加業績，還是尋找可靠的行銷夥伴，歡迎填寫以下表單，我們會在 24 小時內與您聯繫。</p>
         <div class="ci-item"><span>✉️</span><a href="mailto:info@qoooq.tw" style="color:var(--fg2);text-decoration:none;">info@qoooq.tw</a></div>
-        <div class="ci-item"><span>💬</span><a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener" style="color:var(--fg2);text-decoration:none;">加入 LINE 官方帳號</a></div>
+        <div class="ci-item"><span>💬</span><a href="https://lin.ee/OgLqDGS" target="_blank" rel="noopener" style="color:var(--fg2);text-decoration:none;" data-i18n="footer.line">加入 LINE 官方帳號</a></div>
       </div>
       <div class="contact-form">
         <form id="contactForm" action="https://formspree.io/f/mzdywdbv" method="POST">
           <div class="form-row">
-            <div class="f-group"><label>姓名 <span class="req">*</span></label><input type="text" name="name" required placeholder="您的姓名"></div>
-            <div class="f-group"><label>電話 <span class="req">*</span></label><input type="tel" name="phone" required placeholder="0912-345-678"></div>
+            <div class="f-group"><label data-i18n="contact.fName">姓名 <span class="req">*</span></label><input type="text" name="name" required data-i18n-placeholder="contact.pName" placeholder="您的姓名"></div>
+            <div class="f-group"><label data-i18n="contact.fPhone">電話 <span class="req">*</span></label><input type="tel" name="phone" required placeholder="0912-345-678"></div>
           </div>
           <div class="f-group"><label>Email <span class="req">*</span></label><input type="email" name="email" required placeholder="your@email.com"></div>
-          <div class="f-group"><label>LINE ID</label><input type="text" name="line_id" placeholder="您的 LINE ID（選填）"></div>
+          <div class="f-group"><label data-i18n="contact.fLine">LINE ID</label><input type="text" name="line_id" data-i18n-placeholder="contact.pLine" placeholder="您的 LINE ID（選填）"></div>
           <div class="form-row">
-            <div class="f-group"><label>產業 <span class="req">*</span></label>
-              <select name="industry" required><option value="">請選擇</option><option>美妝保養</option><option>食品飲料</option><option>服飾配件</option><option>3C 電子</option><option>健康保健</option><option>居家生活</option><option>餐飲</option><option>教育</option><option>其他</option></select>
+            <div class="f-group"><label data-i18n="contact.fIndustry">產業 <span class="req">*</span></label>
+              <select name="industry" required>
+                <option value="" data-i18n="contact.selectDefault">請選擇</option>
+                <option data-i18n="contact.ind1">美妝保養</option>
+                <option data-i18n="contact.ind2">食品飲料</option>
+                <option data-i18n="contact.ind3">服飾配件</option>
+                <option data-i18n="contact.ind4">3C 電子</option>
+                <option data-i18n="contact.ind5">健康保健</option>
+                <option data-i18n="contact.ind6">居家生活</option>
+                <option data-i18n="contact.ind7">餐飲</option>
+                <option data-i18n="contact.ind8">教育</option>
+                <option data-i18n="contact.ind9">其他</option>
+              </select>
             </div>
-            <div class="f-group"><label>主要商品 <span class="req">*</span></label><input type="text" name="product" required placeholder="您的主要商品"></div>
+            <div class="f-group"><label data-i18n="contact.fProduct">主要商品 <span class="req">*</span></label><input type="text" name="product" required data-i18n-placeholder="contact.pProduct" placeholder="您的主要商品"></div>
           </div>
-          <div class="f-group"><label>品牌介紹 / 需求說明</label><textarea name="message" placeholder="請簡單介紹您的品牌或行銷需求..."></textarea></div>
-          <p class="form-note">送出後我們將在 24 小時內回覆。您的資訊僅用於業務聯繫，不會對外分享。</p>
-          <button type="submit" class="submit-btn">送出諮詢 →</button>
-          <div class="success-msg" id="successMsg">✅ 感謝您的諮詢！我們會盡快與您聯繫。</div>
+          <div class="f-group"><label data-i18n="contact.fMsg">品牌介紹 / 需求說明</label><textarea name="message" data-i18n-placeholder="contact.pMsg" placeholder="請簡單介紹您的品牌或行銷需求..."></textarea></div>
+          <p class="form-note" data-i18n="contact.note">送出後我們將在 24 小時內回覆。您的資訊僅用於業務聯繫，不會對外分享。</p>
+          <button type="submit" class="submit-btn" data-i18n="contact.submit">送出諮詢 →</button>
         </form>
       </div>
     </div>
@@ -617,49 +617,374 @@ footer{background:#0d201c;padding:56px 0 36px;border-top:1px solid var(--border)
 </div>
 
 <script>
+// ===========================
+// I18N TRANSLATIONS
+// ===========================
+const TRANSLATIONS = {
+  zh: {
+    'nav.about': 'ABOUT', 'nav.credit': 'CREDIT', 'nav.service': 'SERVICE',
+    'nav.value': 'VALUE', 'nav.recruit': 'RECRUIT', 'nav.contact': 'CONTACT US',
+    'hero.kicker': '夸克創意 × QoooQ Taiwan · 2026',
+    'hero.h1': '用無限的創意<br>從<em>0</em>創造新玩法',
+    'hero.desc': '短影音行銷・KOL 整合・品牌曝光方案<br>有曝光才收費，真正的成果導向行銷夥伴',
+    'hero.cta1': '立即諮詢', 'hero.cta2': '了解服務',
+    'hero.dashTitle': '本月創造曝光量',
+    'hero.dashLoading': '讀取中',
+    'hero.dashMeta1': '全平台投稿發布數據 * 自然流量',
+    'hero.dashMeta2': '每 30 分鐘更新',
+    'about.tag': '01 — About', 'about.sub': '關於夸克創意',
+    'about.heroBox': '我們是從自創 8 年電商品牌<br>獨立出來的流量變現專家',
+    'about.p1': '<strong>夸克創意股份有限公司（QoooQ.tw）</strong>成立於 2026 年 4 月，帶著 8 年電商品牌的成功經驗，深耕流量與變現策略。',
+    'about.p2': '我司主要協助客戶透過<strong>短影音行銷</strong>創造更多自然流量與業績。夸克是物理最小的單位，卻創造出無限的宇宙。我們期許自己用無限的小創意，提供真正能解決廣告主<strong>流量變現</strong>的行銷服務。',
+    'about.p3': '同時支援 CRM、廣告設計、廣告投放、商城代操等多元專業服務，深化與所有配合的廠商，達成全面性業績提升。',
+    'credit.tag': '02 — Credit', 'credit.sub': '實績亮點',
+    'credit.chartLabel': '自營品牌 8 年業績走勢 ── 平均每年 YoY +50%',
+    'credit.intro': '我們是曝光與營收的<strong style="color:var(--accent);">成長駭客</strong>。協助客戶種類從知名上市櫃品牌，到超有特色的新創都有。只要是 B2C 面向大眾的品項，我們都能提供優質的<strong>短影音行銷</strong>與<strong>品牌曝光</strong>服務。',
+    'credit.card1': '創立兩個月<br>成功招募經營成員，持續招募中',
+    'credit.card2': '創立兩個月<br>台日合作客戶超過 30 間',
+    'credit.card3': '單品自然流量<br>達成單月超過 100 萬曝光',
+    'service.tag': '04 — Service', 'service.sub': '事業內容',
+    'service.badge': 'SIGNATURE', 'service.sigTitle': '短影音行銷爆款方案',
+    'service.sigDesc': '透過大量有趣的短影音內容於 TikTok、Reels、Shorts 等各大平台曝光。<br><strong style="color:var(--accent)">我們不收固定費，有曝光才收費（曝光成果報酬制）。</strong>',
+    'service.painTag': '是否有以下煩惱？',
+    'service.pain1': 'Meta / Google 成效廣告<mark>轉換與成本越來越難做</mark>',
+    'service.pain2': '進了線下實體通路，<mark>業績沒有彈跳式成長</mark>',
+    'service.pain3': 'KOL/KOC 成本太高，<mark>自然流量成長速度太慢</mark>',
+    'service.solveTag': '→ 我們一次解決！',
+    'service.step1': '規劃專案預算上限與曝光單價',
+    'service.step2': '規劃商品行銷策略與誘導路徑',
+    'service.step3': '以素人角度企劃腳本與影音內容',
+    'service.step4': '大量創作並協助於各平台曝光',
+    'service.guaranteeTitle': '三大有感保證 ── <span>絕對客戶友善</span>',
+    'service.g1title': '曝光沒成長', 'service.g1desc': '成果收費制，曝光沒達標花費極少，不需擔心白花錢。',
+    'service.g2title': '曝光太多', 'service.g2desc': '收費不超過當初約定的上限金額，封頂保護你的預算。',
+    'service.g3title': '有感 2 個月內大成長', 'service.g3desc': '2 個月內感受到曝光量明顯成長，看得見的效果。',
+    'service.svc1': '短影音行銷爆款方案', 'service.svc2': 'CRM 顧客經營支援<br>訂閱制導入支援',
+    'service.svc3': '外站商城代操<br>與代營運', 'service.svc4': '數位廣告投放<br>與成效管理',
+    'service.svc5': '社群經營<br>與爆款方案', 'service.svc6': '品牌與經營<br>顧問服務',
+    'service.ctaTitle': '想知道我們能為你的品牌做什麼？',
+    'service.ctaDesc': '免費諮詢，24 小時內回覆。有曝光才收費，沒有風險。',
+    'service.ctaBtn': '立即諮詢 →',
+    'value.tag': '03 — Value', 'value.sub': '企業價值觀',
+    'value.v1title': '客戶至上', 'value.v1desc': '我們保證只要不滿意、沒成效，不收費。成果是我們唯一 KPI。',
+    'value.v2title': '行動至上', 'value.v2desc': '即時對應，立刻調整。不等待，不拖延，快速反應市場變化。',
+    'value.v3title': '成長至上', 'value.v3desc': '交付成績不如預期？做到有業績為止。我們對結果負責，不對過程負責。',
+    'value.v4title': '徹底貫徹', 'value.v4desc': '上述價值觀，所有成員貫徹始終。這不是口號，是每一天的行動準則。',
+    'recruit.tag': '05 — Recruit', 'recruit.sub': '招募人才',
+    'recruit.p1': '夸克創意股份有限公司持續爆發性成長，希望招募更多優秀人才，一起提供<strong>有意義、有價值</strong>的行銷服務。',
+    'recruit.p2': '只要您對於行銷、短影音、行銷經營策略有興趣、有熱忱，歡迎加入我們！讓我們一起青春，一起成長。',
+    'recruit.btn': '查看職缺 on 104',
+    'footer.companyName': '夸克創意股份有限公司',
+    'footer.line': '加入 LINE 官方帳號',
+    'footer.copy': '© 2026 QoooQ Taiwan. All rights reserved.',
+    'footer.privacy': '隱私權政策', 'footer.terms': '使用條款',
+    'contact.tag': 'Contact Us', 'contact.sub': '業務諮詢・合作洽談',
+    'contact.h3': '讓我們幫你爆款！',
+    'contact.desc': '無論您是想提升曝光、增加業績，還是尋找可靠的行銷夥伴，歡迎填寫以下表單，我們會在 24 小時內與您聯繫。',
+    'contact.fName': '姓名 <span class="req">*</span>', 'contact.pName': '您的姓名',
+    'contact.fPhone': '電話 <span class="req">*</span>',
+    'contact.fLine': 'LINE ID', 'contact.pLine': '您的 LINE ID（選填）',
+    'contact.fIndustry': '產業 <span class="req">*</span>',
+    'contact.selectDefault': '請選擇',
+    'contact.ind1': '美妝保養', 'contact.ind2': '食品飲料', 'contact.ind3': '服飾配件',
+    'contact.ind4': '3C 電子', 'contact.ind5': '健康保健', 'contact.ind6': '居家生活',
+    'contact.ind7': '餐飲', 'contact.ind8': '教育', 'contact.ind9': '其他',
+    'contact.fProduct': '主要商品 <span class="req">*</span>', 'contact.pProduct': '您的主要商品',
+    'contact.fMsg': '品牌介紹 / 需求說明', 'contact.pMsg': '請簡單介紹您的品牌或行銷需求...',
+    'contact.note': '送出後我們將在 24 小時內回覆。您的資訊僅用於業務聯繫，不會對外分享。',
+    'contact.submit': '送出諮詢 →',
+    'contact.successTitle': '我們收到您的需求',
+    'contact.successMsg': '將於 24 小時內與您聯繫，請稍候。',
+  },
+  en: {
+    'nav.about': 'ABOUT', 'nav.credit': 'CREDIT', 'nav.service': 'SERVICE',
+    'nav.value': 'VALUE', 'nav.recruit': 'RECRUIT', 'nav.contact': 'CONTACT US',
+    'hero.kicker': 'QoooQ Creative × Taiwan · 2026',
+    'hero.h1': 'Infinite Creativity,<br>Born from <em>Zero</em>',
+    'hero.desc': 'Short-form video marketing · KOL integration · Brand exposure<br>Pay only for results — your performance-driven marketing partner',
+    'hero.cta1': 'Get in Touch', 'hero.cta2': 'Our Services',
+    'hero.dashTitle': 'Monthly Total Exposure',
+    'hero.dashLoading': 'Loading',
+    'hero.dashMeta1': 'All-platform organic reach data',
+    'hero.dashMeta2': 'Updated every 30 minutes',
+    'about.tag': '01 — About', 'about.sub': 'About QoooQ',
+    'about.heroBox': 'Traffic monetization experts<br>spun off from our own 8-year e-commerce brand',
+    'about.p1': '<strong>QoooQ Creative Co., Ltd. (QoooQ.tw)</strong> was founded in April 2026, bringing 8 years of successful e-commerce brand experience to traffic and monetization strategy.',
+    'about.p2': 'We help clients generate organic traffic and revenue through <strong>short-form video marketing</strong>. Like quarks — the smallest unit in physics that builds entire universes — we believe small creative ideas can drive massive results in <strong>traffic monetization</strong>.',
+    'about.p3': 'We also support CRM, ad creative, paid media management, and marketplace operations — deepening partnerships to drive comprehensive revenue growth.',
+    'credit.tag': '02 — Credit', 'credit.sub': 'Our Track Record',
+    'credit.chartLabel': '8-Year Revenue Trend of Our Own Brand — Average YoY +50%',
+    'credit.intro': 'We are <strong style="color:var(--accent);">growth hackers</strong> for exposure and revenue. Our clients range from publicly listed brands to exciting new startups. For any B2C product category, we deliver high-quality <strong>short-form video marketing</strong> and <strong>brand exposure</strong>.',
+    'credit.card1': '2 months since founding<br>13+ team members recruited and growing',
+    'credit.card2': '2 months since founding<br>30+ clients across Taiwan & Japan',
+    'credit.card3': 'Single product organic reach<br>over 1M+ views in a single month',
+    'service.tag': '04 — Service', 'service.sub': 'What We Do',
+    'service.badge': 'SIGNATURE', 'service.sigTitle': 'Short-form Video Viral Growth Plan',
+    'service.sigDesc': 'Massive exposure through engaging short-form content on TikTok, Reels, Shorts and beyond.<br><strong style="color:var(--accent)">No fixed fees — you only pay for real exposure results.</strong>',
+    'service.painTag': 'Sound familiar?',
+    'service.pain1': 'Meta / Google performance ads <mark>getting harder and more expensive</mark>',
+    'service.pain2': 'Entered retail channels but <mark>revenue didn\'t spike as expected</mark>',
+    'service.pain3': 'KOL/KOC costs too high, <mark>organic growth moving too slowly</mark>',
+    'service.solveTag': '→ We solve all of it.',
+    'service.step1': 'Set project budget cap & cost-per-view target',
+    'service.step2': 'Build product marketing strategy & conversion path',
+    'service.step3': 'Develop authentic UGC-style scripts & video content',
+    'service.step4': 'Produce at scale and distribute across platforms',
+    'service.guaranteeTitle': 'Three Client-Friendly Guarantees — <span>Zero Risk</span>',
+    'service.g1title': 'Low Exposure', 'service.g1desc': 'Performance-based billing means minimal spend if targets aren\'t met. No wasted budget.',
+    'service.g2title': 'Too Much Exposure', 'service.g2desc': 'Costs never exceed the agreed cap. Your budget is always protected.',
+    'service.g3title': 'Visible Growth in 2 Months', 'service.g3desc': 'Measurable exposure growth within 2 months. Real, visible results.',
+    'service.svc1': 'Short-form Video Viral Growth', 'service.svc2': 'CRM & Customer Retention<br>Subscription Integration',
+    'service.svc3': 'Marketplace Management<br>& Operations', 'service.svc4': 'Digital Advertising<br>& Performance Management',
+    'service.svc5': 'Social Media Management<br>& Viral Content', 'service.svc6': 'Brand & Business<br>Consulting',
+    'service.ctaTitle': 'Curious what we can do for your brand?',
+    'service.ctaDesc': 'Free consultation, reply within 24 hours. Pay only for results — zero risk.',
+    'service.ctaBtn': 'Get in Touch →',
+    'value.tag': '03 — Value', 'value.sub': 'Our Values',
+    'value.v1title': 'Client First', 'value.v1desc': 'No satisfaction, no results — no charge. Outcomes are our only KPI.',
+    'value.v2title': 'Bias for Action', 'value.v2desc': 'Respond immediately, adjust instantly. No waiting, no delays — react at the speed of the market.',
+    'value.v3title': 'Growth Obsessed', 'value.v3desc': 'Results below expectations? We keep going until we deliver. We own outcomes, not just effort.',
+    'value.v4title': 'Relentless Execution', 'value.v4desc': 'These values are lived daily by every team member. Not a motto — an operating principle.',
+    'recruit.tag': '05 — Recruit', 'recruit.sub': 'Join Our Team',
+    'recruit.p1': 'QoooQ Creative is growing fast. We\'re looking for talented people to join us in delivering <strong>meaningful, high-impact</strong> marketing services.',
+    'recruit.p2': 'If you\'re passionate about marketing, short-form video, or growth strategy — we\'d love to hear from you. Let\'s grow together.',
+    'recruit.btn': 'View Openings on 104',
+    'footer.companyName': 'QoooQ Creative Co., Ltd.',
+    'footer.line': 'Add LINE Official Account',
+    'footer.copy': '© 2026 QoooQ Taiwan. All rights reserved.',
+    'footer.privacy': 'Privacy Policy', 'footer.terms': 'Terms of Use',
+    'contact.tag': 'Contact Us', 'contact.sub': 'Business Inquiries · Partnerships',
+    'contact.h3': 'Let\'s make your brand viral.',
+    'contact.desc': 'Whether you want more exposure, higher revenue, or a reliable marketing partner — fill out the form and we\'ll get back to you within 24 hours.',
+    'contact.fName': 'Name <span class="req">*</span>', 'contact.pName': 'Your name',
+    'contact.fPhone': 'Phone <span class="req">*</span>',
+    'contact.fLine': 'LINE ID', 'contact.pLine': 'Your LINE ID (optional)',
+    'contact.fIndustry': 'Industry <span class="req">*</span>',
+    'contact.selectDefault': 'Please select',
+    'contact.ind1': 'Beauty & Skincare', 'contact.ind2': 'Food & Beverage', 'contact.ind3': 'Fashion & Accessories',
+    'contact.ind4': 'Consumer Electronics', 'contact.ind5': 'Health & Wellness', 'contact.ind6': 'Home & Living',
+    'contact.ind7': 'F&B / Restaurants', 'contact.ind8': 'Education', 'contact.ind9': 'Other',
+    'contact.fProduct': 'Main Product <span class="req">*</span>', 'contact.pProduct': 'Your main product or service',
+    'contact.fMsg': 'Brand Info / Requirements', 'contact.pMsg': 'Tell us about your brand and marketing goals...',
+    'contact.note': 'We\'ll reply within 24 hours. Your information is used solely for business contact and will not be shared.',
+    'contact.submit': 'Send Inquiry →',
+    'contact.successTitle': 'We received your inquiry',
+    'contact.successMsg': 'We\'ll be in touch within 24 hours.',
+  },
+  ja: {
+    'nav.about': 'ABOUT', 'nav.credit': 'CREDIT', 'nav.service': 'SERVICE',
+    'nav.value': 'VALUE', 'nav.recruit': 'RECRUIT', 'nav.contact': 'お問い合わせ',
+    'hero.kicker': '夸克創意 × QoooQ Taiwan · 2026',
+    'hero.h1': '無限のクリエイティブで<br><em>ゼロ</em>から新たな可能性を',
+    'hero.desc': 'ショート動画マーケティング・KOL活用・ブランド露出<br>成果報酬型で真のパフォーマンスパートナー',
+    'hero.cta1': '無料相談', 'hero.cta2': 'サービス詳細',
+    'hero.dashTitle': '今月の総露出数',
+    'hero.dashLoading': '読み込み中',
+    'hero.dashMeta1': '全プラットフォーム・オーガニックリーチデータ',
+    'hero.dashMeta2': '30分ごとに更新',
+    'about.tag': '01 — About', 'about.sub': '夸克創意について',
+    'about.heroBox': '8年間の自社ECブランド運営から<br>生まれた流量マネタイズの専門家',
+    'about.p1': '<strong>夸克創意股份有限公司（QoooQ.tw）</strong>は2026年4月に設立。8年間の自社ECブランドで培った成功経験を活かし、流量とマネタイズ戦略に特化しています。',
+    'about.p2': '<strong>ショート動画マーケティング</strong>を通じて、クライアントのオーガニックトラフィックと売上を最大化します。クォークは物理学最小の単位でありながら宇宙を構成するように、小さなアイデアで大きな<strong>流量マネタイズ</strong>を実現します。',
+    'about.p3': 'CRM、広告クリエイティブ、運用代行、モール代理運営など多様なサービスで、パートナー企業の包括的な業績向上を支援します。',
+    'credit.tag': '02 — Credit', 'credit.sub': '実績ハイライト',
+    'credit.chartLabel': '自社ブランド8年間の業績推移 ── 平均YoY +50%成長',
+    'credit.intro': '私たちは露出と売上の<strong style="color:var(--accent);">グロースハッカー</strong>です。上場企業から個性的なスタートアップまで、幅広いクライアントを支援。B2C向けすべての商品カテゴリで高品質な<strong>ショート動画マーケティング</strong>と<strong>ブランド露出</strong>を提供します。',
+    'credit.card1': '設立2ヶ月で<br>13名以上のチームメンバーを採用',
+    'credit.card2': '設立2ヶ月で<br>台湾・日本30社以上と契約',
+    'credit.card3': '単一商品のオーガニックリーチ<br>月間100万インプレッション達成',
+    'service.tag': '04 — Service', 'service.sub': '事業内容',
+    'service.badge': 'SIGNATURE', 'service.sigTitle': 'ショート動画バイラル成長プラン',
+    'service.sigDesc': 'TikTok、Reels、Shortsなど主要プラットフォームで大量のショート動画コンテンツを配信。<br><strong style="color:var(--accent)">固定費なし、露出成果に応じた完全成果報酬制。</strong>',
+    'service.painTag': 'こんなお悩みはありませんか？',
+    'service.pain1': 'Meta / Google広告の<mark>コストが上がり効果が出にくい</mark>',
+    'service.pain2': 'リアル店舗に入ったが<mark>売上が期待通り伸びない</mark>',
+    'service.pain3': 'KOL/KOCのコストが高く<mark>オーガニック成長が遅い</mark>',
+    'service.solveTag': '→ すべて解決します！',
+    'service.step1': 'プロジェクト予算上限とCPVを設定',
+    'service.step2': '商品マーケティング戦略と導線を設計',
+    'service.step3': '素人視点でスクリプトと動画コンテンツを企画',
+    'service.step4': '大量制作・各プラットフォームへ配信支援',
+    'service.guaranteeTitle': '3大クライアントフレンドリー保証 ── <span>リスクゼロ</span>',
+    'service.g1title': '露出が伸びなかった場合', 'service.g1desc': '成果報酬制のため、目標未達でも費用は最小限。無駄な出費の心配なし。',
+    'service.g2title': '露出が多すぎた場合', 'service.g2desc': '事前に合意した上限金額を超えた請求は一切なし。予算は常に守られます。',
+    'service.g3title': '2ヶ月以内に実感できる成長', 'service.g3desc': '2ヶ月以内に露出量の明確な増加を実感。見える化された成果をお約束。',
+    'service.svc1': 'ショート動画バイラル成長', 'service.svc2': 'CRM顧客管理支援<br>サブスク導入支援',
+    'service.svc3': 'ECモール代理運営<br>・管理代行', 'service.svc4': 'デジタル広告運用<br>・成果管理',
+    'service.svc5': 'SNS運用<br>・バイラルコンテンツ', 'service.svc6': 'ブランド・経営<br>コンサルティング',
+    'service.ctaTitle': '御社のブランドに何ができるか知りたいですか？',
+    'service.ctaDesc': '無料相談、24時間以内にご返答。成果報酬型のためリスクなし。',
+    'service.ctaBtn': '今すぐ相談 →',
+    'value.tag': '03 — Value', 'value.sub': '企業バリュー',
+    'value.v1title': 'クライアントファースト', 'value.v1desc': '満足できなければ、成果がなければ請求しません。成果が唯一のKPIです。',
+    'value.v2title': '即行動', 'value.v2desc': '即座に対応し、すぐに調整。待たず、先送りせず、市場変化に素早く反応。',
+    'value.v3title': '成長至上', 'value.v3desc': '期待以下なら成果が出るまでやり続けます。プロセスではなく結果に責任を持ちます。',
+    'value.v4title': '徹底実行', 'value.v4desc': 'これらのバリューは全メンバーが日々実践します。スローガンではなく、日々の行動指針です。',
+    'recruit.tag': '05 — Recruit', 'recruit.sub': '採用情報',
+    'recruit.p1': '夸克創意は急成長中です。<strong>意義があり価値ある</strong>マーケティングサービスを一緒に提供してくれる優秀な人材を募集しています。',
+    'recruit.p2': 'マーケティング、ショート動画、グロース戦略に情熱のある方、ぜひご応募ください。一緒に成長しましょう。',
+    'recruit.btn': '104で求人を見る',
+    'footer.companyName': '夸克創意股份有限公司',
+    'footer.line': 'LINE公式アカウントを追加',
+    'footer.copy': '© 2026 QoooQ Taiwan. All rights reserved.',
+    'footer.privacy': 'プライバシーポリシー', 'footer.terms': '利用規約',
+    'contact.tag': 'Contact Us', 'contact.sub': 'ビジネスお問い合わせ・提携',
+    'contact.h3': 'ブランドをバイラルにしましょう。',
+    'contact.desc': '露出向上・売上増加・信頼できるマーケティングパートナーをお探しなら、フォームにご記入ください。24時間以内にご連絡します。',
+    'contact.fName': '氏名 <span class="req">*</span>', 'contact.pName': 'お名前',
+    'contact.fPhone': '電話番号 <span class="req">*</span>',
+    'contact.fLine': 'LINE ID', 'contact.pLine': 'LINE ID（任意）',
+    'contact.fIndustry': '業界 <span class="req">*</span>',
+    'contact.selectDefault': '選択してください',
+    'contact.ind1': '美容・スキンケア', 'contact.ind2': '食品・飲料', 'contact.ind3': 'ファッション・アクセサリー',
+    'contact.ind4': '家電・電子機器', 'contact.ind5': '健康・ウェルネス', 'contact.ind6': 'ホーム・インテリア',
+    'contact.ind7': '飲食・レストラン', 'contact.ind8': '教育', 'contact.ind9': 'その他',
+    'contact.fProduct': '主要商品 <span class="req">*</span>', 'contact.pProduct': '主要商品またはサービス',
+    'contact.fMsg': 'ブランド紹介 / ご要件', 'contact.pMsg': 'ブランドとマーケティング目標についてお聞かせください...',
+    'contact.note': '24時間以内にご返答します。ご提供いただいた情報は商談目的のみに使用し、外部に共有することはありません。',
+    'contact.submit': 'お問い合わせを送る →',
+    'contact.successTitle': 'お問い合わせを受け付けました',
+    'contact.successMsg': '24時間以内にご連絡いたします。',
+  }
+};
+
+let currentLang = localStorage.getItem('qoooq_lang') || 'zh';
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  localStorage.setItem('qoooq_lang', lang);
+  applyLang();
+}
+
+function applyLang() {
+  const t = TRANSLATIONS[currentLang];
+  const body = document.body;
+
+  // fade out
+  body.classList.add('lang-switching');
+
+  setTimeout(() => {
+    // update html lang & body lang attribute
+    document.documentElement.lang = currentLang === 'zh' ? 'zh-TW' : currentLang === 'ja' ? 'ja' : 'en';
+    body.setAttribute('lang', currentLang);
+
+    // update all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) {
+        el.innerHTML = t[key];
+      }
+    });
+
+    // update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (t[key] !== undefined) {
+        el.placeholder = t[key];
+      }
+    });
+
+    // update lang buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+    });
+
+    // fade in
+    body.classList.remove('lang-switching');
+  }, 180);
+}
+
+// init lang on load
+document.addEventListener('DOMContentLoaded', () => {
+  if (currentLang !== 'zh') applyLang();
+  // sync button states
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+  });
+});
+
+// ===========================
+// CURSOR
+// ===========================
 const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
 let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
 (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
 document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2.2)';});el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';});});
+
+// ===========================
+// RECRUIT SECTION CURSOR
+// ===========================
 const recruitSection=document.getElementById('recruit');
 const recruitObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)document.body.classList.add('on-recruit');else document.body.classList.remove('on-recruit');});},{threshold:0.1});
 recruitObs.observe(recruitSection);
+
+// ===========================
+// MOBILE NAV
+// ===========================
 const hamBtn=document.getElementById('hamBtn'),mobileNav=document.getElementById('mobileNav');
 hamBtn.addEventListener('click',()=>{hamBtn.classList.toggle('open');mobileNav.classList.toggle('open');});
 function closeMob(){hamBtn.classList.remove('open');mobileNav.classList.remove('open');}
+
+// ===========================
+// PAGE SWITCHING
+// ===========================
 function showMain(){document.getElementById('main-content').classList.remove('hidden');document.getElementById('contact-page').classList.remove('active');window.scrollTo({top:0,behavior:'smooth'});}
 function showContact(){document.getElementById('main-content').classList.add('hidden');document.getElementById('contact-page').classList.add('active');window.scrollTo({top:0});closeMob();}
+
+// ===========================
+// SCROLL REVEAL
+// ===========================
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// ===========================
+// HEADER SCROLL
+// ===========================
 const hdr=document.getElementById('siteHeader');
 window.addEventListener('scroll',()=>{if(window.scrollY>80)hdr.classList.add('alt');else hdr.classList.remove('alt');});
+
+// ===========================
+// CONTACT FORM
+// ===========================
 const form=document.getElementById('contactForm');
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const btn=form.querySelector('.submit-btn');
-  btn.textContent='送出中...';btn.disabled=true;
+  const t=TRANSLATIONS[currentLang];
+  btn.textContent='...';btn.disabled=true;
   try{
     const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
     if(res.ok){
-  form.closest('.contact-form').innerHTML=`
-    <div class="success-panel">
-      <div class="success-panel-icon">✓</div>
-      <h3>我們收到您的需求</h3>
-      <p>將於 24 小時內與您聯繫，請稍候。</p>
-    </div>
-  `;
-}
-else{
-  btn.textContent='請直接來信 info@qoooq.tw';
-  btn.disabled=false;
-}
-  }catch{btn.textContent='請直接來信 info@qoooq.tw';btn.disabled=false;}
+      form.closest('.contact-form').innerHTML=`
+        <div class="success-panel">
+          <div class="success-panel-icon">✓</div>
+          <h3>${t['contact.successTitle']}</h3>
+          <p>${t['contact.successMsg']}</p>
+        </div>
+      `;
+    } else {
+      btn.textContent='Email: info@qoooq.tw';
+      btn.disabled=false;
+    }
+  } catch {
+    btn.textContent='Email: info@qoooq.tw';
+    btn.disabled=false;
+  }
 });
+
+// ===========================
+// MOBILE THEME TOGGLE
+// ===========================
 if(window.matchMedia('(hover:none)').matches){
   document.querySelectorAll('.theme-block').forEach(el=>{el.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;this.classList.toggle('alt');});});
 }
-  const EXPOSURE_CONFIG={
+
+// ===========================
+// EXPOSURE DASHBOARD
+// ===========================
+const EXPOSURE_CONFIG={
   sheetId:'1iftY-l2WikYdRj136t4Y1zklyH4-jgr6q02zRPg-SxQ',
   gid:'66553152',
   range:'R:R',
@@ -676,27 +1001,21 @@ let shownValue=0;
 let displayRaf=null;
 let refreshTimer=null;
 
-function formatExposure(n){
-  return nf.format(Math.max(0,Math.floor(n)));
-}
+function formatExposure(n){return nf.format(Math.max(0,Math.floor(n)));}
 
 function renderExposure(nextValue){
   if(displayRaf)cancelAnimationFrame(displayRaf);
-
-  const start=shownValue || nextValue;
+  const start=shownValue||nextValue;
   const end=nextValue;
   const duration=900;
   const t0=performance.now();
-
   function step(now){
     const p=Math.min(1,(now-t0)/duration);
     const eased=1-Math.pow(1-p,3);
     shownValue=start+(end-start)*eased;
     exposureEl.textContent=formatExposure(shownValue);
-
     if(p<1)displayRaf=requestAnimationFrame(step);
   }
-
   displayRaf=requestAnimationFrame(step);
 }
 
@@ -705,17 +1024,10 @@ function fetchSheetTotalJsonp(){
     const cb='qoooqExposureCallback_'+Date.now();
     const url=`https://docs.google.com/spreadsheets/d/${EXPOSURE_CONFIG.sheetId}/gviz/tq?gid=${EXPOSURE_CONFIG.gid}&range=${encodeURIComponent(EXPOSURE_CONFIG.range)}&tqx=out:json;responseHandler:${cb}`;
     const script=document.createElement('script');
-    const timer=setTimeout(()=>{cleanup();reject(new Error('sheet timeout'));},9000);
-
-    function cleanup(){
-      clearTimeout(timer);
-      script.remove();
-      delete window[cb];
-    }
-
+    const timer=setTimeout(()=>{cleanup();reject(new Error('timeout'));},9000);
+    function cleanup(){clearTimeout(timer);script.remove();delete window[cb];}
     window[cb]=data=>{
       cleanup();
-
       const rows=data.table?.rows||[];
       const total=rows.reduce((sum,row)=>{
         const cell=row.c?.[0];
@@ -723,11 +1035,9 @@ function fetchSheetTotalJsonp(){
         const n=Number(String(raw).replace(/[^\d.-]/g,''));
         return Number.isFinite(n)?sum+n:sum;
       },0);
-
-      total?resolve(total):reject(new Error('empty total'));
+      total?resolve(total):reject(new Error('empty'));
     };
-
-    script.onerror=()=>{cleanup();reject(new Error('sheet unavailable'));};
+    script.onerror=()=>{cleanup();reject(new Error('unavailable'));};
     script.src=url;
     document.head.appendChild(script);
   });
@@ -736,16 +1046,13 @@ function fetchSheetTotalJsonp(){
 async function updateExposure(){
   try{
     statusEl.textContent='SYNCING';
-
     const total=await fetchSheetTotalJsonp();
     const finalValue=total*EXPOSURE_CONFIG.multiplier;
-
     exposureEl.classList.remove('loading');
     statusEl.textContent='LIVE';
     renderExposure(finalValue);
-  }catch(err){
+  }catch{
     const fallbackValue=EXPOSURE_CONFIG.fallbackBase*EXPOSURE_CONFIG.multiplier;
-
     exposureEl.classList.remove('loading');
     statusEl.textContent='DEMO LIVE';
     renderExposure(fallbackValue);
@@ -754,13 +1061,10 @@ async function updateExposure(){
 
 function startExposureUpdates(){
   updateExposure();
-
   if(refreshTimer)clearInterval(refreshTimer);
   refreshTimer=setInterval(updateExposure,EXPOSURE_CONFIG.refreshMinutes*60*1000);
 }
-
 startExposureUpdates();
-
 </script>
 </body>
 </html>
