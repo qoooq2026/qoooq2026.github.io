@@ -51,10 +51,40 @@ header.alt{background:rgba(19,19,19,0.92);}
 .nav-cta:hover{background:var(--acc2)!important;}
 
 /* ===== LANG SWITCHER ===== */
-.lang-switcher{display:flex;align-items:center;gap:2px;margin-left:8px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:2px;overflow:hidden;}
-.lang-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 9px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .2s,background .2s;text-transform:uppercase;white-space:nowrap;}
-.lang-btn:hover{color:var(--fg);background:rgba(255,255,255,0.06);}
-.lang-btn.active{color:var(--accent);background:rgba(242,115,91,0.1);}
+.lang-switcher{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  margin-left:10px;
+  padding:4px;
+  background:rgba(242,115,91,0.12);
+  border:1px solid rgba(242,115,91,0.45);
+  border-radius:4px;
+  box-shadow:0 0 18px rgba(242,115,91,0.12);
+}
+.lang-btn{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  padding:7px 10px;
+  color:var(--fg2);
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  transition:color .2s,background .2s;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.lang-btn:hover{
+  color:#fff;
+  background:rgba(255,255,255,0.08);
+}
+
+.lang-btn.active{
+  color:#fff;
+  background:var(--accent);
+}
 .lang-divider{width:1px;height:14px;background:var(--border);flex-shrink:0;}
 
 .ham-btn{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px;}
@@ -66,8 +96,21 @@ header.alt{background:rgba(19,19,19,0.92);}
 .nav-mobile.open{display:flex;}
 .nav-mobile a{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;color:var(--fg);text-decoration:none;letter-spacing:3px;text-transform:uppercase;transition:color .2s;}
 .nav-mobile a:hover,.nav-mobile a.accent{color:var(--accent);}
-.nav-mobile .lang-switcher-mob{display:flex;align-items:center;gap:0;border:1px solid rgba(255,255,255,0.15);border-radius:2px;overflow:hidden;margin-top:8px;}
-.nav-mobile .lang-btn{font-size:11px;padding:10px 16px;}
+.nav-mobile .lang-switcher-mob{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  border:1px solid rgba(242,115,91,0.5);
+  background:rgba(242,115,91,0.12);
+  border-radius:4px;
+  padding:5px;
+  margin-top:8px;
+}
+
+.nav-mobile .lang-btn{
+  font-size:12px;
+  padding:10px 18px;
+}
 
 @media(max-width:768px){
   .nav-desktop{display:none;}
@@ -989,7 +1032,7 @@ const EXPOSURE_CONFIG={
   sheetId:'1iftY-l2WikYdRj136t4Y1zklyH4-jgr6q02zRPg-SxQ',
   gid:'66553152',
   fallbackBase:5000000,
-  multiplier:1.8,
+  multiplier:2,
   refreshMinutes:30
 };
 
@@ -1023,7 +1066,7 @@ function fetchMonthlyExposureJsonp(){
   return new Promise((resolve,reject)=>{
     const now=new Date();
     const y=now.getFullYear();
-    const m=now.getMonth()+1; // 1-based，與 GViz month() 一致
+    const m=now.getMonth(); // GViz month() 是 0-11，6月=5
 
     // L欄=發布日(date)，R欄=曝光數
     // GViz Query Language: month() 回傳 1-12
