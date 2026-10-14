@@ -124,6 +124,14 @@ td.name{font-weight:500;word-break:break-all}
 .frame.warn img{border-color:var(--warn)}
 .frame.good img{border-color:var(--good)}
 .tc{position:absolute;left:5px;top:5px;background:rgba(0,0,0,.72);color:#fff;font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:3px}
+.ytwrap{position:relative;width:100%;max-width:360px;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000}
+.ytwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-layout{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:20px;align-items:start}
+@media (max-width:720px){.yt-layout{grid-template-columns:1fr}}
+.tcbtn{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;border-left:4px solid var(--line);background:none;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.tcbtn:hover{background:var(--bg)}
+.tcbtn.bad{border-left-color:var(--bad)}.tcbtn.warn{border-left-color:var(--warn)}.tcbtn.good{border-left-color:var(--good)}
+.tcbtn .mono{color:var(--link);font-weight:700;min-width:52px}
 .frame figcaption{font-size:12px;line-height:1.5;color:var(--muted)}
 .frame figcaption b{display:block;color:var(--ink)}
 .notes{padding:4px 20px}
@@ -180,6 +188,10 @@ td.name{font-weight:500;word-break:break-all}
           <button class="btn" id="pick">從雲端硬碟選擇</button>
         </div>
         <input type="file" id="local-input" accept="video/*" multiple hidden>
+      <div class="folder-row">
+        <input id="yt-url" placeholder="或貼上 YouTube 連結（公開影片），例如 https://www.youtube.com/shorts/…" autocomplete="off">
+        <button class="btn" id="yt-add">加入 YouTube 影片</button>
+      </div>
       </div>
       <div class="err" id="err2" hidden></div>
     </div>
@@ -376,6 +388,35 @@ document.addEventListener('drop', e => {
   if (e.dataTransfer && e.dataTransfer.files.length) addLocalFiles(e.dataTransfer.files);
 });
 
+/* ======================= YouTube 連結 ======================= */
+function ytId(s) {
+  s = String(s || '').trim();
+  const m = s.match(/(?:youtube\.com\/(?:shorts\/|watch\?(?:.*&)?v=|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : (/^[A-Za-z0-9_-]{11}$/.test(s) ? s : '');
+}
+function addYoutube() {
+  if (S.busy) return;
+  showErr('');
+  const raw = $('yt-url').value;
+  const urls = raw.split(/[\s,，]+/).filter(Boolean);
+  let added = 0;
+  urls.forEach((u, i) => {
+    const id = ytId(u);
+    if (!id) return;
+    const fid = 'yt-' + id;
+    const old = S.files.findIndex(x => x.id === fid);
+    if (old >= 0) S.files.splice(old, 1);
+    S.files.push({ id: fid, name: (S.results[fid] && S.results[fid].name) || 'YouTube ' + id, size: 0, modifiedTime: '', picked: true, pickedAt: String(Date.now() + i), yt: true, url: 'https://www.youtube.com/watch?v=' + id });
+    added++;
+  });
+  if (!added) { showErr('看不懂這個 YouTube 連結。請貼 youtube.com/shorts/… 或 youtu.be/… 的網址，多支可以用空白或換行分開。'); return; }
+  $('yt-url').value = '';
+  sortFiles();
+  renderList();
+}
+$('yt-add').onclick = addYoutube;
+$('yt-url').addEventListener('keydown', e => { if (e.key === 'Enter') addYoutube(); });
+
 /* ======================= Google 雲端硬碟選擇器 ======================= */
 let pickerReady = null;
 function loadPicker() {
@@ -451,7 +492,7 @@ function renderList() {
       <td class="name">${r ? `<button class="linkish" data-open="${esc(f.id)}">${esc(f.name)}</button>` : esc(f.name)}
         ${r && r.verdict ? `<div class="small muted">${esc(r.verdict)}</div>` : ''}
         ${st && st.indexOf('fail:') === 0 ? `<div class="small" style="color:var(--bad)">${esc(st.slice(5))}</div>` : ''}</td>
-      <td class="mono small">${fmtMB(f.size)}</td>
+      <td class="mono small">${String(f.id).indexOf('yt-') === 0 ? 'YouTube' : fmtMB(f.size)}</td>
       <td>${chip}</td>
       <td>${score}</td>
       <td><div class="acts">
@@ -494,12 +535,15 @@ async function runQueue(ids) {
     updateCount();
     try {
       token = await getToken();
-      const payload = await prepareOne(f, token);
+      const isYt = String(f.id).indexOf('yt-') === 0;
+      const payload = isYt ? null : await prepareOne(f, token);
       while (aiRunning >= AI_PARALLEL) await Promise.race(aiJobs);
       aiRunning++; updateCount();
-      setProgress(3, 0.75, i + 1 < ids.length ? '同時準備下一支' : '約 30 到 90 秒');
-      const job = api('analyze', { payload: payload }).then(out => {
-        S.results[f.id] = { modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict };
+      setProgress(3, 0.75, isYt ? 'AI 正在看 YouTube 影片' : (i + 1 < ids.length ? '同時準備下一支' : '約 30 到 90 秒'));
+      const req = isYt ? api('analyzeYoutube', { url: f.url || ('https://www.youtube.com/watch?v=' + f.id.slice(3)) }) : api('analyze', { payload: payload });
+      const job = req.then(out => {
+        if (isYt) f.name = out.meta.fileName;
+        S.results[f.id] = { name: out.meta.fileName, modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict };
         f.picked = false;
         S.status[f.id] = '';
       }).catch(e => {
@@ -683,9 +727,13 @@ function renderReport(el, d) {
   const { meta, result: r, thumbs } = d;
   const crit = S.boot.criteria;
   const critLabel = k => (crit.find(c => c.key === k) || {}).label || k;
-  const near = t => thumbs.reduce((b, x) => (!b || Math.abs(x.t - t) < Math.abs(b.t - t)) ? x : b, null);
+  const near = t => thumbs.filter(x => x.t >= 0).reduce((b, x) => (!b || Math.abs(x.t - t) < Math.abs(b.t - t)) ? x : b, null);
   const driveUrl = 'https://drive.google.com/file/d/' + encodeURIComponent(meta.fileId) + '/view';
   const kf = (r.keyframes || []).slice().sort((a, b) => a.t - b.t);
+  const isYt = String(meta.fileId).indexOf('yt-') === 0;
+  const ytVid = isYt ? String(meta.fileId).slice(3) : '';
+  const ytUrl = 'https://www.youtube.com/watch?v=' + ytVid;
+  const ytEmbed = t => 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytVid) + '?rel=0&playsinline=1' + (t > 0 ? '&start=' + Math.floor(t) + '&autoplay=1&mute=1' : '');
   const issues = (r.issues || []).slice().sort((a, b) => ({ bad: 0, warn: 1, good: 2 }[a.severity] - { bad: 0, warn: 1, good: 2 }[b.severity]) || a.start - b.start);
   const span = i => (Math.abs(i.end - i.start) < 0.05 ? fmtT(i.start) : fmtT(i.start) + '–' + fmtT(i.end));
 
@@ -698,7 +746,7 @@ function renderReport(el, d) {
       <span>企劃：${esc(meta.owner)}</span>
       <span class="mono">${Number(meta.durationSec).toFixed(1)} 秒</span>
       <span>分析：${fmtDate(meta.analyzedAt)}</span>
-      ${String(meta.fileId).indexOf('local-') === 0 ? '<span>從電腦上傳</span>' : `<a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>`}
+      ${isYt ? `<a href="${esc(ytUrl)}" target="_blank" rel="noopener">在 YouTube 開啟</a>` : String(meta.fileId).indexOf('local-') === 0 ? '<span>從電腦上傳</span>' : `<a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>`}
     </div>
   </div>
 
@@ -717,10 +765,13 @@ function renderReport(el, d) {
 
   <section>
     <h2>時間軸</h2>
-    <p class="small muted">邊框顏色：紅＝要改，橘＝建議改，綠＝做得好。左右滑動看完整時間軸。</p>
-    <div class="card"><div class="strip">${kf.map(k => { const th = near(k.t); return `
+    <p class="small muted">${isYt ? '點時間點，影片會跳到那一秒。顏色：紅＝要改，橘＝建議改，綠＝做得好。' : '邊框顏色：紅＝要改，橘＝建議改，綠＝做得好。左右滑動看完整時間軸。'}</p>
+    ${isYt ? `<div class="yt-layout">
+      <div class="ytwrap"><iframe id="ytframe" src="${ytEmbed(0)}" title="YouTube 影片" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+      <div class="card">${kf.map(k => `<button class="tcbtn ${esc(k.severity)}" data-t="${Number(k.t) || 0}"><span class="mono">${fmtT(k.t)}</span><span><b>${esc(k.label)}</b><br><span class="small muted">${esc(k.note)}</span></span></button>`).join('') || '<p class="muted" style="padding:12px">沒有關鍵畫面。</p>'}</div>
+    </div>` : `<div class="card"><div class="strip">${kf.map(k => { const th = near(k.t); return `
       <figure class="frame ${esc(k.severity)}"><div class="im">${th ? `<img src="${th.data}" alt="${esc(fmtT(k.t))} 的畫面">` : ''}<span class="tc">${fmtT(k.t)}</span></div>
-      <figcaption><b>${esc(k.label)}</b>${esc(k.note)}</figcaption></figure>`; }).join('') || '<p class="muted">沒有關鍵畫面。</p>'}</div></div>
+      <figcaption><b>${esc(k.label)}</b>${esc(k.note)}</figcaption></figure>`; }).join('') || '<p class="muted">沒有關鍵畫面。</p>'}</div></div>`}
   </section>
 
   <section>
@@ -739,6 +790,7 @@ function renderReport(el, d) {
     <h2>口白逐字稿</h2>
     <div class="card box"><p class="transcript">${esc(r.transcript)}</p></div>
   </section>`;
+  el.querySelectorAll('.tcbtn').forEach(b => b.onclick = () => { const f = $('ytframe'); if (f) f.src = ytEmbed(Number(b.dataset.t)); });
   $('rep-back').onclick = () => { if (S.back === 'admin') show('admin'); else { show('list'); renderList(); } };
 }
 
