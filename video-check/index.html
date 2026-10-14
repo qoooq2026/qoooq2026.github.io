@@ -174,8 +174,12 @@ td.name{font-weight:500;word-break:break-all}
   <section id="pick-sec" hidden>
     <div class="card folder">
       <div class="listhead">
-        <div><h2>選擇影片</h2><p class="muted small">從你的雲端硬碟選擇成品影片，可以一次選多支。建議匯出成 mp4（H.264）。分析時這個分頁要保持開著。</p></div>
-        <button class="btn primary" id="pick">從雲端硬碟選擇影片</button>
+        <div><h2>選擇影片</h2><p class="muted small">從電腦或雲端硬碟選擇成品影片，可以一次選多支，也可以直接把影片拖進這個頁面。建議匯出成 mp4（H.264）。分析時這個分頁要保持開著。</p></div>
+        <div class="acts">
+          <button class="btn primary" id="pick-local">從電腦選擇影片</button>
+          <button class="btn" id="pick">從雲端硬碟選擇</button>
+        </div>
+        <input type="file" id="local-input" accept="video/*" multiple hidden>
       </div>
       <div class="err" id="err2" hidden></div>
     </div>
@@ -232,7 +236,8 @@ async function api(action, params) {
   if (!j.ok) throw new Error(j.error || '發生錯誤');
   return j.data;
 }
-function showErr(msg) { ['err', 'err2'].forEach(id => { const e = $(id); e.textContent = msg; e.hidden = !msg; }); }
+function showHint(msg) { const e = $('err2'); if (!e.textContent) { e.textContent = msg; e.hidden = false; e.style.background = 'var(--warn-soft)'; e.style.color = 'var(--warn)'; } }
+function showErr(msg) { ['err', 'err2'].forEach(id => { const e = $(id); e.textContent = msg; e.hidden = !msg; e.style.background = ''; e.style.color = ''; }); }
 function show(view) {
   S.view = view;
   ['list', 'report', 'admin'].forEach(v => { $('view-' + v).hidden = v !== view; });
@@ -341,6 +346,36 @@ $('tab-list').onclick = () => show('list');
 $('tab-admin').onclick = () => { S.back = 'admin'; loadAdmin(); };
 $('run-all').onclick = () => runQueue(S.files.filter(f => fileState(f) !== 'done').map(f => f.id));
 
+/* ======================= 從電腦選擇影片 ======================= */
+const LOCAL = {};  // id → File
+function localId(file) {
+  const s = file.name + '|' + file.size + '|' + file.lastModified;
+  let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0;
+  return 'local-' + h.toString(36) + '-' + file.size.toString(36);
+}
+function addLocalFiles(list) {
+  const now = Date.now();
+  [...list].forEach((file, i) => {
+    if (!/^video\//.test(file.type) && !/\.(mov|mp4|m4v|webm)$/i.test(file.name)) return;
+    const id = localId(file);
+    LOCAL[id] = file;
+    const f = { id: id, name: file.name, size: file.size, modifiedTime: new Date(file.lastModified).toISOString(), picked: true, pickedAt: String(now + i), local: true };
+    const old = S.files.findIndex(x => x.id === id);
+    if (old >= 0) S.files.splice(old, 1);
+    S.files.push(f);
+  });
+  sortFiles();
+  renderList();
+}
+$('pick-local').onclick = () => { if (!S.busy) $('local-input').click(); };
+$('local-input').onchange = e => { addLocalFiles(e.target.files); e.target.value = ''; };
+document.addEventListener('dragover', e => { if (S.boot) e.preventDefault(); });
+document.addEventListener('drop', e => {
+  if (!S.boot || S.busy) return;
+  e.preventDefault();
+  if (e.dataTransfer && e.dataTransfer.files.length) addLocalFiles(e.dataTransfer.files);
+});
+
 /* ======================= Google 雲端硬碟選擇器 ======================= */
 let pickerReady = null;
 function loadPicker() {
@@ -369,6 +404,7 @@ $('pick').onclick = async () => {
     b.setOrigin(location.protocol + '//' + location.host);
     b.build().setVisible(true);
   } catch (e) { showErr(e.message); }
+  showHint('如果雲端硬碟視窗顯示 403 錯誤，請先改用「從電腦選擇影片」。');
 };
 function onPicked(data) {
   if (data.action !== google.picker.Action.PICKED) return;
@@ -505,6 +541,12 @@ async function prepareOne(f, token) {
 }
 
 async function download(f, token, onp) {
+  if (String(f.id).indexOf('local-') === 0) {
+    const file = LOCAL[f.id];
+    if (!file) throw new Error('這支影片是從電腦選的，請按「從電腦選擇影片」重新選一次再分析。');
+    onp(1);
+    return await file.arrayBuffer();
+  }
   const url = 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent(f.id) + '?alt=media&supportsAllDrives=true';
   const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
   if (!res.ok) throw new Error(res.status === 404 || res.status === 403 ? '沒有這支影片的讀取權限。請用「從雲端硬碟選擇影片」重新選一次這支影片。' : '下載影片失敗（' + res.status + '）。');
@@ -655,7 +697,7 @@ function renderReport(el, d) {
       <span>企劃：${esc(meta.owner)}</span>
       <span class="mono">${Number(meta.durationSec).toFixed(1)} 秒</span>
       <span>分析：${fmtDate(meta.analyzedAt)}</span>
-      <a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>
+      ${String(meta.fileId).indexOf('local-') === 0 ? '<span>從電腦上傳</span>' : `<a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>`}
     </div>
   </div>
 
