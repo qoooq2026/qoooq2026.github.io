@@ -116,6 +116,13 @@ td.name{font-weight:500;word-break:break-all}
 .pip.on.mid{background:var(--warn)}
 .pip.on.lo{background:var(--bad)}
 .reason{font-size:14px;color:var(--muted)}
+.matrix tr.grp td{background:var(--bg);font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.06em;padding:6px 14px}
+.matrix .wt{font-size:11px;color:var(--muted);font-weight:400;margin-left:4px}
+.tier{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px}
+.tier.t高{background:var(--good-soft);color:var(--good)}
+.tier.t中{background:var(--warn-soft);color:var(--warn)}
+.tier.t低{background:var(--bad-soft);color:var(--bad)}
+.oldtag{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-left:6px;font-family:var(--f-body)}
 .strip{display:flex;gap:10px;overflow-x:auto;padding:18px 20px 14px}
 .frame{flex:0 0 128px;display:flex;flex-direction:column;gap:6px;margin:0}
 .frame .im{position:relative}
@@ -487,7 +494,7 @@ function renderList() {
     else if (st === 'wait') chip = '<span class="chip none">排隊中</span>';
     else if (st && st.indexOf('fail:') === 0) chip = `<span class="chip fail" title="${esc(st.slice(5))}">失敗</span>`;
     else chip = { none: '<span class="chip none">未分析</span>', done: '<span class="chip done">已分析</span>', stale: '<span class="chip stale">影片已更新</span>' }[state];
-    const score = r ? `<span class="mono">${r.total} / ${S.boot.maxScore}</span>` : '<span class="muted">—</span>';
+    const score = r ? `<span class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}</span>${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}` : '<span class="muted">—</span>';
     return `<tr>
       <td class="name">${r ? `<button class="linkish" data-open="${esc(f.id)}">${esc(f.name)}</button>` : esc(f.name)}
         ${r && r.verdict ? `<div class="small muted">${esc(r.verdict)}</div>` : ''}
@@ -543,7 +550,7 @@ async function runQueue(ids) {
       const req = isYt ? api('analyzeYoutube', { url: f.url || ('https://www.youtube.com/watch?v=' + f.id.slice(3)) }) : api('analyze', { payload: payload });
       const job = req.then(out => {
         if (isYt) f.name = out.meta.fileName;
-        S.results[f.id] = { name: out.meta.fileName, modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict };
+        S.results[f.id] = { name: out.meta.fileName, modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict, maxScore: out.result.maxScore || S.boot.maxScore };
         f.picked = false;
         S.status[f.id] = '';
       }).catch(e => {
@@ -722,11 +729,17 @@ function pips(n) {
   return s + `</div><span class="mono small muted">${n}</span></div>`;
 }
 const SEV = { bad: '要改', warn: '建議改', good: '做得好' };
+const OLD_LABELS = { hook: '前 3 秒 hook', colloquial: '口語化、無廣告用詞', closeup: '商品、人物近拍', coherence: '標題、文案和畫面有連結', pacing: '速度與節奏', density: '畫面資訊量', single: '只講一個訴求' };
+const isOld = r => !!r && Number(r.maxScore) > 0 && Number(r.maxScore) !== Number(S.boot.maxScore);
 
 function renderReport(el, d) {
   const { meta, result: r, thumbs } = d;
-  const crit = S.boot.criteria;
+  const old = !(r.scores && r.scores.topic);
+  const crit = old ? Object.keys(OLD_LABELS).map(k => ({ key: k, label: OLD_LABELS[k] })) : S.boot.criteria;
   const critLabel = k => (crit.find(c => c.key === k) || {}).label || k;
+  let lastGrp = '';
+  const critRows = crit.map(c => { const s = r.scores[c.key] || {}; let g = ''; if (c.group && c.group !== lastGrp) { lastGrp = c.group; const gw = crit.filter(x => x.group === c.group).reduce((a, x) => a + x.weight * 5, 0); g = `<tr class="grp"><td colspan="3">${esc(c.group)}（${gw} 分）</td></tr>`; }
+    return g + `<tr><td class="crit">${esc(c.label)}${c.weight ? `<span class="wt">×${c.weight}</span>` : ''}</td><td>${pips(s.score)}</td><td class="reason">${esc(s.reason)}</td></tr>`; }).join('');
   const near = t => thumbs.filter(x => x.t >= 0).reduce((b, x) => (!b || Math.abs(x.t - t) < Math.abs(b.t - t)) ? x : b, null);
   const driveUrl = 'https://drive.google.com/file/d/' + encodeURIComponent(meta.fileId) + '/view';
   const kf = (r.keyframes || []).slice().sort((a, b) => a.t - b.t);
@@ -751,15 +764,16 @@ function renderReport(el, d) {
   </div>
 
   <div class="card verdict">
-    <div class="score">${r.total}<small> / ${r.maxScore || S.boot.maxScore}</small></div>
-    <div><b>${esc(r.verdict)}</b><p class="muted" style="margin-top:4px">${esc(r.summary)}</p></div>
+    <div class="score">${r.total}<small> / ${r.maxScore || (old ? 35 : S.boot.maxScore)}</small></div>
+    <div>${r.viral_tier ? `<span class="tier t${esc(r.viral_tier)}">爆款潛力：${esc(r.viral_tier)}</span>${r.viral_reason ? `<p class="small muted" style="margin:0 0 6px">${esc(r.viral_reason)}</p>` : ''}` : ''}${old ? '<p class="small muted" style="margin:0 0 6px">這是舊版評分（7 項、滿分 35）。重新分析可套用新標準。</p>' : ''}<b>${esc(r.verdict)}</b><p class="muted" style="margin-top:4px">${esc(r.summary)}</p></div>
   </div>
 
   <section>
-    <h2>七項標準</h2>
+    <h2>評分項目</h2>
+    <p class="small muted">${old ? '' : '每項 1 到 5 分，乘上權重（×2、×3）後加總。3 分是團隊一般水準，5 分是爆款等級。'}</p>
     <div class="card tbl matrix"><table>
       <thead><tr><th>標準</th><th>分數</th><th>原因</th></tr></thead>
-      <tbody>${crit.map(c => { const s = r.scores[c.key] || {}; return `<tr><td class="crit">${esc(c.label)}</td><td>${pips(s.score)}</td><td class="reason">${esc(s.reason)}</td></tr>`; }).join('')}</tbody>
+      <tbody>${critRows}</tbody>
     </table></div>
   </section>
 
@@ -808,6 +822,10 @@ async function loadAdmin() {
 function renderAdmin(el, rows) {
   const crit = S.boot.criteria;
   if (!rows.length) { el.innerHTML = '<div class="card empty">還沒有任何分析結果。</div>'; return; }
+  const allRows = rows.slice();
+  rows = rows.filter(r => !isOld(r));
+  const oldN = allRows.length - rows.length;
+  if (!rows.length) rows = [];
   const by = {};
   rows.forEach(r => { (by[r.owner] = by[r.owner] || []).push(r); });
   const people = Object.keys(by).map(o => {
@@ -817,12 +835,12 @@ function renderAdmin(el, rows) {
     const weak = cAvg.slice().sort((a, b) => a.v - b.v)[0];
     return { o, n: list.length, avg, cAvg, weak };
   }).sort((a, b) => b.avg - a.avg);
-  const teamC = crit.map(c => ({ c, v: rows.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / rows.length }));
+  const teamC = crit.map(c => ({ c, v: rows.length ? rows.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / rows.length : 0 }));
   const cell = v => { const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
-  rows.sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
+  allRows.sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
 
   el.innerHTML = `
-  <div class="rhead"><h1>全組總覽</h1><p class="muted">${rows.length} 支影片、${people.length} 位企劃。數字是 1 到 5 分的平均。</p></div>
+  <div class="rhead"><h1>全組總覽</h1><p class="muted">${rows.length} 支影片、${people.length} 位企劃。數字是 1 到 5 分的平均${oldN ? `，不含 ${oldN} 支舊版評分的影片` : ''}。</p></div>
   <section>
     <h2>全組最常失分的項目</h2>
     <div class="card tbl"><table><thead><tr>${teamC.map(x => `<th>${esc(x.c.label)}</th>`).join('')}</tr></thead>
@@ -839,8 +857,8 @@ function renderAdmin(el, rows) {
     <h2>所有影片</h2>
     <div class="card tbl"><table>
       <thead><tr><th>影片</th><th>企劃</th><th>分析時間</th><th>總分</th></tr></thead>
-      <tbody>${rows.map(r => `<tr><td class="name"><button class="linkish" data-open="${esc(r.fileId)}">${esc(r.fileName)}</button><div class="small muted">${esc(r.verdict)}</div></td>
-        <td class="small">${esc(r.owner)}</td><td class="small mono">${fmtDate(r.analyzedAt)}</td><td class="mono">${r.total} / ${S.boot.maxScore}</td></tr>`).join('')}</tbody>
+      <tbody>${allRows.map(r => `<tr><td class="name"><button class="linkish" data-open="${esc(r.fileId)}">${esc(r.fileName)}</button><div class="small muted">${esc(r.verdict)}</div></td>
+        <td class="small">${esc(r.owner)}</td><td class="small mono">${fmtDate(r.analyzedAt)}</td><td class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}</td></tr>`).join('')}</tbody>
     </table></div>
   </section>`;
   el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'admin'; openReport(b.dataset.open); });
