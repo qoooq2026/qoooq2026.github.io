@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>短影音健檢｜QoooQ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: 深綠工具列在上，下面三個畫面切換：我的影片（登入、選片、清單＋進度）、單支報告、全組總覽。QoooQ 品牌：深綠＋珊瑚橘 */
+:root{
+  --bg:#f3f5f3; --surface:#ffffff; --ink:#17312c; --muted:#5d6e69; --line:#dae1de;
+  --brand:#17312c; --brand-ink:#ffffff;
+  --accent:#e0583f; --accent-soft:#fde9e4; --accent-ink:#ffffff; --link:#1d6b5a;
+  --bad:#c2332b; --bad-soft:#fbe7e5; --warn:#b26a00; --warn-soft:#fbf0dc; --good:#1f7a4d; --good-soft:#e1f3e9;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;
+  --f-display:"Montserrat","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1a18; --surface:#16231f; --ink:#e6eeeb; --muted:#97aaa4; --line:#283a35;
+  --brand:#0b1513; --brand-ink:#e6eeeb;
+  --accent:#f2735b; --accent-soft:#3b231e; --accent-ink:#1a0d0a; --link:#7fd0bb;
+  --bad:#ff8a80; --bad-soft:#3a1f1d; --warn:#f0b558; --warn-soft:#3a2d17; --good:#6fd39c; --good-soft:#18342a; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.3}
+h1{font-size:clamp(22px,3.4vw,30px);font-weight:900}
+h2{font-size:19px;font-weight:900}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+button,input{font:inherit}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+.top{position:sticky;top:0;z-index:5;background:var(--brand);color:var(--brand-ink)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:16px;letter-spacing:.02em;display:flex;align-items:baseline;gap:8px}
+.brand .q{font-family:var(--f-display);font-weight:800;color:var(--accent);letter-spacing:.04em}
+.tabs{display:flex;gap:4px}
+.tab{border:0;background:none;padding:6px 12px;border-radius:6px;color:var(--brand-ink);opacity:.72;cursor:pointer;font-weight:500}
+.tab[aria-current="true"]{background:rgba(255,255,255,.12);opacity:1;font-weight:700}
+.who{margin-left:auto;font-size:13px;display:flex;gap:10px;align-items:center;opacity:.85}
+.who button{border:1px solid rgba(255,255,255,.3);background:none;color:inherit;border-radius:6px;padding:3px 10px;cursor:pointer;font:inherit;font-size:12px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 72px;display:flex;flex-direction:column;gap:28px}
+section{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:7px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,.tab:focus-visible,input:focus-visible,.linkish:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rhead a{color:var(--link)}
+.linkish{border:0;background:none;color:var(--link);cursor:pointer;padding:0;font-weight:700;text-align:left}
+
+.folder{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.folder-row{display:flex;gap:10px;flex-wrap:wrap}
+.folder-row input{flex:1 1 320px;min-width:0;padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink)}
+.hero{padding:28px 24px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.hero h1{font-family:var(--f-body)}
+.hero ol{margin:0;padding-left:1.3em;color:var(--muted);font-size:14px}
+.gbtn{display:inline-flex;align-items:center;gap:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:9px 16px;font-weight:700;cursor:pointer}
+.gbtn svg{width:18px;height:18px}
+.score,.mono{font-family:var(--f-mono)}
+
+.err{background:var(--bad-soft);color:var(--bad);padding:10px 14px;border-radius:8px;font-size:14px}
+
+.listhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+th{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.06em}
+td.name{font-weight:500;word-break:break-all}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.chip.none{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.chip.done{background:var(--good-soft);color:var(--good)}
+.chip.stale{background:var(--warn-soft);color:var(--warn)}
+.chip.run{background:var(--accent);color:var(--accent-ink)}
+.chip.fail{background:var(--bad-soft);color:var(--bad)}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+
+.prog{padding:16px 20px;display:flex;flex-direction:column;gap:8px}
+.prog-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.steps{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.steps span.on{color:var(--accent);font-weight:700}
+.steps span.ok{color:var(--good)}
+
+/* report */
+.rhead{display:flex;flex-direction:column;gap:8px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:13px}
+.verdict{padding:20px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.score{font-family:var(--f-mono);font-size:44px;font-weight:600;line-height:1}
+.score small{font-size:16px;color:var(--muted);font-weight:400}
+.verdict b{font-size:16px}
+@media (max-width:560px){
+  .verdict{grid-template-columns:1fr}
+  .matrix table,.matrix tbody,.matrix tr,.matrix td{display:block;min-width:0;width:auto}
+  .matrix thead{display:none}
+  .matrix tr{padding:10px 14px;border-bottom:1px solid var(--line)}
+  .matrix tr:last-child{border-bottom:0}
+  .matrix td{padding:2px 0;border:0}
+}
+.matrix td.crit{font-weight:500;width:30%}
+.bar{display:flex;align-items:center;gap:8px}
+.pips{display:flex;gap:3px}
+.pip{width:16px;height:8px;border-radius:2px;background:var(--line)}
+.pip.on{background:var(--good)}
+.pip.on.mid{background:var(--warn)}
+.pip.on.lo{background:var(--bad)}
+.reason{font-size:14px;color:var(--muted)}
+.strip{display:flex;gap:10px;overflow-x:auto;padding:18px 20px 14px}
+.frame{flex:0 0 128px;display:flex;flex-direction:column;gap:6px;margin:0}
+.frame .im{position:relative}
+.frame img{width:128px;aspect-ratio:9/16;object-fit:cover;border-radius:6px;display:block;border:2px solid transparent;background:var(--bg)}
+.frame.bad img{border-color:var(--bad)}
+.frame.warn img{border-color:var(--warn)}
+.frame.good img{border-color:var(--good)}
+.tc{position:absolute;left:5px;top:5px;background:rgba(0,0,0,.72);color:#fff;font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:3px}
+.frame figcaption{font-size:12px;line-height:1.5;color:var(--muted)}
+.frame figcaption b{display:block;color:var(--ink)}
+.notes{padding:4px 20px}
+.note{display:grid;grid-template-columns:100px 78px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.note:last-child{border-bottom:0}
+.note .when{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding-top:2px}
+.sev{font-size:12px;font-weight:700;padding:2px 6px;border-radius:4px;text-align:center}
+.sev.bad{background:var(--bad-soft);color:var(--bad)}
+.sev.warn{background:var(--warn-soft);color:var(--warn)}
+.sev.good{background:var(--good-soft);color:var(--good)}
+.note .txt{min-width:0}
+.note .fix{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.note .fix::before{content:"改法：";color:var(--link);font-weight:700}
+@media (max-width:560px){.note{grid-template-columns:1fr;gap:4px}.note .sev{justify-self:start}}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.box{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.box.risk{border-left:4px solid var(--bad)}
+.box ul{margin:0;padding-left:1.2em}
+.transcript{white-space:pre-wrap;font-size:14px;color:var(--muted)}
+.empty{padding:28px 20px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <span class="brand"><span class="q">QoooQ</span>短影音健檢</span>
+  <nav class="tabs">
+    <button class="tab" id="tab-list" aria-current="true">我的影片</button>
+    <button class="tab" id="tab-admin" hidden>全組總覽</button>
+  </nav>
+  <span class="who" id="who" hidden><span id="who-email"></span><button id="logout">登出</button></span>
+</div></header>
+
+<main class="wrap" id="view-list">
+  <section id="login-sec">
+    <div class="card hero">
+      <h1>上片前，先讓 AI 看一遍</h1>
+      <p class="muted">依團隊的七項短影音標準評分，標出要改的秒數與改法。目標是完播率，以及看完會想分享。</p>
+      <ol>
+        <li>用公司的 Google 帳號登入</li>
+        <li>從雲端硬碟選擇要分析的影片（可以一次選多支）</li>
+        <li>按「分析」，分頁保持開著，等報告出來</li>
+      </ol>
+      <button class="gbtn" id="login"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>用 Google 帳號登入</button>
+      <div class="err" id="err" hidden></div>
+    </div>
+  </section>
+
+  <section id="pick-sec" hidden>
+    <div class="card folder">
+      <div class="listhead">
+        <div><h2>選擇影片</h2><p class="muted small">從你的雲端硬碟選擇成品影片，可以一次選多支。建議匯出成 mp4（H.264）。分析時這個分頁要保持開著。</p></div>
+        <button class="btn primary" id="pick">從雲端硬碟選擇影片</button>
+      </div>
+      <div class="err" id="err2" hidden></div>
+    </div>
+  </section>
+
+  <section id="prog-sec" hidden>
+    <div class="card prog">
+      <div class="listhead"><b id="prog-title">分析中</b><span class="small muted" id="prog-count"></span></div>
+      <div class="prog-bar"><i id="prog-bar"></i></div>
+      <div class="steps" id="prog-steps"></div>
+    </div>
+  </section>
+
+  <section id="list-sec" hidden>
+    <div class="listhead">
+      <div><h2>我的影片</h2><p class="small muted" id="folder-sum"></p></div>
+      <button class="btn primary" id="run-all">分析全部未分析的影片</button>
+    </div>
+    <div class="card tbl">
+      <table>
+        <thead><tr><th>影片</th><th>大小</th><th>狀態</th><th>分數</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<main class="wrap" id="view-report" hidden></main>
+<main class="wrap" id="view-admin" hidden></main>
+
+<script src="config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+<script>
+/* ======================= 狀態與工具 ======================= */
+const CFG = window.APP_CONFIG || {};
+const S = { boot: null, files: [], results: {}, busy: false, status: {}, view: 'list', back: 'list', token: null, tokenExp: 0 };
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtT = t => { t = Number(t) || 0; const m = Math.floor(t / 60); const s = (t - m * 60).toFixed(1); return m + ':' + (s < 10 ? '0' : '') + s; };
+const fmtMB = b => b ? (b / 1048576).toFixed(1) + ' MB' : '—';
+const fmtDate = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric' }) + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false }); };
+
+/** 呼叫後端（Apps Script）。用 text/plain 避免跨網域預檢。 */
+async function api(action, params) {
+  const token = await getToken();
+  const res = await fetch(CFG.BACKEND_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action: action, token: token }, params || {}))
+  });
+  if (!res.ok) throw new Error('伺服器沒有回應（' + res.status + '），請稍後再試。');
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || '發生錯誤');
+  return j.data;
+}
+function showErr(msg) { ['err', 'err2'].forEach(id => { const e = $(id); e.textContent = msg; e.hidden = !msg; }); }
+function show(view) {
+  S.view = view;
+  ['list', 'report', 'admin'].forEach(v => { $('view-' + v).hidden = v !== view; });
+  $('tab-list').setAttribute('aria-current', String(view === 'list' || (view === 'report' && S.back === 'list')));
+  $('tab-admin').setAttribute('aria-current', String(view === 'admin' || (view === 'report' && S.back === 'admin')));
+  window.scrollTo(0, 0);
+}
+window.addEventListener('beforeunload', e => { if (S.busy) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ======================= Google 登入 ======================= */
+const SCOPES = 'openid email https://www.googleapis.com/auth/drive.file';
+let tokenClient = null, tokenWaiters = [];
+
+function initAuth() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CFG.CLIENT_ID,
+    scope: SCOPES,
+    callback: resp => {
+      const waiters = tokenWaiters; tokenWaiters = [];
+      if (resp.error) { waiters.forEach(w => w.rej(new Error('登入失敗：' + resp.error))); return; }
+      S.token = resp.access_token;
+      S.tokenExp = Date.now() + (Number(resp.expires_in) || 3600) * 1000;
+      try { sessionStorage.setItem('vc_tok', JSON.stringify({ t: S.token, e: S.tokenExp })); } catch (e) {}
+      waiters.forEach(w => w.res(S.token));
+    },
+    error_callback: err => {
+      const waiters = tokenWaiters; tokenWaiters = [];
+      waiters.forEach(w => w.rej(new Error(err && err.type === 'popup_closed' ? '登入視窗被關閉了，請再按一次登入。' : '登入視窗被瀏覽器擋住了，請允許彈出視窗後再試。')));
+    }
+  });
+}
+function requestToken(prompt) {
+  return new Promise((res, rej) => {
+    tokenWaiters.push({ res, rej });
+    tokenClient.requestAccessToken({ prompt: prompt });
+  });
+}
+async function getToken() {
+  if (S.token && Date.now() < S.tokenExp - 5 * 60 * 1000) return S.token;
+  return requestToken('');
+}
+
+/* ======================= 啟動 ======================= */
+async function init() {
+  if (!CFG.CLIENT_ID || !CFG.BACKEND_URL) { showErr('網站還沒設定完成（config.js）。請聯絡管理者。'); $('login').disabled = true; return; }
+  await waitFor(() => window.google && google.accounts && google.accounts.oauth2, 10000);
+  initAuth();
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('vc_tok') || 'null');
+    if (saved && saved.e > Date.now() + 5 * 60 * 1000) { S.token = saved.t; S.tokenExp = saved.e; await afterLogin(); }
+  } catch (e) { S.token = null; }
+}
+function waitFor(fn, ms) {
+  return new Promise((res, rej) => {
+    const t0 = Date.now();
+    (function tick() { if (fn()) return res(); if (Date.now() - t0 > ms) return rej(new Error('Google 登入元件載入失敗，請重新整理。')); setTimeout(tick, 100); })();
+  });
+}
+
+$('login').onclick = async () => {
+  showErr('');
+  $('login').disabled = true;
+  try { await requestToken('select_account'); await afterLogin(); }
+  catch (e) { showErr(e.message); }
+  $('login').disabled = false;
+};
+$('logout').onclick = () => {
+  if (S.busy) return;
+  try { google.accounts.oauth2.revoke(S.token, () => {}); } catch (e) {}
+  try { sessionStorage.removeItem('vc_tok'); } catch (e) {}
+  location.reload();
+};
+
+async function afterLogin() {
+  try {
+    S.boot = await api('boot');
+  } catch (e) {
+    S.token = null; try { sessionStorage.removeItem('vc_tok'); } catch (x) {}
+    showErr(e.message); return;
+  }
+  $('who-email').textContent = S.boot.email;
+  $('who').hidden = false;
+  $('login-sec').hidden = true;
+  $('pick-sec').hidden = false;
+  if (S.boot.isAdmin) $('tab-admin').hidden = false;
+  await loadMine();
+}
+
+async function loadMine() {
+  try {
+    const rows = await api('listMine');
+    rows.forEach(r => {
+      S.results[r.id] = r;
+      if (!S.files.find(f => f.id === r.id)) S.files.push({ id: r.id, name: r.name, size: 0, modifiedTime: '' });
+    });
+    sortFiles();
+    renderList();
+  } catch (e) { showErr(e.message); }
+}
+function sortFiles() {
+  const key = f => (S.results[f.id] && !f.picked ? S.results[f.id].analyzedAt : '9' + (f.pickedAt || ''));
+  S.files.sort((a, b) => String(key(b)).localeCompare(String(key(a))));
+}
+
+$('tab-list').onclick = () => show('list');
+$('tab-admin').onclick = () => { S.back = 'admin'; loadAdmin(); };
+$('run-all').onclick = () => runQueue(S.files.filter(f => fileState(f) !== 'done').map(f => f.id));
+
+/* ======================= Google 雲端硬碟選擇器 ======================= */
+let pickerReady = null;
+function loadPicker() {
+  if (!pickerReady) pickerReady = new Promise((res, rej) => {
+    waitFor(() => window.gapi, 10000).then(() => gapi.load('picker', { callback: res, onerror: () => rej(new Error('選擇器載入失敗')) }), rej);
+  });
+  return pickerReady;
+}
+$('pick').onclick = async () => {
+  if (S.busy) return;
+  showErr('');
+  try {
+    const token = await getToken();
+    await loadPicker();
+    const mimes = 'video/mp4,video/quicktime,video/x-m4v,video/webm,video/mpeg,video/x-msvideo';
+    const mine = new google.picker.DocsView(google.picker.ViewId.DOCS).setMimeTypes(mimes).setIncludeFolders(true).setMode(google.picker.DocsViewMode.LIST);
+    const shared = new google.picker.DocsView(google.picker.ViewId.DOCS).setMimeTypes(mimes).setIncludeFolders(true).setEnableDrives(true).setMode(google.picker.DocsViewMode.LIST);
+    const b = new google.picker.PickerBuilder()
+      .addView(mine).addView(shared)
+      .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+      .enableFeature(google.picker.Feature.SUPPORT_DRIVES)
+      .setOAuthToken(token).setDeveloperKey(CFG.API_KEY).setLocale('zh-TW')
+      .setTitle('選擇要分析的影片（可多選）')
+      .setCallback(onPicked);
+    if (CFG.APP_ID) b.setAppId(CFG.APP_ID);
+    b.setOrigin(location.protocol + '//' + location.host);
+    b.build().setVisible(true);
+  } catch (e) { showErr(e.message); }
+};
+function onPicked(data) {
+  if (data.action !== google.picker.Action.PICKED) return;
+  const now = Date.now();
+  (data.docs || []).forEach((d, i) => {
+    if (!/^video\//.test(d.mimeType || '')) return;
+    const f = {
+      id: d.id, name: d.name, size: Number(d.sizeBytes) || 0,
+      modifiedTime: d.lastEditedUtc ? new Date(Number(d.lastEditedUtc)).toISOString() : '',
+      picked: true, pickedAt: String(now + i)
+    };
+    const old = S.files.findIndex(x => x.id === f.id);
+    if (old >= 0) S.files.splice(old, 1);
+    S.files.push(f);
+  });
+  sortFiles();
+  renderList();
+}
+
+function fileState(f) {
+  const r = S.results[f.id];
+  if (!r) return 'none';
+  if (r.modifiedTime && f.modifiedTime && r.modifiedTime !== f.modifiedTime) return 'stale';
+  return 'done';
+}
+
+function renderList() {
+  $('list-sec').hidden = false;
+  const done = S.files.filter(f => fileState(f) === 'done').length;
+  $('folder-sum').textContent = S.files.length ? `${S.files.length} 支影片，已分析 ${done} 支` : '';
+  $('run-all').disabled = S.busy || done === S.files.length;
+  if (!S.files.length) { $('rows').innerHTML = '<tr><td colspan="5" class="empty">還沒有影片。按上面的「從雲端硬碟選擇影片」開始。</td></tr>'; return; }
+  $('rows').innerHTML = S.files.map(f => {
+    const st = S.status[f.id];
+    const state = fileState(f);
+    const r = S.results[f.id];
+    let chip;
+    if (st === 'run') chip = '<span class="chip run">分析中</span>';
+    else if (st === 'wait') chip = '<span class="chip none">排隊中</span>';
+    else if (st && st.indexOf('fail:') === 0) chip = `<span class="chip fail" title="${esc(st.slice(5))}">失敗</span>`;
+    else chip = { none: '<span class="chip none">未分析</span>', done: '<span class="chip done">已分析</span>', stale: '<span class="chip stale">影片已更新</span>' }[state];
+    const score = r ? `<span class="mono">${r.total} / ${S.boot.maxScore}</span>` : '<span class="muted">—</span>';
+    return `<tr>
+      <td class="name">${r ? `<button class="linkish" data-open="${esc(f.id)}">${esc(f.name)}</button>` : esc(f.name)}
+        ${r && r.verdict ? `<div class="small muted">${esc(r.verdict)}</div>` : ''}
+        ${st && st.indexOf('fail:') === 0 ? `<div class="small" style="color:var(--bad)">${esc(st.slice(5))}</div>` : ''}</td>
+      <td class="mono small">${fmtMB(f.size)}</td>
+      <td>${chip}</td>
+      <td>${score}</td>
+      <td><div class="acts">
+        ${r ? `<button class="btn" data-open="${esc(f.id)}">看報告</button>` : ''}
+        <button class="btn" data-run="${esc(f.id)}" ${S.busy ? 'disabled' : ''}>${r ? '重新分析' : '分析'}</button>
+      </div></td></tr>`;
+  }).join('');
+  $('rows').querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'list'; openReport(b.dataset.open); });
+  $('rows').querySelectorAll('[data-run]').forEach(b => b.onclick = () => runQueue([b.dataset.run]));
+}
+
+/* ======================= 分析佇列 ======================= */
+const STEPS = ['下載影片', '擷取畫面', '讀取音軌', 'AI 評分', '儲存報告'];
+function setProgress(step, pct, sub) {
+  $('prog-bar').style.width = Math.round(pct * 100) + '%';
+  $('prog-steps').innerHTML = STEPS.map((s, i) => `<span class="${i < step ? 'ok' : i === step ? 'on' : ''}">${i < step ? '✓ ' : ''}${s}${i === step && sub ? '（' + esc(sub) + '）' : ''}</span>`).join('');
+}
+
+/*
+ * 流水線：下載與擷取一支一支做（吃電腦資源），
+ * AI 評分最多同時 3 支（等的是 Google），所以前一支在評分時，下一支已經在擷取。
+ */
+const AI_PARALLEL = 3;
+async function runQueue(ids) {
+  if (S.busy || !ids.length) return;
+  S.busy = true; showErr('');
+  ids.forEach(id => S.status[id] = 'wait');
+  renderList();
+  $('prog-sec').hidden = false;
+  let token;
+  let aiRunning = 0, done = 0;
+  const aiJobs = [];
+  const updateCount = () => {
+    $('prog-count').textContent = `完成 ${done} / ${ids.length} 支` + (aiRunning ? `，AI 評分中 ${aiRunning} 支` : '');
+  };
+  for (let i = 0; i < ids.length; i++) {
+    const f = S.files.find(x => x.id === ids[i]);
+    S.status[f.id] = 'run'; renderList();
+    $('prog-title').textContent = f.name;
+    updateCount();
+    try {
+      token = await getToken();
+      const payload = await prepareOne(f, token);
+      while (aiRunning >= AI_PARALLEL) await Promise.race(aiJobs);
+      aiRunning++; updateCount();
+      setProgress(3, 0.75, i + 1 < ids.length ? '同時準備下一支' : '約 30 到 90 秒');
+      const job = api('analyze', { payload: payload }).then(out => {
+        S.results[f.id] = { modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict };
+        f.picked = false;
+        S.status[f.id] = '';
+      }).catch(e => {
+        console.error(e);
+        S.status[f.id] = 'fail:' + (e.message || e);
+      }).finally(() => {
+        aiRunning--; done++; updateCount(); renderList();
+        aiJobs.splice(aiJobs.indexOf(job), 1);
+      });
+      aiJobs.push(job);
+    } catch (e) {
+      console.error(e);
+      S.status[f.id] = 'fail:' + (e.message || e);
+      done++; renderList();
+    }
+  }
+  if (aiJobs.length) {
+    $('prog-title').textContent = '等待 AI 評分完成';
+    setProgress(3, 0.85, '約 30 到 90 秒');
+    await Promise.all(aiJobs.slice());
+  }
+  S.busy = false;
+  $('prog-sec').hidden = true;
+  renderList();
+}
+
+async function prepareOne(f, token) {
+  setProgress(0, 0, '0%');
+  const buf = await download(f, token, p => setProgress(0, p * 0.35, Math.round(p * 100) + '%'));
+  setProgress(1, 0.35);
+  const vid = await extractFrames(buf, (i, n) => setProgress(1, 0.35 + 0.35 * i / n, i + ' / ' + n));
+  setProgress(2, 0.72);
+  const audio = await extractAudio(buf, vid.duration);
+  return {
+    fileId: f.id, fileName: f.name,
+    modifiedTime: f.modifiedTime, duration: vid.duration, step: vid.step,
+    frames: vid.frames, thumbs: vid.thumbs, cuts: vid.cuts, audio: audio
+  };
+}
+
+async function download(f, token, onp) {
+  const url = 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent(f.id) + '?alt=media&supportsAllDrives=true';
+  const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+  if (!res.ok) throw new Error(res.status === 404 || res.status === 403 ? '沒有這支影片的讀取權限。請用「從雲端硬碟選擇影片」重新選一次這支影片。' : '下載影片失敗（' + res.status + '）。');
+  const total = Number(res.headers.get('Content-Length')) || f.size || 0;
+  if (!res.body || !total) return await res.arrayBuffer();
+  const reader = res.body.getReader();
+  const chunks = []; let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value); got += value.length;
+    onp(Math.min(1, got / total));
+  }
+  const out = new Uint8Array(got); let o = 0;
+  chunks.forEach(c => { out.set(c, o); o += c.length; });
+  return out.buffer;
+}
+
+/* ---------- 擷取畫面 ---------- */
+function once(el, ev, ms) {
+  return new Promise((res, rej) => {
+    let to;
+    const ok = () => { clearTimeout(to); el.removeEventListener('error', bad); res(); };
+    const bad = () => { clearTimeout(to); el.removeEventListener(ev, ok); rej(new Error('瀏覽器無法播放這個影片格式。請匯出成 mp4（H.264）後再試。')); };
+    el.addEventListener(ev, ok, { once: true });
+    el.addEventListener('error', bad, { once: true });
+    if (ms) to = setTimeout(() => { el.removeEventListener(ev, ok); el.removeEventListener('error', bad); res(); }, ms);
+  });
+}
+
+async function extractFrames(buf, onp) {
+  const url = URL.createObjectURL(new Blob([buf], { type: 'video/mp4' }));
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = url;
+  try {
+    await once(v, 'loadeddata', 20000);
+    const duration = v.duration;
+    if (!isFinite(duration) || duration <= 0 || !v.videoWidth) throw new Error('讀不到影片長度或畫面。請匯出成 mp4（H.264）後再試。');
+    const step = duration <= 20 ? 0.5 : duration <= 45 ? 1 : duration <= 90 ? 1.5 : Math.ceil(duration / 60);
+    const times = [];
+    for (let t = 0; t < duration - 0.05; t += step) times.push(Math.round(t * 10) / 10);
+
+    const W = 360, H = Math.round(W * v.videoHeight / v.videoWidth);
+    const TW = 180, TH = Math.round(TW * v.videoHeight / v.videoWidth);
+    const big = Object.assign(document.createElement('canvas'), { width: W, height: H });
+    const sm = Object.assign(document.createElement('canvas'), { width: TW, height: TH });
+    const dif = Object.assign(document.createElement('canvas'), { width: 24, height: 42 });
+    const bctx = big.getContext('2d'), sctx = sm.getContext('2d'), dctx = dif.getContext('2d', { willReadFrequently: true });
+
+    const frames = [], thumbs = [], cuts = [];
+    let prev = null;
+    for (let i = 0; i < times.length; i++) {
+      v.currentTime = Math.max(0.04, times[i]);
+      await once(v, 'seeked', 5000);
+      bctx.drawImage(v, 0, 0, W, H);
+      frames.push({ t: times[i], data: big.toDataURL('image/jpeg', 0.72).split(',')[1] });
+      sctx.drawImage(v, 0, 0, TW, TH);
+      let q = 0.7, d = sm.toDataURL('image/jpeg', q);
+      while (d.length > 45000 && q > 0.3) { q -= 0.1; d = sm.toDataURL('image/jpeg', q); }
+      thumbs.push({ t: times[i], data: d });
+      dctx.drawImage(v, 0, 0, 24, 42);
+      const px = dctx.getImageData(0, 0, 24, 42).data;
+      const g = new Float32Array(24 * 42);
+      for (let k = 0; k < g.length; k++) g[k] = px[k * 4] * 0.3 + px[k * 4 + 1] * 0.59 + px[k * 4 + 2] * 0.11;
+      if (prev) {
+        let s = 0; for (let k = 0; k < g.length; k++) s += Math.abs(g[k] - prev[k]);
+        if (s / g.length > 30) cuts.push(times[i]);
+      }
+      prev = g;
+      onp(i + 1, times.length);
+    }
+    return { duration, step, frames, thumbs, cuts };
+  } finally {
+    v.removeAttribute('src'); v.load(); URL.revokeObjectURL(url);
+  }
+}
+
+/* ---------- 音軌：轉成 16kHz 單聲道 WAV ---------- */
+async function extractAudio(buf, duration) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ac = new AC();
+    const decoded = await ac.decodeAudioData(buf.slice(0));
+    ac.close();
+    const secs = Math.min(decoded.duration, 180);
+    const rate = 16000;
+    const off = new OfflineAudioContext(1, Math.ceil(secs * rate), rate);
+    const src = off.createBufferSource();
+    src.buffer = decoded; src.connect(off.destination); src.start();
+    const r = await off.startRendering();
+    return abToB64(wav(r.getChannelData(0), rate));
+  } catch (e) {
+    console.warn('音軌讀取失敗，改用字幕判斷', e);
+    return null;
+  }
+}
+function wav(samples, rate) {
+  const b = new ArrayBuffer(44 + samples.length * 2), d = new DataView(b);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) d.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); d.setUint32(4, 36 + samples.length * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+  d.setUint32(16, 16, true); d.setUint16(20, 1, true); d.setUint16(22, 1, true); d.setUint32(24, rate, true);
+  d.setUint32(28, rate * 2, true); d.setUint16(32, 2, true); d.setUint16(34, 16, true); w(36, 'data'); d.setUint32(40, samples.length * 2, true);
+  for (let i = 0; i < samples.length; i++) { const s = Math.max(-1, Math.min(1, samples[i])); d.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true); }
+  return b;
+}
+function abToB64(buf) {
+  const b = new Uint8Array(buf); let s = '';
+  for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
+/* ======================= 報告 ======================= */
+async function openReport(fileId) {
+  const el = $('view-report');
+  el.innerHTML = '<p class="muted">讀取報告中…</p>';
+  show('report');
+  try {
+    const d = await api('report', { fileId: fileId });
+    renderReport(el, d);
+  } catch (e) {
+    el.innerHTML = `<div class="err">${esc(e.message)}</div>`;
+  }
+}
+
+function pips(n) {
+  let s = '<div class="bar"><div class="pips">';
+  for (let i = 1; i <= 5; i++) s += `<span class="pip${i <= n ? ' on' + (n <= 2 ? ' lo' : n === 3 ? ' mid' : '') : ''}"></span>`;
+  return s + `</div><span class="mono small muted">${n}</span></div>`;
+}
+const SEV = { bad: '要改', warn: '建議改', good: '做得好' };
+
+function renderReport(el, d) {
+  const { meta, result: r, thumbs } = d;
+  const crit = S.boot.criteria;
+  const critLabel = k => (crit.find(c => c.key === k) || {}).label || k;
+  const near = t => thumbs.reduce((b, x) => (!b || Math.abs(x.t - t) < Math.abs(b.t - t)) ? x : b, null);
+  const driveUrl = 'https://drive.google.com/file/d/' + encodeURIComponent(meta.fileId) + '/view';
+  const kf = (r.keyframes || []).slice().sort((a, b) => a.t - b.t);
+  const issues = (r.issues || []).slice().sort((a, b) => ({ bad: 0, warn: 1, good: 2 }[a.severity] - { bad: 0, warn: 1, good: 2 }[b.severity]) || a.start - b.start);
+  const span = i => (Math.abs(i.end - i.start) < 0.05 ? fmtT(i.start) : fmtT(i.start) + '–' + fmtT(i.end));
+
+  el.innerHTML = `
+  <div><button class="btn" id="rep-back">← 回到${S.back === 'admin' ? '全組總覽' : '我的影片'}</button></div>
+  <div class="rhead">
+    
+    <h1>${esc(meta.fileName)}</h1>
+    <div class="meta">
+      <span>企劃：${esc(meta.owner)}</span>
+      <span class="mono">${Number(meta.durationSec).toFixed(1)} 秒</span>
+      <span>分析：${fmtDate(meta.analyzedAt)}</span>
+      <a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>
+    </div>
+  </div>
+
+  <div class="card verdict">
+    <div class="score">${r.total}<small> / ${r.maxScore || S.boot.maxScore}</small></div>
+    <div><b>${esc(r.verdict)}</b><p class="muted" style="margin-top:4px">${esc(r.summary)}</p></div>
+  </div>
+
+  <section>
+    <h2>七項標準</h2>
+    <div class="card tbl matrix"><table>
+      <thead><tr><th>標準</th><th>分數</th><th>原因</th></tr></thead>
+      <tbody>${crit.map(c => { const s = r.scores[c.key] || {}; return `<tr><td class="crit">${esc(c.label)}</td><td>${pips(s.score)}</td><td class="reason">${esc(s.reason)}</td></tr>`; }).join('')}</tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>時間軸</h2>
+    <p class="small muted">邊框顏色：紅＝要改，橘＝建議改，綠＝做得好。左右滑動看完整時間軸。</p>
+    <div class="card"><div class="strip">${kf.map(k => { const th = near(k.t); return `
+      <figure class="frame ${esc(k.severity)}"><div class="im">${th ? `<img src="${th.data}" alt="${esc(fmtT(k.t))} 的畫面">` : ''}<span class="tc">${fmtT(k.t)}</span></div>
+      <figcaption><b>${esc(k.label)}</b>${esc(k.note)}</figcaption></figure>`; }).join('') || '<p class="muted">沒有關鍵畫面。</p>'}</div></div>
+  </section>
+
+  <section>
+    <h2>逐段建議</h2>
+    <div class="card notes">${issues.map(i => `
+      <div class="note"><span class="when">${span(i)}</span><span class="sev ${esc(i.severity)}">${SEV[i.severity] || ''}</span>
+      <div class="txt"><span class="small muted">${esc(critLabel(i.criterion))}</span><br><b>${esc(i.problem)}</b>${i.severity !== 'good' && i.fix ? `<span class="fix">${esc(i.fix)}</span>` : ''}</div></div>`).join('')}</div>
+  </section>
+
+  <div class="two">
+    <div class="card box"><h3>這支片講了哪些訴求（${(r.appeals || []).length} 個）</h3><ul>${(r.appeals || []).map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>
+    ${(r.compliance || []).length ? `<div class="card box risk"><h3>法規風險（請與客戶確認可用說法）</h3><ul>${r.compliance.map(c => `<li><span class="mono small">${fmtT(c.t)}</span>「${esc(c.phrase)}」${esc(c.reason)}</li>`).join('')}</ul></div>` : `<div class="card box"><h3>法規風險</h3><p class="muted">沒有發現功效宣稱。</p></div>`}
+  </div>
+
+  <section>
+    <h2>口白逐字稿</h2>
+    <div class="card box"><p class="transcript">${esc(r.transcript)}</p></div>
+  </section>`;
+  $('rep-back').onclick = () => { if (S.back === 'admin') show('admin'); else { show('list'); renderList(); } };
+}
+
+/* ======================= 全組總覽 ======================= */
+async function loadAdmin() {
+  const el = $('view-admin');
+  el.innerHTML = '<p class="muted">讀取中…</p>';
+  show('admin');
+  try {
+    const rows = await api('all');
+    renderAdmin(el, rows);
+  } catch (e) { el.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+
+function renderAdmin(el, rows) {
+  const crit = S.boot.criteria;
+  if (!rows.length) { el.innerHTML = '<div class="card empty">還沒有任何分析結果。</div>'; return; }
+  const by = {};
+  rows.forEach(r => { (by[r.owner] = by[r.owner] || []).push(r); });
+  const people = Object.keys(by).map(o => {
+    const list = by[o];
+    const avg = list.reduce((s, r) => s + Number(r.total || 0), 0) / list.length;
+    const cAvg = crit.map(c => ({ c, v: list.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / list.length }));
+    const weak = cAvg.slice().sort((a, b) => a.v - b.v)[0];
+    return { o, n: list.length, avg, cAvg, weak };
+  }).sort((a, b) => b.avg - a.avg);
+  const teamC = crit.map(c => ({ c, v: rows.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / rows.length }));
+  const cell = v => { const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
+  rows.sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
+
+  el.innerHTML = `
+  <div class="rhead"><h1>全組總覽</h1><p class="muted">${rows.length} 支影片、${people.length} 位企劃。數字是 1 到 5 分的平均。</p></div>
+  <section>
+    <h2>全組最常失分的項目</h2>
+    <div class="card tbl"><table><thead><tr>${teamC.map(x => `<th>${esc(x.c.label)}</th>`).join('')}</tr></thead>
+    <tbody><tr>${teamC.map(x => `<td>${cell(x.v)}</td>`).join('')}</tr></tbody></table></div>
+  </section>
+  <section>
+    <h2>企劃</h2>
+    <div class="card tbl"><table>
+      <thead><tr><th>企劃</th><th>影片數</th><th>平均總分</th><th>最弱項目</th>${crit.map(c => `<th>${esc(c.label)}</th>`).join('')}</tr></thead>
+      <tbody>${people.map(p => `<tr><td class="name">${esc(p.o)}</td><td class="mono">${p.n}</td><td class="mono"><b>${p.avg.toFixed(1)}</b> / ${S.boot.maxScore}</td><td>${esc(p.weak.c.label)}</td>${p.cAvg.map(x => `<td>${cell(x.v)}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table></div>
+  </section>
+  <section>
+    <h2>所有影片</h2>
+    <div class="card tbl"><table>
+      <thead><tr><th>影片</th><th>企劃</th><th>分析時間</th><th>總分</th></tr></thead>
+      <tbody>${rows.map(r => `<tr><td class="name"><button class="linkish" data-open="${esc(r.fileId)}">${esc(r.fileName)}</button><div class="small muted">${esc(r.verdict)}</div></td>
+        <td class="small">${esc(r.owner)}</td><td class="small mono">${fmtDate(r.analyzedAt)}</td><td class="mono">${r.total} / ${S.boot.maxScore}</td></tr>`).join('')}</tbody>
+    </table></div>
+  </section>`;
+  el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'admin'; openReport(b.dataset.open); });
+}
+
+init().catch(e => showErr(e.message));
+</script>
+</body>
+</html>
