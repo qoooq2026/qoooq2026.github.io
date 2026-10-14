@@ -585,7 +585,8 @@ async function extractFrames(buf, onp) {
     await once(v, 'loadeddata', 20000);
     const duration = v.duration;
     if (!isFinite(duration) || duration <= 0 || !v.videoWidth) throw new Error('讀不到影片長度或畫面。請匯出成 mp4（H.264）後再試。');
-    const step = duration <= 20 ? 0.5 : duration <= 45 ? 1 : duration <= 90 ? 1.5 : Math.ceil(duration / 60);
+    // 最多約 36 張畫面：張數越多，AI 回應越慢（Apps Script 等候上限約 60 秒）
+    const step = Math.max(0.5, Math.ceil(duration / 36 * 2) / 2);
     const times = [];
     for (let t = 0; t < duration - 0.05; t += step) times.push(Math.round(t * 10) / 10);
 
