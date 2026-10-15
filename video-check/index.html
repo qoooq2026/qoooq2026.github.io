@@ -117,6 +117,9 @@ td.name{font-weight:500;word-break:break-all}
 .pip.on.lo{background:var(--bad)}
 .reason{font-size:14px;color:var(--muted)}
 table.narrow{min-width:0}
+.btn.del{color:var(--bad)}
+.oldtag.warn{color:var(--warn);border-color:var(--warn)}
+.fbwarn{background:var(--warn-soft);color:var(--warn);font-size:13px;padding:6px 10px;border-radius:6px;margin:0 0 8px}
 .views-in{width:9em;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:13px}
 .views-in.saved{border-color:var(--good);background:var(--good-soft)}
 .views-in.bad{border-color:var(--bad);background:var(--bad-soft)}
@@ -248,8 +251,10 @@ const fmtMB = b => b ? (b / 1048576).toFixed(1) + ' MB' : '—';
 const fmtDate = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric' }) + ' ' + d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false }); };
 
 /** 呼叫後端（Apps Script）。用 text/plain 避免跨網域預檢。 */
+const sessionOk = () => S.session && S.session.exp > Date.now() + 60000;
+function clearSession() { S.session = null; try { localStorage.removeItem('vc_sess'); } catch (e) {} }
 async function api(action, params) {
-  const token = await getToken();
+  const token = sessionOk() ? S.session.token : await getToken();
   const res = await fetch(CFG.BACKEND_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -257,7 +262,10 @@ async function api(action, params) {
   });
   if (!res.ok) throw new Error('伺服器沒有回應（' + res.status + '），請稍後再試。');
   const j = await res.json();
-  if (!j.ok) throw new Error(j.error || '發生錯誤');
+  if (!j.ok) {
+    if (/登入已過期/.test(j.error || '') && sessionOk()) clearSession();
+    throw new Error(j.error || '發生錯誤');
+  }
   return j.data;
 }
 function showHint(msg) { const e = $('err2'); if (!e.textContent) { e.textContent = msg; e.hidden = false; e.style.background = 'var(--warn-soft)'; e.style.color = 'var(--warn)'; } }
@@ -310,6 +318,10 @@ async function init() {
   await waitFor(() => window.google && google.accounts && google.accounts.oauth2, 10000);
   initAuth();
   try {
+    const sess = JSON.parse(localStorage.getItem('vc_sess') || 'null');
+    if (sess && sess.token && sess.exp > Date.now() + 60000) { S.session = sess; await afterLogin(); return; }
+  } catch (e) { clearSession(); }
+  try {
     const saved = JSON.parse(sessionStorage.getItem('vc_tok') || 'null');
     if (saved && saved.e > Date.now() + 5 * 60 * 1000) { S.token = saved.t; S.tokenExp = saved.e; await afterLogin(); }
   } catch (e) { S.token = null; }
@@ -332,14 +344,20 @@ $('logout').onclick = () => {
   if (S.busy) return;
   try { google.accounts.oauth2.revoke(S.token, () => {}); } catch (e) {}
   try { sessionStorage.removeItem('vc_tok'); } catch (e) {}
+  clearSession();
   location.reload();
 };
 
 async function afterLogin() {
   try {
     S.boot = await api('boot');
+    if (S.boot.session && S.boot.session.token) {
+      S.session = S.boot.session;
+      try { localStorage.setItem('vc_sess', JSON.stringify(S.session)); } catch (x) {}
+    }
   } catch (e) {
     S.token = null; try { sessionStorage.removeItem('vc_tok'); } catch (x) {}
+    clearSession();
     showErr(e.message); return;
   }
   $('who-email').textContent = S.boot.email;
@@ -499,7 +517,7 @@ function renderList() {
     else if (st === 'wait') chip = '<span class="chip none">排隊中</span>';
     else if (st && st.indexOf('fail:') === 0) chip = `<span class="chip fail" title="${esc(st.slice(5))}">失敗</span>`;
     else chip = { none: '<span class="chip none">未分析</span>', done: '<span class="chip done">已分析</span>', stale: '<span class="chip stale">影片已更新</span>' }[state];
-    const score = r ? `<span class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}</span>${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}` : '<span class="muted">—</span>';
+    const score = r ? `<span class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}</span>${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}${r.fallback ? '<span class="oldtag warn" title="這次是備用模型評分，分數比較不穩，建議重新分析">備用模型</span>' : ''}` : '<span class="muted">—</span>';
     return `<tr>
       <td class="name">${r ? `<button class="linkish" data-open="${esc(f.id)}">${esc(f.name)}</button>` : esc(f.name)}
         ${r && r.verdict ? `<div class="small muted">${esc(r.verdict)}</div>` : ''}
@@ -510,10 +528,29 @@ function renderList() {
       <td><div class="acts">
         ${r ? `<button class="btn" data-open="${esc(f.id)}">看報告</button>` : ''}
         <button class="btn" data-run="${esc(f.id)}" ${S.busy ? 'disabled' : ''}>${r ? '重新分析' : '分析'}</button>
+        <button class="btn del" data-del="${esc(f.id)}" ${S.busy || st === 'run' || st === 'wait' ? 'disabled' : ''} title="${r ? '刪除這支影片的分析結果' : '從清單移除'}" aria-label="刪除">刪除</button>
       </div></td></tr>`;
   }).join('');
   $('rows').querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'list'; openReport(b.dataset.open); });
   $('rows').querySelectorAll('[data-run]').forEach(b => b.onclick = () => runQueue([b.dataset.run]));
+  $('rows').querySelectorAll('[data-del]').forEach(b => b.onclick = () => deleteOne(b.dataset.del));
+}
+
+async function deleteOne(id) {
+  const f = S.files.find(x => x.id === id);
+  if (!f || S.busy) return;
+  const r = S.results[id];
+  if (r && !confirm('確定要刪除「' + f.name + '」的分析結果嗎？報告和截圖會一起刪掉，無法復原。')) return;
+  showErr('');
+  if (r) {
+    try { await api('delete', { fileId: id }); }
+    catch (e) { showErr(e.message); return; }
+    delete S.results[id];
+  }
+  S.files = S.files.filter(x => x.id !== id);
+  delete S.status[id];
+  if (typeof LOCAL !== 'undefined') delete LOCAL[id];
+  renderList();
 }
 
 /* ======================= 分析佇列 ======================= */
@@ -546,7 +583,7 @@ async function runQueue(ids) {
     $('prog-title').textContent = f.name;
     updateCount();
     try {
-      token = await getToken();
+      token = /^(local-|yt-)/.test(String(f.id)) ? null : await getToken();
       const isYt = String(f.id).indexOf('yt-') === 0;
       const payload = isYt ? null : await prepareOne(f, token);
       while (aiRunning >= AI_PARALLEL) await Promise.race(aiJobs);
@@ -555,7 +592,7 @@ async function runQueue(ids) {
       const req = isYt ? api('analyzeYoutube', { url: f.url || ('https://www.youtube.com/watch?v=' + f.id.slice(3)) }) : api('analyze', { payload: payload });
       const job = req.then(out => {
         if (isYt) f.name = out.meta.fileName;
-        S.results[f.id] = { name: out.meta.fileName, modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict, maxScore: out.result.maxScore || S.boot.maxScore };
+        S.results[f.id] = { name: out.meta.fileName, modifiedTime: f.modifiedTime, analyzedAt: out.meta.analyzedAt, total: out.result.total, verdict: out.result.verdict, maxScore: out.result.maxScore || S.boot.maxScore, fallback: !!out.result.fallbackNote };
         f.picked = false;
         S.status[f.id] = '';
       }).catch(e => {
@@ -771,7 +808,7 @@ function renderReport(el, d) {
 
   <div class="card verdict">
     <div class="score">${r.total}<small> / ${r.maxScore || (old ? 35 : S.boot.maxScore)}</small></div>
-    <div>${r.viral_tier ? `<span class="tier t${esc(r.viral_tier)}">爆款潛力：${esc(r.viral_tier)}</span>${r.viral_reason ? `<p class="small muted" style="margin:0 0 6px">${esc(r.viral_reason)}</p>` : ''}` : ''}${old ? '<p class="small muted" style="margin:0 0 6px">這是舊版評分（7 項、滿分 35）。重新分析可套用新標準。</p>' : ''}<b>${esc(r.verdict)}</b><p class="muted" style="margin-top:4px">${esc(r.summary)}</p></div>
+    <div>${r.viral_tier ? `<span class="tier t${esc(r.viral_tier)}">爆款潛力：${esc(r.viral_tier)}</span>${r.viral_reason ? `<p class="small muted" style="margin:0 0 6px">${esc(r.viral_reason)}</p>` : ''}` : ''}${r.fallbackNote ? '<p class="fbwarn">這次主要 AI 忙碌，改用備用模型評分。備用模型比較不穩，分數可能差 10 分以上，建議稍後按「重新分析」。</p>' : ''}${old ? '<p class="small muted" style="margin:0 0 6px">這是舊版評分（7 項、滿分 35）。重新分析可套用新標準。</p>' : ''}<b>${esc(r.verdict)}</b><p class="muted" style="margin-top:4px">${esc(r.summary)}</p></div>
   </div>
 
   <section>
