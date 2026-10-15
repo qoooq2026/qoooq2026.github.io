@@ -366,7 +366,9 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
             <div><dt class="mono" data-i18n="mail_l">メール</dt><dd>info@qoooq.tw</dd></div>
           </dl>
         </div>
-        <form id="form" novalidate>
+        <form id="form" action="https://formspree.io/f/mzdywdbv" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="QoooQ 新官網（new.html）詢問">
+          <input type="hidden" name="source" value="new.html">
           <div class="field"><label class="mono" for="f-company" data-i18n="f_company">会社名</label><input id="f-company" name="company" autocomplete="organization"></div>
           <div class="field"><label class="mono" for="f-name" data-i18n="f_name">お名前</label><input id="f-name" name="name" autocomplete="name"></div>
           <div class="field"><label class="mono" for="f-email" data-i18n="f_email">メール</label><input id="f-email" name="email" type="email" autocomplete="email"></div>
@@ -455,7 +457,7 @@ ja:{
  addr_l:"所在地",addr_v:"台湾 新北市三重區捷運路39號2樓",
  f_company:"会社名",f_name:"お名前",f_email:"メール",f_type:"目的",
  opt1:"店舗・EC誘導",opt2:"採用",opt3:"観光",opt4:"Meta広告",opt5:"その他",f_msg:"ご相談内容",f_submit:"送信する",
- f_done:"デザイン確認用のため、実際には送信されません。公開時に送信先を設定します。"
+ f_done:"送信しました。24時間以内にご連絡します。"
 },
 zh:{
  nav_service:"服務項目",nav_work:"案例",nav_flow:"合作流程",nav_contact:"聯絡我們",nav_recruit:"招募",nav_company:"公司簡介",pain_eyebrow:"你的煩惱",pain_h2:"你是否也有這些煩惱？",
@@ -498,7 +500,7 @@ zh:{
  addr_l:"地址",addr_v:"新北市三重區捷運路39號2樓",
  f_company:"公司名稱",f_name:"姓名",f_email:"電子郵件",f_type:"目的",
  opt1:"門市・電商導流",opt2:"招募",opt3:"觀光",opt4:"Meta廣告",opt5:"其他",f_msg:"諮詢內容",f_submit:"送出",
- f_done:"此為設計預覽，內容不會實際送出。正式上線時將設定收件信箱。"
+ f_done:"已送出，我們會在 24 小時內與您聯繫。"
 }
 };
 
@@ -652,7 +654,23 @@ else{
   hv.src="assets/hero.mp4";
 }
 
-document.getElementById("form").addEventListener("submit",e=>{ e.preventDefault(); document.getElementById("done").hidden=false; });
+// 詢問表單：跟原本官網一樣送到 Formspree，Formspree 再寄信通知
+document.getElementById("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=e.target, btn=f.querySelector('button[type="submit"]'), done=document.getElementById("done");
+  const zh=(document.documentElement.lang||"").indexOf("zh")===0;
+  if(!f.email.value.trim()||!f.email.checkValidity()){ f.email.focus(); done.textContent=zh?"請填寫正確的 Email。":"メールアドレスを正しく入力してください。"; done.hidden=false; return; }
+  btn.disabled=true; done.hidden=true;
+  try{
+    const res=await fetch(f.action,{method:"POST",body:new FormData(f),headers:{Accept:"application/json"}});
+    if(!res.ok) throw new Error(res.status);
+    f.querySelectorAll("input:not([type=hidden]),select,textarea").forEach(x=>{ if(x.tagName!=="SELECT") x.value=""; });
+    done.textContent=(I18N[zh?"zh":"ja"]||{}).f_done||done.textContent;
+  }catch(err){
+    done.textContent=zh?"送出失敗，請直接寄信到 info@qoooq.tw。":"送信できませんでした。info@qoooq.tw までご連絡ください。";
+  }
+  done.hidden=false; btn.disabled=false;
+});
 </script>
 </body>
 </html>
