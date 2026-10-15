@@ -564,7 +564,7 @@ function setProgress(step, pct, sub) {
  * 流水線：下載與擷取一支一支做（吃電腦資源），
  * AI 評分最多同時 3 支（等的是 Google），所以前一支在評分時，下一支已經在擷取。
  */
-const AI_PARALLEL = 3;
+const AI_PARALLEL = 2;
 async function runQueue(ids) {
   if (S.busy || !ids.length) return;
   S.busy = true; showErr('');
