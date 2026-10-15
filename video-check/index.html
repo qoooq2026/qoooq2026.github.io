@@ -766,6 +766,7 @@ async function openReport(fileId) {
 }
 
 function pips(n) {
+  if (n === undefined || n === null || n === '') return '<span class="small muted">舊版沒有這項，重新分析後才有</span>';
   let s = '<div class="bar"><div class="pips">';
   for (let i = 1; i <= 5; i++) s += `<span class="pip${i <= n ? ' on' + (n <= 2 ? ' lo' : n === 3 ? ' mid' : '') : ''}"></span>`;
   return s + `</div><span class="mono small muted">${n}</span></div>`;
@@ -907,17 +908,18 @@ function renderAdmin(el) {
   const rows = scoped.filter(r => !isOld(r));
   const oldN = scoped.length - rows.length;
   const allRows = scoped.slice().sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
-  const avgOf = (list, k) => list.length ? list.reduce((s, r) => s + Number(r.scores[k] || 0), 0) / list.length : 0;
-  const cell = v => { const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
+  // 只算有這一項的影片（新增的項目，舊結果沒有分數）
+  const avgOf = (list, k) => { const l = list.filter(r => r.scores[k] !== undefined && r.scores[k] !== null); return l.length ? l.reduce((s, r) => s + Number(r.scores[k]), 0) / l.length : null; };
+  const cell = v => { if (v === null) return '<span class="small muted">—</span>'; const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
   const avgTotal = rows.length ? rows.reduce((s, r) => s + Number(r.total || 0), 0) / rows.length : 0;
-  const cAvg = crit.map(c => ({ c, v: avgOf(rows, c.key) })).sort((a, b) => a.v - b.v);
+  const cAvg = crit.map(c => ({ c, v: avgOf(rows, c.key) })).sort((a, b) => (a.v === null) - (b.v === null) || a.v - b.v);
 
   const by = {};
   rows.forEach(r => { (by[r.owner] = by[r.owner] || []).push(r); });
   const people = Object.keys(by).map(o => {
     const list = by[o];
     const cA = crit.map(c => ({ c, v: avgOf(list, c.key) }));
-    return { o, n: list.length, avg: list.reduce((s, r) => s + Number(r.total || 0), 0) / list.length, weak: cA.slice().sort((a, b) => a.v - b.v)[0] };
+    return { o, n: list.length, avg: list.reduce((s, r) => s + Number(r.total || 0), 0) / list.length, weak: cA.filter(x => x.v !== null).sort((a, b) => a.v - b.v)[0] || cA[0] };
   }).sort((a, b) => b.avg - a.avg);
 
   const withViews = rows.filter(r => r.views !== null && r.views !== undefined && r.views !== '');
