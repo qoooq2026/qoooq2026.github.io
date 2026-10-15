@@ -116,6 +116,11 @@ td.name{font-weight:500;word-break:break-all}
 .pip.on.mid{background:var(--warn)}
 .pip.on.lo{background:var(--bad)}
 .reason{font-size:14px;color:var(--muted)}
+table.narrow{min-width:0}
+.views-in{width:9em;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:13px}
+.views-in.saved{border-color:var(--good);background:var(--good-soft)}
+.views-in.bad{border-color:var(--bad);background:var(--bad-soft)}
+#ov-owner{margin-left:6px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);max-width:100%}
 .matrix tr.grp td{background:var(--bg);font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.06em;padding:6px 14px}
 .matrix .wt{font-size:11px;color:var(--muted);font-weight:400;margin-left:4px}
 .tier{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px}
@@ -341,7 +346,7 @@ async function afterLogin() {
   $('who').hidden = false;
   $('login-sec').hidden = true;
   $('pick-sec').hidden = false;
-  if (S.boot.isAdmin) $('tab-admin').hidden = false;
+  $('tab-admin').textContent = ovName(); $('tab-admin').hidden = false;
   await loadMine();
 }
 
@@ -751,7 +756,7 @@ function renderReport(el, d) {
   const span = i => (Math.abs(i.end - i.start) < 0.05 ? fmtT(i.start) : fmtT(i.start) + '–' + fmtT(i.end));
 
   el.innerHTML = `
-  <div><button class="btn" id="rep-back">← 回到${S.back === 'admin' ? '全組總覽' : '我的影片'}</button></div>
+  <div><button class="btn" id="rep-back">← 回到${S.back === 'admin' ? ovName() : '我的影片'}</button></div>
   <div class="rhead">
     
     <h1>${esc(meta.fileName)}</h1>
@@ -759,6 +764,7 @@ function renderReport(el, d) {
       <span>企劃：${esc(meta.owner)}</span>
       <span class="mono">${Number(meta.durationSec).toFixed(1)} 秒</span>
       <span>分析：${fmtDate(meta.analyzedAt)}</span>
+      <span>實際曝光：${viewsInput(meta.fileId, meta.views, meta.owner)}</span>
       ${isYt ? `<a href="${esc(ytUrl)}" target="_blank" rel="noopener">在 YouTube 開啟</a>` : String(meta.fileId).indexOf('local-') === 0 ? '<span>從電腦上傳</span>' : `<a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>`}
     </div>
   </div>
@@ -805,63 +811,119 @@ function renderReport(el, d) {
     <div class="card box"><p class="transcript">${esc(r.transcript)}</p></div>
   </section>`;
   el.querySelectorAll('.tcbtn').forEach(b => b.onclick = () => { const f = $('ytframe'); if (f) f.src = ytEmbed(Number(b.dataset.t)); });
+  bindViews(el, (id, v) => { (S.ovRows || []).forEach(x => { if (x.fileId === id) x.views = v; }); });
   $('rep-back').onclick = () => { if (S.back === 'admin') show('admin'); else { show('list'); renderList(); } };
 }
 
-/* ======================= 全組總覽 ======================= */
+/* ======================= 總覽（管理者看全組，企劃看自己） ======================= */
+const ovName = () => (S.boot && S.boot.isAdmin) ? '全組總覽' : '我的總覽';
+const fmtViews = v => (v === null || v === undefined || v === '') ? '' : Number(v).toLocaleString('en-US');
+const canEditViews = owner => S.boot.isAdmin || String(owner).toLowerCase() === S.boot.email;
+function viewsInput(fileId, views, owner) {
+  if (!canEditViews(owner)) return `<span class="mono">${fmtViews(views) || '—'}</span>`;
+  return `<input class="views-in mono" inputmode="numeric" placeholder="填曝光" data-views="${esc(fileId)}" value="${esc(fmtViews(views))}" aria-label="實際曝光數">`;
+}
+function bindViews(root, onSaved) {
+  root.querySelectorAll('[data-views]').forEach(inp => {
+    inp.onchange = async () => {
+      const raw = inp.value.replace(/[,\s]/g, '');
+      if (raw !== '' && !/^\d+$/.test(raw)) { inp.classList.add('bad'); return; }
+      inp.classList.remove('bad'); inp.disabled = true;
+      try {
+        const out = await api('setViews', { fileId: inp.dataset.views, views: raw });
+        inp.value = fmtViews(out.views);
+        inp.classList.add('saved'); setTimeout(() => inp.classList.remove('saved'), 1200);
+        if (onSaved) onSaved(inp.dataset.views, out.views);
+      } catch (e) { inp.classList.add('bad'); showErr(e.message); }
+      inp.disabled = false;
+    };
+  });
+}
+/** 分數和曝光（取 log）的相關係數 */
+function corr(pairs) {
+  const n = pairs.length; if (n < 3) return null;
+  const xs = pairs.map(p => p[0]), ys = pairs.map(p => Math.log10(p[1] + 1));
+  const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+  let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += (xs[i] - mx) ** 2; syy += (ys[i] - my) ** 2; }
+  return sxx && syy ? sxy / Math.sqrt(sxx * syy) : null;
+}
+
 async function loadAdmin() {
   const el = $('view-admin');
   el.innerHTML = '<p class="muted">讀取中…</p>';
   show('admin');
   try {
-    const rows = await api('all');
-    renderAdmin(el, rows);
+    S.ovRows = await api('all');
+    renderAdmin(el);
   } catch (e) { el.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
 }
 
-function renderAdmin(el, rows) {
+function renderAdmin(el) {
   const crit = S.boot.criteria;
-  if (!rows.length) { el.innerHTML = '<div class="card empty">還沒有任何分析結果。</div>'; return; }
-  const allRows = rows.slice();
-  rows = rows.filter(r => !isOld(r));
-  const oldN = allRows.length - rows.length;
-  if (!rows.length) rows = [];
+  const admin = S.boot.isAdmin;
+  const everything = S.ovRows || [];
+  if (!everything.length) { el.innerHTML = `<div class="rhead"><h1>${ovName()}</h1></div><div class="card empty">還沒有任何分析結果。</div>`; return; }
+  const owners = Array.from(new Set(everything.map(r => String(r.owner)))).sort();
+  if (!admin) S.ovOwner = S.boot.email; else if (S.ovOwner && owners.indexOf(S.ovOwner) < 0) S.ovOwner = '';
+  const scoped = S.ovOwner ? everything.filter(r => String(r.owner) === S.ovOwner) : everything;
+  const rows = scoped.filter(r => !isOld(r));
+  const oldN = scoped.length - rows.length;
+  const allRows = scoped.slice().sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
+  const avgOf = (list, k) => list.length ? list.reduce((s, r) => s + Number(r.scores[k] || 0), 0) / list.length : 0;
+  const cell = v => { const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
+  const avgTotal = rows.length ? rows.reduce((s, r) => s + Number(r.total || 0), 0) / rows.length : 0;
+  const cAvg = crit.map(c => ({ c, v: avgOf(rows, c.key) })).sort((a, b) => a.v - b.v);
+
   const by = {};
   rows.forEach(r => { (by[r.owner] = by[r.owner] || []).push(r); });
   const people = Object.keys(by).map(o => {
     const list = by[o];
-    const avg = list.reduce((s, r) => s + Number(r.total || 0), 0) / list.length;
-    const cAvg = crit.map(c => ({ c, v: list.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / list.length }));
-    const weak = cAvg.slice().sort((a, b) => a.v - b.v)[0];
-    return { o, n: list.length, avg, cAvg, weak };
+    const cA = crit.map(c => ({ c, v: avgOf(list, c.key) }));
+    return { o, n: list.length, avg: list.reduce((s, r) => s + Number(r.total || 0), 0) / list.length, weak: cA.slice().sort((a, b) => a.v - b.v)[0] };
   }).sort((a, b) => b.avg - a.avg);
-  const teamC = crit.map(c => ({ c, v: rows.length ? rows.reduce((s, r) => s + Number(r.scores[c.key] || 0), 0) / rows.length : 0 }));
-  const cell = v => { const cls = v < 2.5 ? 'bad' : v < 3.5 ? 'warn' : 'good'; return `<span class="sev ${cls} mono">${v.toFixed(1)}</span>`; };
-  allRows.sort((a, b) => String(b.analyzedAt).localeCompare(String(a.analyzedAt)));
 
+  const withViews = rows.filter(r => r.views !== null && r.views !== undefined && r.views !== '');
+  const r = corr(withViews.map(x => [Number(x.total), Number(x.views)]));
+  const calib = withViews.length < 5
+    ? `已填 ${withViews.length} 支的實際曝光。再填 ${5 - withViews.length} 支，這裡就會算出「分數準不準」。`
+    : `已填 ${withViews.length} 支。分數和曝光的相關係數 <b class="mono">${r === null ? '—' : r.toFixed(2)}</b>：${r === null ? '資料不足' : r >= 0.6 ? '分數很能預測曝光。' : r >= 0.3 ? '有一定關聯，但還不夠準。' : '分數跟曝光幾乎沒有關聯，評分標準需要調整。'}（1＝完全一致，0＝沒關聯）`;
+
+  const title = admin ? (S.ovOwner ? (S.ovOwner === S.boot.email ? '我的總覽' : S.ovOwner + ' 的總覽') : '全組總覽') : '我的總覽';
   el.innerHTML = `
-  <div class="rhead"><h1>全組總覽</h1><p class="muted">${rows.length} 支影片、${people.length} 位企劃。數字是 1 到 5 分的平均${oldN ? `，不含 ${oldN} 支舊版評分的影片` : ''}。</p></div>
+  <div class="rhead"><h1>${esc(title)}</h1>
+    ${admin ? `<label class="small muted">查看 <select id="ov-owner"><option value="">全組</option>${owners.map(o => `<option value="${esc(o)}"${o === S.ovOwner ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select></label>` : ''}
+    <p class="muted">${rows.length} 支影片${!S.ovOwner ? `、${people.length} 位企劃` : ''}，平均 <b class="mono">${avgTotal.toFixed(1)}</b> / ${S.boot.maxScore} 分${oldN ? `（不含 ${oldN} 支舊版評分）` : ''}。</p></div>
   <section>
-    <h2>全組最常失分的項目</h2>
-    <div class="card tbl"><table><thead><tr>${teamC.map(x => `<th>${esc(x.c.label)}</th>`).join('')}</tr></thead>
-    <tbody><tr>${teamC.map(x => `<td>${cell(x.v)}</td>`).join('')}</tr></tbody></table></div>
+    <h2>最常失分的項目</h2>
+    <p class="small muted">1 到 5 分的平均，由低到高排列。3 分是團隊一般水準。</p>
+    <div class="card tbl"><table class="narrow"><thead><tr><th>項目</th><th>分組</th><th>平均</th></tr></thead>
+    <tbody>${cAvg.map(x => `<tr><td>${esc(x.c.label)}</td><td class="small muted">${esc(x.c.group || '')}</td><td>${cell(x.v)}</td></tr>`).join('')}</tbody></table></div>
   </section>
-  <section>
+  ${admin && !S.ovOwner ? `<section>
     <h2>企劃</h2>
-    <div class="card tbl"><table>
-      <thead><tr><th>企劃</th><th>影片數</th><th>平均總分</th><th>最弱項目</th>${crit.map(c => `<th>${esc(c.label)}</th>`).join('')}</tr></thead>
-      <tbody>${people.map(p => `<tr><td class="name">${esc(p.o)}</td><td class="mono">${p.n}</td><td class="mono"><b>${p.avg.toFixed(1)}</b> / ${S.boot.maxScore}</td><td>${esc(p.weak.c.label)}</td>${p.cAvg.map(x => `<td>${cell(x.v)}</td>`).join('')}</tr>`).join('')}</tbody>
+    <div class="card tbl"><table class="narrow">
+      <thead><tr><th>企劃</th><th>影片數</th><th>平均總分</th><th>最弱項目</th></tr></thead>
+      <tbody>${people.map(p => `<tr><td class="name"><button class="linkish" data-owner="${esc(p.o)}">${esc(p.o)}</button></td><td class="mono">${p.n}</td><td class="mono"><b>${p.avg.toFixed(1)}</b></td><td>${esc(p.weak.c.label)}</td></tr>`).join('')}</tbody>
     </table></div>
+  </section>` : ''}
+  <section>
+    <h2>分數準不準</h2>
+    <div class="card box"><p class="small">${calib}</p><p class="small muted" style="margin-top:6px">影片發出去一週後，在下面「實際曝光」欄填數字（填完自動儲存）。</p></div>
   </section>
   <section>
     <h2>所有影片</h2>
     <div class="card tbl"><table>
-      <thead><tr><th>影片</th><th>企劃</th><th>分析時間</th><th>總分</th></tr></thead>
+      <thead><tr><th>影片</th><th>總分</th><th>實際曝光</th>${S.ovOwner ? '' : '<th>企劃</th>'}<th>分析時間</th></tr></thead>
       <tbody>${allRows.map(r => `<tr><td class="name"><button class="linkish" data-open="${esc(r.fileId)}">${esc(r.fileName)}</button><div class="small muted">${esc(r.verdict)}</div></td>
-        <td class="small">${esc(r.owner)}</td><td class="small mono">${fmtDate(r.analyzedAt)}</td><td class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}</td></tr>`).join('')}</tbody>
+        <td class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}</td><td>${viewsInput(r.fileId, r.views, r.owner)}</td>
+        ${S.ovOwner ? '' : `<td class="small">${esc(r.owner)}</td>`}<td class="small mono">${fmtDate(r.analyzedAt)}</td></tr>`).join('')}</tbody>
     </table></div>
   </section>`;
   el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'admin'; openReport(b.dataset.open); });
+  el.querySelectorAll('[data-owner]').forEach(b => b.onclick = () => { S.ovOwner = b.dataset.owner; renderAdmin(el); window.scrollTo(0, 0); });
+  if ($('ov-owner')) $('ov-owner').onchange = e => { S.ovOwner = e.target.value; renderAdmin(el); };
+  bindViews(el, (id, v) => { const x = everything.find(r => r.fileId === id); if (x) x.views = v; renderAdmin(el); });
 }
 
 init().catch(e => showErr(e.message));
