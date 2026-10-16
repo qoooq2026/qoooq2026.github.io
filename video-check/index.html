@@ -120,7 +120,12 @@ table.narrow{min-width:0}
 .btn.del{color:var(--bad)}
 .oldtag.warn{color:var(--warn);border-color:var(--warn)}
 .fbwarn{background:var(--warn-soft);color:var(--warn);font-size:13px;padding:6px 10px;border-radius:6px;margin:0 0 8px}
-.views-in{width:9em;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:13px}
+.vgrp{display:flex;gap:4px;flex-wrap:wrap;align-items:center;border-radius:8px;padding:2px}
+.vgrp.saved{background:var(--good-soft)}
+.vgrp.bad{background:var(--bad-soft)}
+.vgrp.need .views-sel:invalid,.vgrp.need .views-sel{border-color:var(--warn)}
+.views-sel{padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:12px}
+.views-in{width:7em;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:13px}
 .views-in.saved{border-color:var(--good);background:var(--good-soft)}
 .views-in.bad{border-color:var(--bad);background:var(--bad-soft)}
 #ov-owner{margin-left:6px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);max-width:100%}
@@ -802,7 +807,7 @@ function renderReport(el, d) {
       <span>企劃：${esc(meta.owner)}</span>
       <span class="mono">${Number(meta.durationSec).toFixed(1)} 秒</span>
       <span>分析：${fmtDate(meta.analyzedAt)}</span>
-      <span>實際曝光：${viewsInput(meta.fileId, meta.views, meta.owner)}</span>
+      <span>實際曝光：${viewsInput({ fileId: meta.fileId, views: meta.views, viewsPlatform: meta.viewsPlatform, viewsDay: meta.viewsDay, owner: meta.owner })}</span>
       ${isYt ? `<a href="${esc(ytUrl)}" target="_blank" rel="noopener">在 YouTube 開啟</a>` : String(meta.fileId).indexOf('local-') === 0 ? '<span>從電腦上傳</span>' : `<a href="${driveUrl}" target="_blank" rel="noopener">在 Drive 開啟影片</a>`}
     </div>
   </div>
@@ -849,7 +854,7 @@ function renderReport(el, d) {
     <div class="card box"><p class="transcript">${esc(r.transcript)}</p></div>
   </section>`;
   el.querySelectorAll('.tcbtn').forEach(b => b.onclick = () => { const f = $('ytframe'); if (f) f.src = ytEmbed(Number(b.dataset.t)); });
-  bindViews(el, (id, v) => { (S.ovRows || []).forEach(x => { if (x.fileId === id) x.views = v; }); });
+  bindViews(el, (id, o) => { (S.ovRows || []).forEach(x => { if (x.fileId === id) Object.assign(x, { views: o.views, viewsPlatform: o.viewsPlatform, viewsDay: o.viewsDay }); }); });
   $('rep-back').onclick = () => { if (S.back === 'admin') show('admin'); else { show('list'); renderList(); } };
 }
 
@@ -857,24 +862,41 @@ function renderReport(el, d) {
 const ovName = () => (S.boot && S.boot.isAdmin) ? '全組總覽' : '我的總覽';
 const fmtViews = v => (v === null || v === undefined || v === '') ? '' : Number(v).toLocaleString('en-US');
 const canEditViews = owner => S.boot.isAdmin || String(owner).toLowerCase() === S.boot.email;
-function viewsInput(fileId, views, owner) {
-  if (!canEditViews(owner)) return `<span class="mono">${fmtViews(views) || '—'}</span>`;
-  return `<input class="views-in mono" inputmode="numeric" placeholder="填曝光" data-views="${esc(fileId)}" value="${esc(fmtViews(views))}" aria-label="實際曝光數">`;
+const PLATFORMS = () => (S.boot && S.boot.viewPlatforms) || ['YT', 'IG', 'TikTok', 'FB', '脆', '多平台加總'];
+const VDAYS = () => (S.boot && S.boot.viewDays) || [3, 7, 30];
+const vLabel = (p, d) => [p, d ? '第' + d + '天' : ''].filter(Boolean).join('・');
+/** 實際曝光：數字＋平台＋發布後第幾天。o = { fileId, views, viewsPlatform, viewsDay, owner } */
+function viewsInput(o) {
+  if (!canEditViews(o.owner)) {
+    const n = fmtViews(o.views);
+    return n ? `<span class="mono">${n}</span><div class="small muted">${esc(vLabel(o.viewsPlatform, o.viewsDay))}</div>` : '<span class="muted">—</span>';
+  }
+  const opt = (list, cur, ph, fmt) => `<option value="">${ph}</option>` + list.map(x => `<option value="${esc(x)}"${String(x) === String(cur) ? ' selected' : ''}>${esc(fmt ? fmt(x) : x)}</option>`).join('');
+  return `<div class="vgrp" data-views="${esc(o.fileId)}">
+    <input class="views-in mono" inputmode="numeric" placeholder="填曝光" value="${esc(fmtViews(o.views))}" aria-label="實際曝光數">
+    <select class="views-sel" aria-label="平台">${opt(PLATFORMS(), o.viewsPlatform, '平台')}</select>
+    <select class="views-sel" aria-label="發布後第幾天">${opt(VDAYS(), o.viewsDay, '第幾天', d => '第 ' + d + ' 天')}</select>
+  </div>`;
 }
 function bindViews(root, onSaved) {
-  root.querySelectorAll('[data-views]').forEach(inp => {
-    inp.onchange = async () => {
+  root.querySelectorAll('.vgrp[data-views]').forEach(g => {
+    const [inp, plat, day] = [g.querySelector('input'), ...g.querySelectorAll('select')];
+    const save = async () => {
       const raw = inp.value.replace(/[,\s]/g, '');
       if (raw !== '' && !/^\d+$/.test(raw)) { inp.classList.add('bad'); return; }
-      inp.classList.remove('bad'); inp.disabled = true;
+      g.classList.remove('bad'); inp.classList.remove('bad');
+      const els = [inp, plat, day]; els.forEach(e => e.disabled = true);
       try {
-        const out = await api('setViews', { fileId: inp.dataset.views, views: raw });
+        const out = await api('setViews', { fileId: g.dataset.views, views: raw, platform: plat.value, day: day.value });
         inp.value = fmtViews(out.views);
-        inp.classList.add('saved'); setTimeout(() => inp.classList.remove('saved'), 1200);
-        if (onSaved) onSaved(inp.dataset.views, out.views);
-      } catch (e) { inp.classList.add('bad'); showErr(e.message); }
-      inp.disabled = false;
+        g.classList.add('saved'); setTimeout(() => g.classList.remove('saved'), 1200);
+        g.classList.toggle('need', out.views !== null && (!out.viewsPlatform || !out.viewsDay));
+        if (onSaved) onSaved(g.dataset.views, out);
+      } catch (e) { g.classList.add('bad'); showErr(e.message); }
+      els.forEach(e => e.disabled = false);
     };
+    [inp, plat, day].forEach(e => e.onchange = save);
+    g.classList.toggle('need', inp.value !== '' && (!plat.value || !day.value));
   });
 }
 /** 分數和曝光（取 log）的相關係數 */
@@ -923,10 +945,17 @@ function renderAdmin(el) {
   }).sort((a, b) => b.avg - a.avg);
 
   const withViews = rows.filter(r => r.views !== null && r.views !== undefined && r.views !== '');
-  const r = corr(withViews.map(x => [Number(x.total), Number(x.views)]));
-  const calib = withViews.length < 5
-    ? `已填 ${withViews.length} 支的實際曝光。再填 ${5 - withViews.length} 支，這裡就會算出「分數準不準」。`
-    : `已填 ${withViews.length} 支。分數和曝光的相關係數 <b class="mono">${r === null ? '—' : r.toFixed(2)}</b>：${r === null ? '資料不足' : r >= 0.6 ? '分數很能預測曝光。' : r >= 0.3 ? '有一定關聯，但還不夠準。' : '分數跟曝光幾乎沒有關聯，評分標準需要調整。'}（1＝完全一致，0＝沒關聯）`;
+  // 只拿「同平台、同天數」的數字互相比較；選資料最多的那一組
+  const groups = {};
+  withViews.filter(x => x.viewsPlatform && x.viewsDay).forEach(x => { const k = vLabel(x.viewsPlatform, x.viewsDay); (groups[k] = groups[k] || []).push(x); });
+  const best = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length)[0];
+  const grp = best ? groups[best] : [];
+  const unlabeled = withViews.filter(x => !x.viewsPlatform || !x.viewsDay).length;
+  const r = corr(grp.map(x => [Number(x.total), Number(x.views)]));
+  const calib = (grp.length < 5
+    ? `已填 ${withViews.length} 支的實際曝光${best ? `，其中「${esc(best)}」${grp.length} 支` : ''}。同平台、同天數的影片累積到 5 支，這裡就會算出「分數準不準」。`
+    : `以「${esc(best)}」的 ${grp.length} 支計算，分數和曝光的相關係數 <b class="mono">${r === null ? '—' : r.toFixed(2)}</b>：${r === null ? '資料不足' : r >= 0.6 ? '分數很能預測曝光。' : r >= 0.3 ? '有一定關聯，但還不夠準。' : '分數跟曝光幾乎沒有關聯，評分標準需要調整。'}（1＝完全一致，0＝沒關聯）`)
+    + (unlabeled ? `<br><span style="color:var(--warn)">有 ${unlabeled} 支只填了數字、沒選平台或天數，不會列入計算，請補選。</span>` : '');
 
   const title = admin ? (S.ovOwner ? (S.ovOwner === S.boot.email ? '我的總覽' : S.ovOwner + ' 的總覽') : '全組總覽') : '我的總覽';
   el.innerHTML = `
@@ -948,21 +977,21 @@ function renderAdmin(el) {
   </section>` : ''}
   <section>
     <h2>分數準不準</h2>
-    <div class="card box"><p class="small">${calib}</p><p class="small muted" style="margin-top:6px">影片發出去一週後，在下面「實際曝光」欄填數字（填完自動儲存）。</p></div>
+    <div class="card box"><p class="small">${calib}</p><p class="small muted" style="margin-top:6px">建議統一填「發布後第 7 天」、該片主要平台的數字，並選好平台和天數（改完自動儲存）。不同平台、不同天數的數字不會混在一起比較。</p></div>
   </section>
   <section>
     <h2>所有影片</h2>
     <div class="card tbl"><table>
       <thead><tr><th>影片</th><th>總分</th><th>實際曝光</th>${S.ovOwner ? '' : '<th>企劃</th>'}<th>分析時間</th></tr></thead>
       <tbody>${allRows.map(r => `<tr><td class="name"><button class="linkish" data-open="${esc(r.fileId)}">${esc(r.fileName)}</button><div class="small muted">${esc(r.verdict)}</div></td>
-        <td class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}</td><td>${viewsInput(r.fileId, r.views, r.owner)}</td>
+        <td class="mono">${r.total} / ${r.maxScore || S.boot.maxScore}${isOld(r) ? '<span class="oldtag">舊版</span>' : ''}</td><td>${viewsInput(r)}</td>
         ${S.ovOwner ? '' : `<td class="small">${esc(r.owner)}</td>`}<td class="small mono">${fmtDate(r.analyzedAt)}</td></tr>`).join('')}</tbody>
     </table></div>
   </section>`;
   el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { S.back = 'admin'; openReport(b.dataset.open); });
   el.querySelectorAll('[data-owner]').forEach(b => b.onclick = () => { S.ovOwner = b.dataset.owner; renderAdmin(el); window.scrollTo(0, 0); });
   if ($('ov-owner')) $('ov-owner').onchange = e => { S.ovOwner = e.target.value; renderAdmin(el); };
-  bindViews(el, (id, v) => { const x = everything.find(r => r.fileId === id); if (x) x.views = v; renderAdmin(el); });
+  bindViews(el, (id, o) => { const x = everything.find(r => r.fileId === id); if (x) Object.assign(x, { views: o.views, viewsPlatform: o.viewsPlatform, viewsDay: o.viewsDay }); renderAdmin(el); });
 }
 
 init().catch(e => showErr(e.message));
