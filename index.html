@@ -15,7 +15,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<!-- 字型不擋住畫面：先用系統字顯示，Google 字型載入後再換上（網路慢或連不到 Google 時頁面也能打開） -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap"></noscript>
 <style>
 /* Layout: full-bleed black "broadcast" hero (live canvas footage + HUD) → fast reel strip → light editorial sections (bridge, services rows, stats, steps) → black contact + giant wordmark footer. Single fixed look by choice: monochrome + one electric blue. */
 :root{
@@ -642,10 +644,15 @@ const scenes=[
  {video:"assets/clip-07.mp4"},
  {video:"assets/clip-08.mp4"}
 ];
-const card=s=>s.video?`<div class="card vid"><video src="${s.video}" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></div>`:`<div class="card" style="--c1:${s.c1};--c2:${s.c2}"><div class="cap" lang="${s.l}">${s.cap.map(t=>`<span>${t}</span>`).join("")}</div><div class="meta">${s.u}<b>▶ ${s.v}</b></div></div>`;
+const card=s=>s.video?`<div class="card vid"><video data-src="${s.video}" muted loop playsinline preload="none" aria-hidden="true"></video></div>`:`<div class="card" style="--c1:${s.c1};--c2:${s.c2}"><div class="cap" lang="${s.l}">${s.cap.map(t=>`<span>${t}</span>`).join("")}</div><div class="meta">${s.u}<b>▶ ${s.v}</b></div></div>`;
 const all=scenes.map(card).join("");
 document.getElementById("belt1").innerHTML=all+all;
-document.querySelectorAll(".card video").forEach(v=>{ v.muted=true; v.play().catch(()=>{}); });
+// 影片等滑到附近才下載、播放，手機網路慢也不會卡住整頁
+const playVid=v=>{ if(!v.src) v.src=v.dataset.src; v.muted=true; v.play().catch(()=>{}); };
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) playVid(e.target); else e.target.pause(); }),{rootMargin:"200px"});
+  document.querySelectorAll(".card video").forEach(v=>io.observe(v));
+} else document.querySelectorAll(".card video").forEach(playVid);
 
 /* hero footage */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
