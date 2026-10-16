@@ -124,6 +124,7 @@ a{color:inherit}
 .sec-head{display:flex;flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:clamp(40px,6vw,72px);text-align:left}
 .sec-head .mono{color:var(--mute);display:flex;gap:12px;align-items:center}
 .sec-head .mono::before{content:"";width:28px;height:2px;background:var(--sig)}
+:lang(en) .sec-head h2,:lang(vi) .sec-head h2{white-space:normal!important}
 .sec-head h2{font-family:var(--f-lat),var(--f-cjk);font-weight:900;font-size:clamp(1.6rem,4vw,3.2rem);line-height:1.2;letter-spacing:-.01em;text-wrap:wrap;white-space:nowrap;max-width:100%}
 @media (max-width:820px){ .sec-head h2{white-space:normal} }
 
@@ -274,6 +275,8 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
     <div class="lang" role="group" aria-label="Language">
       <button type="button" data-lang="ja" aria-pressed="true">JP</button>
       <button type="button" data-lang="zh" aria-pressed="false">繁中</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+      <button type="button" data-lang="vi" aria-pressed="false" lang="vi">VI</button>
     </div>
   </div>
 </header>
@@ -509,6 +512,92 @@ zh:{
  f_company:"公司名稱",f_name:"姓名",f_email:"電子郵件",f_type:"目的",
  opt1:"門市・電商導流",opt2:"招募",opt3:"觀光",opt4:"Meta廣告",opt5:"其他",f_msg:"諮詢內容",f_submit:"送出",
  f_done:"已送出，我們會在 24 小時內與您聯繫。"
+},
+en:{
+ nav_service:"Services",nav_work:"Results",nav_flow:"Process",nav_contact:"Contact",nav_recruit:"Careers",nav_company:"Company",pain_eyebrow:"Sound familiar?",pain_h2:"Facing any of these?",
+ pains:["Social ad costs keep climbing.","Your ads are still static images.","You can't tell whether influencer marketing is working.","Making short videos takes too much time and effort."],
+ pain_answer:"If so, we'll propose <b>marketing that delivers results you can see</b>.",cl_h:"Client results",
+ clients:[["Shampoo","3 months in a row","Record-high sales"],["Milk tea","All-time high","Best sales month ever"],["Dust-mite pad","1000%","Sales vs. previous month"]],
+ co_eyebrow:"Company",co_h2:"About QoooQ",co_name_l:"Company name",co_brand_l:"Brand",co_mail_l:"Email",co_addr_l:"Address",co_addr:"2F, No. 39, Jieyun Rd., Sanchong Dist., New Taipei City, Taiwan",co_est_l:"Founded",co_est:"April 2026",
+ rc_eyebrow:"Careers",rc_sub:"Join our team",
+ rc_p1:"QoooQ is growing fast. We're looking for people who want to build <b>meaningful, valuable</b> marketing with us.",
+ rc_p2:"If you're passionate about marketing, short video or growth strategy, we'd love to hear from you. Let's take on new challenges and grow together.",
+ rc_cta:"See openings on 104",
+ hero_eyebrow:"Short-video marketing from Taipei",views_l:"Views",strip_t:"Trending now",bridge_eyebrow:"By goal",mail_l:"Email",foot_city:"Taipei",
+ hero_h1:"15 seconds to the center of the conversation.",
+ hero_sub:"TikTok, Instagram Reels and YouTube Shorts. From planning and filming to account management and ads, we design videos that take off on Taiwan's social media.",
+ hero_cta1:"Free consultation",hero_cta2:"See our results",strip_note:"* Sample footage",
+ bridge_h2:"A different growth plan for every goal.",
+ purposes:[["STORE / EC","Store & e-commerce traffic","Videos that drive store visits and online sales. We show what makes your product great in 15 seconds and guide viewers to your profile and links."],
+   ["HIRING","Recruiting","Short videos that show your workplace and your people, so candidates see what a job post can't tell them, and more of them apply."],
+   ["TRAVEL","Tourism","Turn destinations, hotels and experiences into footage that makes people want to go, reaching users who are planning their next trip."],
+   ["META ADS","Meta ads","We produce Instagram and Facebook ad videos and run the campaigns, turning top-performing videos into ads for a better return."]],
+ bridge_note:"We cover TikTok, Instagram, YouTube, Facebook and the other major platforms used in Taiwan.",
+ svc_eyebrow:"Services",svc_h2:"From planning to posting, we handle it all.",
+ svc:[["Planning","Hooks and scripts built for your audience and goal, designed to stop the scroll in the first 2 seconds."],
+      ["Filming","Shot for vertical mobile viewing. We come to your store, office or location."],
+      ["Editing","Fast-paced cuts with captions and music, tuned to what's trending in Taiwan right now."],
+      ["Posting","We post when engagement peaks and feed the numbers into the next video's plan."]],
+ fee_l:"Pricing",fee_t:"Production fees are performance-based.",
+ fee_d:"You pay according to results, so even your first short video is low-risk. Contact us for details.",fee_cta:"Ask about terms",
+ work_eyebrow:"Results",work_h2:"Growth you can see in numbers.",
+ work_note:"* Cases and figures on this page are design samples.",
+ cases:[["Two months after launch","30+","Over 30 clients in Taiwan and Japan."],
+        ["Organic reach for one product","5M+","Over 1 million impressions in a single month."]],
+ flow_eyebrow:"Process",flow_h2:"Your first video in as little as 3 weeks.",
+ steps:[["W1","Kickoff","We map out your product, audience and competitor accounts together."],
+        ["W1–2","Planning & scripts","We propose a full month of topics and scripts at once."],
+        ["W3","Filming & posting","Batch filming keeps production efficient, and we post at peak engagement times."],
+        ["Weekly","Analysis & tuning","We keep optimizing from the data until we find the formula that takes off."]],
+ contact_eyebrow:"Contact",contact_h2:"Start with a free 30-minute consultation.",
+ contact_sub:"We work in English, Chinese and Japanese.",
+ addr_l:"Address",addr_v:"2F, No. 39, Jieyun Rd., Sanchong Dist., New Taipei City, Taiwan",
+ f_company:"Company",f_name:"Name",f_email:"Email",f_type:"Goal",
+ opt1:"Store & e-commerce traffic",opt2:"Recruiting",opt3:"Tourism",opt4:"Meta ads",opt5:"Other",f_msg:"How can we help?",f_submit:"Send",
+ f_done:"Sent. We'll get back to you within 24 hours."
+},
+vi:{
+ nav_service:"Dịch vụ",nav_work:"Thành tích",nav_flow:"Quy trình",nav_contact:"Liên hệ",nav_recruit:"Tuyển dụng",nav_company:"Công ty",pain_eyebrow:"Bạn có đang gặp?",pain_h2:"Bạn có đang gặp những vấn đề này?",
+ pains:["Chi phí quảng cáo mạng xã hội ngày càng tăng.","Quảng cáo vẫn chỉ dùng hình ảnh tĩnh.","Không biết tiếp thị qua người ảnh hưởng có hiệu quả hay không.","Làm video ngắn quá tốn thời gian và công sức."],
+ pain_answer:"Nếu vậy, chúng tôi sẽ đề xuất <b>giải pháp tiếp thị mang lại kết quả rõ ràng</b>.",cl_h:"Kết quả khách hàng",
+ clients:[["Dầu gội","3 tháng liên tiếp","Doanh thu cao kỷ lục"],["Trà sữa","Cao nhất từ trước đến nay","Lập kỷ lục doanh thu"],["Tấm diệt mạt bụi","1000%","Doanh thu (so với tháng trước)"]],
+ co_eyebrow:"Công ty",co_h2:"Về QoooQ",co_name_l:"Tên công ty",co_brand_l:"Thương hiệu",co_mail_l:"Email",co_addr_l:"Địa chỉ",co_addr:"Tầng 2, số 39 đường Jieyun, quận Sanchong, thành phố Tân Bắc, Đài Loan",co_est_l:"Thành lập",co_est:"Tháng 4/2026",
+ rc_eyebrow:"Tuyển dụng",rc_sub:"Gia nhập đội ngũ",
+ rc_p1:"QoooQ đang phát triển rất nhanh. Chúng tôi tìm kiếm những người muốn cùng tạo ra hoạt động tiếp thị <b>có ý nghĩa và có giá trị</b>.",
+ rc_p2:"Nếu bạn đam mê tiếp thị, video ngắn hoặc chiến lược kinh doanh, hãy ứng tuyển. Cùng nhau thử thách, cùng nhau phát triển.",
+ rc_cta:"Xem vị trí trên 104",
+ hero_eyebrow:"Tiếp thị video ngắn từ Đài Bắc",views_l:"Lượt xem",strip_t:"Đang thịnh hành",bridge_eyebrow:"Theo mục tiêu",mail_l:"Email",foot_city:"Đài Bắc",
+ hero_h1:"15 giây để trở thành tâm điểm.",
+ hero_sub:"TikTok, Instagram Reels, YouTube Shorts. Từ lên ý tưởng, quay phim đến vận hành tài khoản và quảng cáo, chúng tôi thiết kế video bùng nổ trên mạng xã hội Đài Loan.",
+ hero_cta1:"Tư vấn miễn phí",hero_cta2:"Xem thành tích",strip_note:"* Hình ảnh minh họa",
+ bridge_h2:"Mỗi mục tiêu, một cách bùng nổ riêng.",
+ purposes:[["STORE / EC","Thu hút khách đến cửa hàng & TMĐT","Video thúc đẩy khách đến cửa hàng và mua hàng online. Truyền tải sức hút sản phẩm trong 15 giây, dẫn người xem đến trang cá nhân và đường link."],
+   ["HIRING","Tuyển dụng","Video ngắn thể hiện không khí làm việc và tiếng nói của nhân viên, truyền tải điều mà tin tuyển dụng không nói được, giúp tăng số người ứng tuyển."],
+   ["TRAVEL","Du lịch","Biến điểm đến, khách sạn và trải nghiệm thành thước phim khiến người xem muốn lên đường, tiếp cận người đang lên kế hoạch du lịch."],
+   ["META ADS","Quảng cáo Meta","Sản xuất video quảng cáo cho Instagram và Facebook và vận hành chiến dịch, biến video hiệu quả thành quảng cáo để tối ưu chi phí."]],
+ bridge_note:"Hỗ trợ TikTok, Instagram, YouTube, Facebook và các nền tảng mạng xã hội chính tại Đài Loan.",
+ svc_eyebrow:"Dịch vụ",svc_h2:"Từ ý tưởng đến đăng tải, chúng tôi lo trọn gói.",
+ svc:[["Ý tưởng","Thiết kế câu mở đầu và kịch bản theo khách hàng mục tiêu, giữ chân người xem ngay trong 2 giây đầu."],
+      ["Quay phim","Quay tối ưu cho màn hình dọc điện thoại. Chúng tôi đến tận cửa hàng, văn phòng hay địa điểm du lịch."],
+      ["Dựng phim","Dựng nhịp nhanh, kèm phụ đề và nhạc nền, bắt kịp xu hướng Đài Loan."],
+      ["Đăng tải","Đăng vào khung giờ tương tác tốt nhất và dùng số liệu để lên ý tưởng cho video tiếp theo."]],
+ fee_l:"Chi phí",fee_t:"Phí sản xuất tính theo hiệu quả.",
+ fee_d:"Chi phí phụ thuộc vào kết quả, nên ngay cả lần đầu làm video ngắn bạn cũng giảm được rủi ro. Liên hệ để biết điều kiện chi tiết.",fee_cta:"Hỏi về điều kiện hợp tác",
+ work_eyebrow:"Thành tích",work_h2:"Tăng trưởng bằng con số.",
+ work_note:"* Các trường hợp và số liệu trên trang là ví dụ minh họa thiết kế.",
+ cases:[["2 tháng sau khi thành lập","30+","Hơn 30 khách hàng tại Đài Loan và Nhật Bản."],
+        ["Lượt tiếp cận tự nhiên của một sản phẩm","5 triệu+","Hơn 1 triệu lượt hiển thị trong một tháng."]],
+ flow_eyebrow:"Quy trình",flow_h2:"Video đầu tiên chỉ sau 3 tuần.",
+ steps:[["W1","Trao đổi nhu cầu","Cùng làm rõ sản phẩm, khách hàng mục tiêu và tài khoản đối thủ."],
+        ["W1–2","Ý tưởng & kịch bản","Đề xuất chủ đề và kịch bản cho cả tháng cùng lúc."],
+        ["W3","Quay & đăng tải","Quay gộp để sản xuất hiệu quả, đăng vào khung giờ tương tác tốt nhất."],
+        ["Hằng tuần","Phân tích & tối ưu","Liên tục tối ưu theo số liệu cho đến khi tìm ra công thức bùng nổ."]],
+ contact_eyebrow:"Liên hệ",contact_h2:"Bắt đầu với 30 phút tư vấn miễn phí.",
+ contact_sub:"Chúng tôi hỗ trợ tiếng Anh, tiếng Trung và tiếng Nhật.",
+ addr_l:"Địa chỉ",addr_v:"Tầng 2, số 39 đường Jieyun, quận Sanchong, thành phố Tân Bắc, Đài Loan",
+ f_company:"Công ty",f_name:"Họ tên",f_email:"Email",f_type:"Mục tiêu",
+ opt1:"Thu hút khách đến cửa hàng & TMĐT",opt2:"Tuyển dụng",opt3:"Du lịch",opt4:"Quảng cáo Meta",opt5:"Khác",f_msg:"Nội dung cần tư vấn",f_submit:"Gửi",
+ f_done:"Đã gửi. Chúng tôi sẽ liên hệ trong vòng 24 giờ."
 }
 };
 
@@ -539,7 +628,7 @@ function apply(l){
 }
 document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>apply(b.dataset.lang)));
 let first="ja";
-try{ const s=localStorage.getItem("qoooq-lang"); if(s && I18N[s]) first=s; else { const n=(navigator.language||"").toLowerCase(); if(n.startsWith("zh")) first="zh"; } }catch(e){}
+try{ const s=localStorage.getItem("qoooq-lang"); if(s && I18N[s]) first=s; else { const n=(navigator.language||"").toLowerCase(); if(n.startsWith("zh")) first="zh"; else if(n.startsWith("vi")) first="vi"; else if(n.startsWith("en")) first="en"; } }catch(e){}
 apply(first);
 
 /* reel strip */
@@ -666,16 +755,17 @@ else{
 document.getElementById("form").addEventListener("submit",async e=>{
   e.preventDefault();
   const f=e.target, btn=f.querySelector('button[type="submit"]'), done=document.getElementById("done");
-  const zh=(document.documentElement.lang||"").indexOf("zh")===0;
-  if(!f.email.value.trim()||!f.email.checkValidity()){ f.email.focus(); done.textContent=zh?"請填寫正確的 Email。":"メールアドレスを正しく入力してください。"; done.hidden=false; return; }
+  const L=(document.documentElement.lang||"ja").slice(0,2);
+  const MSG={ja:["メールアドレスを正しく入力してください。","送信できませんでした。info@qoooq.tw までご連絡ください。"],zh:["請填寫正確的 Email。","送出失敗，請直接寄信到 info@qoooq.tw。"],en:["Please enter a valid email address.","Couldn't send. Please email us at info@qoooq.tw."],vi:["Vui lòng nhập email hợp lệ.","Không gửi được. Vui lòng gửi email đến info@qoooq.tw."]}[L]||[];
+  if(!f.email.value.trim()||!f.email.checkValidity()){ f.email.focus(); done.textContent=MSG[0]; done.hidden=false; return; }
   btn.disabled=true; done.hidden=true;
   try{
     const res=await fetch(f.action,{method:"POST",body:new FormData(f),headers:{Accept:"application/json"}});
     if(!res.ok) throw new Error(res.status);
     f.querySelectorAll("input:not([type=hidden]),select,textarea").forEach(x=>{ if(x.tagName!=="SELECT") x.value=""; });
-    done.textContent=(I18N[zh?"zh":"ja"]||{}).f_done||done.textContent;
+    done.textContent=(I18N[I18N[L]?L:"ja"]||{}).f_done||done.textContent;
   }catch(err){
-    done.textContent=zh?"送出失敗，請直接寄信到 info@qoooq.tw。":"送信できませんでした。info@qoooq.tw までご連絡ください。";
+    done.textContent=MSG[1];
   }
   done.hidden=false; btn.disabled=false;
 });
