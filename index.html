@@ -256,6 +256,36 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
 .wordmark i{font-style:normal;color:var(--sig)}
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:24px 32px;font-size:.8rem}
 
+/* heat: 「熱狂で、動かす」 big slogan between reel strip and pain */
+.heat{position:relative;background:var(--paper);padding-block:clamp(90px,14vw,180px) clamp(20px,4vw,48px);overflow:hidden}
+.heat .mono{color:var(--mute);display:flex;gap:12px;align-items:center;margin-bottom:clamp(16px,2.4vw,28px)}
+.heat .mono::before{content:"";width:28px;height:2px;background:var(--sig)}
+.heat-t{font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;font-weight:900;font-size:min(12.5vw,10.5rem);line-height:1.08;letter-spacing:-.04em;display:flex;flex-wrap:wrap;margin:0}
+.heat-t .ln{display:inline-block}
+.heat-t .w{display:inline-block;white-space:nowrap}
+.heat-t:lang(zh-Hant){font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+.heat-t:lang(en),.heat-t:lang(vi){font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wdth" 112;font-size:min(10vw,8.6rem);letter-spacing:-.035em;line-height:1.05;column-gap:.28em}
+.heat-t:lang(vi){font-size:min(8vw,7rem);line-height:1.2}
+@media (max-width:600px){ .heat-t{font-size:21vw;line-height:1.1;flex-direction:column} .heat-t:lang(zh-Hant){font-size:19vw} .heat-t:lang(en){font-size:16vw} .heat-t:lang(vi){font-size:12.5vw;line-height:1.25} }
+.heat-t .c{display:inline-block;opacity:0;transform:translateY(60%) scale(1.5) skewX(-14deg);filter:blur(14px)}
+.heat-t .blue{color:var(--sig)}
+.heat.on .c{animation:slam .75s cubic-bezier(.2,.9,.25,1.2) forwards;animation-delay:calc(var(--i)*80ms)}
+.heat.live .c{opacity:1;transform:none;filter:none;animation:glitch 4.2s steps(1) infinite;animation-delay:calc(var(--i)*45ms)}
+@keyframes slam{
+ 0%{opacity:0;transform:translateY(60%) scale(1.5) skewX(-14deg);filter:blur(14px);text-shadow:none}
+ 55%{opacity:1;filter:blur(0);text-shadow:12px 0 #FF2E63,-12px 0 #2B48FF}
+ 78%{transform:translateY(-5%) scale(.97);text-shadow:-4px 0 #FF2E63,4px 0 #2B48FF}
+ 100%{opacity:1;transform:none;filter:none;text-shadow:none}}
+@keyframes glitch{
+ 0%,88%,100%{transform:none;text-shadow:none}
+ 90%{transform:translateX(4px) skewX(10deg);text-shadow:-6px 0 #FF2E63,6px 0 #2B48FF}
+ 92%{transform:translateX(-5px);text-shadow:5px 0 #FF2E63,-5px 0 #2B48FF}
+ 94%{transform:translateY(-3px) skewX(-6deg);text-shadow:none}}
+.heat-bar{height:clamp(6px,.9vw,12px);margin-top:clamp(18px,2.6vw,32px);border-radius:99px;background:linear-gradient(90deg,#2B48FF,#FF2E63,#2B48FF);background-size:200% 100%;transform:scaleX(0);transform-origin:left;animation:heatflow 2.4s linear infinite}
+.heat.on .heat-bar{transform:scaleX(1);transition:transform 1.1s .7s cubic-bezier(.7,0,.2,1)}
+@keyframes heatflow{to{background-position:-200% 0}}
+@media (prefers-reduced-motion: reduce){ .heat-t .c,.heat.live .c{opacity:1;transform:none;filter:none;animation:none} .heat-bar{transform:none;animation:none} }
+
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .belt,.rec{animation:none}
@@ -319,6 +349,14 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
       <span class="mono" data-i18n="strip_t">いま伸びている動画</span>
     </div>
     <div class="belt" id="belt1"></div>
+  </section>
+
+  <section class="heat" id="heat">
+    <div class="wrap">
+      <p class="mono" aria-hidden="true">MOVE PEOPLE WITH PASSION</p>
+      <h2 class="heat-t" lang="ja" aria-label="熱狂で、動かす"><span class="ln" aria-hidden="true"><span class="c" style="--i:0">熱</span><span class="c" style="--i:1">狂</span><span class="c" style="--i:2">で</span><span class="c" style="--i:3">、</span></span><span class="ln" aria-hidden="true"><span class="c blue" style="--i:4">動</span><span class="c blue" style="--i:5">か</span><span class="c blue" style="--i:6">す</span></span></h2>
+      <div class="heat-bar" aria-hidden="true"></div>
+    </div>
   </section>
 
   <section class="sec pain" id="pain">
@@ -430,6 +468,7 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
 <script>
 const I18N = {
 ja:{
+ heat:["熱狂で、","動かす"],
  nav_service:"サービス",nav_work:"実績",nav_flow:"進め方",nav_contact:"お問い合わせ",nav_recruit:"採用",nav_company:"会社概要",pain_eyebrow:"お悩み",pain_h2:"こんなお悩みありませんか？",
  pains:["SNS広告費が高騰してきた。","広告のバナーがまだ静止画のまま。","インフルエンサーマーケティングで効果が出ているか分からない。","ショート動画をつくるのが大変。"],
  pain_answer:"そんなお悩みがあれば、<b>必ず成果が出るマーケティング</b>をご提案します。",cl_h:"クライアント事例",
@@ -473,6 +512,7 @@ ja:{
  f_done:"送信しました。24時間以内にご連絡します。"
 },
 zh:{
+ heat:["以熱狂，","撼動人心"],
  nav_service:"服務項目",nav_work:"案例",nav_flow:"合作流程",nav_contact:"聯絡我們",nav_recruit:"招募",nav_company:"公司簡介",pain_eyebrow:"你的煩惱",pain_h2:"你是否也有這些煩惱？",
  pains:["社群廣告費越來越高。","廣告素材還停留在靜態圖片。","網紅行銷到底有沒有效果，看不出來。","短影音製作太費時費力。"],
  pain_answer:"如果你也有這些煩惱，我們將為你提出<b>一定看得見成效的行銷方案</b>。",cl_h:"客戶實例",
@@ -516,6 +556,7 @@ zh:{
  f_done:"已送出，我們會在 24 小時內與您聯繫。"
 },
 en:{
+ heat:["Passion","that moves."],
  nav_service:"Services",nav_work:"Results",nav_flow:"Process",nav_contact:"Contact",nav_recruit:"Careers",nav_company:"Company",pain_eyebrow:"Sound familiar?",pain_h2:"Facing any of these?",
  pains:["Social ad costs keep climbing.","Your ads are still static images.","You can't tell whether influencer marketing is working.","Making short videos takes too much time and effort."],
  pain_answer:"If so, we'll propose <b>marketing that delivers results you can see</b>.",cl_h:"Client results",
@@ -559,6 +600,7 @@ en:{
  f_done:"Sent. We'll get back to you within 24 hours."
 },
 vi:{
+ heat:["Nhiệt huyết","tạo chuyển động"],
  nav_service:"Dịch vụ",nav_work:"Thành tích",nav_flow:"Quy trình",nav_contact:"Liên hệ",nav_recruit:"Tuyển dụng",nav_company:"Công ty",pain_eyebrow:"Bạn có đang gặp?",pain_h2:"Bạn có đang gặp những vấn đề này?",
  pains:["Chi phí quảng cáo mạng xã hội ngày càng tăng.","Quảng cáo vẫn chỉ dùng hình ảnh tĩnh.","Không biết tiếp thị qua người ảnh hưởng có hiệu quả hay không.","Làm video ngắn quá tốn thời gian và công sức."],
  pain_answer:"Nếu vậy, chúng tôi sẽ đề xuất <b>giải pháp tiếp thị mang lại kết quả rõ ràng</b>.",cl_h:"Kết quả khách hàng",
@@ -614,8 +656,17 @@ const PICONS = [
  '<path d="M6 20v8a3 3 0 0 0 3 3h4l14 8V9L13 17H9a3 3 0 0 0-3 3z" fill="currentColor" fill-opacity=".12"/><path d="M13 31l3 9h5l-2.5-8"/><path d="M33 18a8 8 0 0 1 0 12M37.5 13.5a14 14 0 0 1 0 21"/>'
 ];
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+function heatRender(l){
+  const h=document.querySelector(".heat-t"); if(!h||!I18N[l].heat) return;
+  const [a,b]=I18N[l].heat.map(t=>t.normalize("NFC")); let i=0;
+  const part=(t,cls)=>`<span class="ln" aria-hidden="true">${t.split(/(\s+)/).map(w=>/^\s+$/.test(w)?" ":`<span class="w">${[...w].map(ch=>`<span class="c${cls}" style="--i:${i++}">${ch}</span>`).join("")}</span>`).join("")}</span>`;
+  h.lang = l==="zh" ? "zh-Hant" : l;
+  h.setAttribute("aria-label", (l==="en"||l==="vi") ? a+" "+b : a+b);
+  h.innerHTML = part(a,"")+part(b," blue");
+}
 function apply(l){
   const d = I18N[l];
+  heatRender(l);
   document.documentElement.lang = l==="zh" ? "zh-Hant" : l;
   document.querySelectorAll("[data-i18n]").forEach(el=>{ const v=d[el.dataset.i18n]; if(typeof v==="string") el.textContent=v; });
   document.querySelectorAll("[data-i18n-html]").forEach(el=>{ const v=d[el.dataset.i18nHtml]; if(typeof v==="string") el.innerHTML=v; });
@@ -656,6 +707,11 @@ if("IntersectionObserver" in window){
 
 /* hero footage */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* 「熱狂で、動かす」: 見えたら文字が叩きつけられるように登場 → その後たまにグリッチ */
+(()=>{ const heat=document.getElementById("heat"); if(!heat) return;
+  if(reduce||!("IntersectionObserver" in window)){ heat.classList.add("on","live"); return; }
+  new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ heat.classList.add("on"); setTimeout(()=>heat.classList.add("live"),1500); o.disconnect(); } },{threshold:.35}).observe(heat);
+})();
 const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
 let W=0,H=0,DPR=1;
 function size(){ DPR=Math.min(window.devicePixelRatio||1,2); W=cv.clientWidth; H=cv.clientHeight; cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); ctx.fillStyle="#F3F3F0"; ctx.fillRect(0,0,W,H); }
