@@ -263,6 +263,7 @@ footer{background:var(--ink);color:var(--mute-d);border-top:1px solid var(--line
 .heat-t{font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;font-weight:900;font-size:min(12.5vw,10.5rem);line-height:1.08;letter-spacing:-.04em;display:flex;flex-wrap:wrap;margin:0}
 .heat-t .ln{display:inline-block}
 .heat-t .w{display:inline-block;white-space:nowrap}
+.heat-t.one,.heat-t.one .ln{flex-direction:row!important;flex-wrap:nowrap!important;white-space:nowrap}
 .heat-t:lang(zh-Hant){font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
 .heat-t:lang(en),.heat-t:lang(vi){font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-variation-settings:"wdth" 112;font-size:min(10vw,8.6rem);letter-spacing:-.035em;line-height:1.05;column-gap:.28em}
 .heat-t:lang(vi){font-size:min(8vw,7rem);line-height:1.2}
@@ -663,7 +664,22 @@ function heatRender(l){
   h.lang = l==="zh" ? "zh-Hant" : l;
   h.setAttribute("aria-label", (l==="en"||l==="vi") ? a+" "+b : a+b);
   h.innerHTML = part(a,"")+part(b," blue");
+  h.classList.toggle("one", l!=="ja");
+  fitHeat();
 }
+/* 日本語以外は1行に収める：幅が足りなければ文字サイズを自動で縮める */
+function fitHeat(){
+  const h=document.querySelector(".heat-t"); if(!h) return;
+  h.style.fontSize="";
+  if(!h.classList.contains("one")) return;
+  // アニメーション中の拡大・ズレに影響されないよう、行の箱の幅で測る
+  const need=()=>{ const l=h.querySelectorAll(".ln"); return l[l.length-1].getBoundingClientRect().right-l[0].getBoundingClientRect().left; };
+  for(let k=0;k<6&&need()>h.clientWidth;k++)
+    h.style.fontSize=(parseFloat(getComputedStyle(h).fontSize)*h.clientWidth/need()*0.98)+"px";
+}
+addEventListener("resize",fitHeat);
+if(document.fonts){ document.fonts.ready.then(fitHeat); document.fonts.addEventListener("loadingdone",fitHeat); }
+addEventListener("load",fitHeat);
 function apply(l){
   const d = I18N[l];
   heatRender(l);
